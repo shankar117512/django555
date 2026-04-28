@@ -1,0 +1,3 @@
+# requirements.txt
+# Root file used by Railway and Docker
+-r requirements/production.txt

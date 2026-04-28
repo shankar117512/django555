@@ -1,0 +1,64 @@
+# docker-compose.staging.yml
+version: "3.9"
+
+services:
+  db-staging:
+    image: postgres:16-alpine
+    container_name: django_db_staging
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: django_staging
+      POSTGRES_USER: staginguser
+      POSTGRES_PASSWORD: stagingpassword
+    volumes:
+      - postgres_staging_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U staginguser -d django_staging"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis-staging:
+    image: redis:7-alpine
+    container_name: django_redis_staging
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+
+  app-staging:
+    build:
+      context: .
+      dockerfile: docker/staging/Dockerfile
+    container_name: django_app_staging
+    restart: unless-stopped
+    env_file:
+      - envs/.env.staging
+    environment:
+      DATABASE_URL: postgres://staginguser:stagingpassword@db-staging:5432/django_staging
+      REDIS_URL: redis://redis-staging:6379/0
+    ports:
+      - "8001:8001"
+    depends_on:
+      db-staging:
+        condition: service_healthy
+
+  celery-staging:
+    build:
+      context: .
+      dockerfile: docker/staging/Dockerfile
+    container_name: django_celery_staging
+    command: celery -A config worker -l INFO
+    env_file:
+      - envs/.env.staging
+    environment:
+      DATABASE_URL: postgres://staginguser:stagingpassword@db-staging:5432/django_staging
+      REDIS_URL: redis://redis-staging:6379/0
+    depends_on:
+      - db-staging
+      - redis-staging
+
+volumes:
+  postgres_staging_data:
+    name: django_postgres_staging

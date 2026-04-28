@@ -1,0 +1,114 @@
+# docker-compose.dev.yml
+version: "3.9"
+
+services:
+  # ─────────────────────────────────────────────
+  # PostgreSQL Dev Database
+  # ─────────────────────────────────────────────
+  db-dev:
+    image: postgres:16-alpine
+    container_name: django_db_dev
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: django_dev
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+    volumes:
+      - postgres_dev_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U devuser -d django_dev"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────────
+  # Redis Dev
+  # ─────────────────────────────────────────────
+  redis-dev:
+    image: redis:7-alpine
+    container_name: django_redis_dev
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ─────────────────────────────────────────────
+  # Django Dev App
+  # ─────────────────────────────────────────────
+  app-dev:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    container_name: django_app_dev
+    restart: unless-stopped
+    env_file:
+      - envs/.env.dev
+    environment:
+      DATABASE_URL: postgres://devuser:devpassword@db-dev:5432/django_dev
+      REDIS_URL: redis://redis-dev:6379/0
+      CELERY_BROKER_URL: redis://redis-dev:6379/0
+      DJANGO_SETTINGS_MODULE: config.settings.dev
+    volumes:
+      - .:/app                   # Hot reload: mount code
+      - ./staticfiles:/app/staticfiles
+      - ./media:/app/media
+      - ./logs:/app/logs
+    ports:
+      - "8000:8000"
+    depends_on:
+      db-dev:
+        condition: service_healthy
+      redis-dev:
+        condition: service_healthy
+
+  # ─────────────────────────────────────────────
+  # Celery Worker Dev
+  # ─────────────────────────────────────────────
+  celery-dev:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    container_name: django_celery_dev
+    command: celery -A config worker -l DEBUG
+    env_file:
+      - envs/.env.dev
+    environment:
+      DATABASE_URL: postgres://devuser:devpassword@db-dev:5432/django_dev
+      REDIS_URL: redis://redis-dev:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      - db-dev
+      - redis-dev
+
+  # ─────────────────────────────────────────────
+  # Celery Beat Dev
+  # ─────────────────────────────────────────────
+  celery-beat-dev:
+    build:
+      context: .
+      dockerfile: docker/dev/Dockerfile
+    container_name: django_celerybeat_dev
+    command: celery -A config beat -l DEBUG --scheduler django_celery_beat.schedulers:DatabaseScheduler
+    env_file:
+      - envs/.env.dev
+    environment:
+      DATABASE_URL: postgres://devuser:devpassword@db-dev:5432/django_dev
+      REDIS_URL: redis://redis-dev:6379/0
+    volumes:
+      - .:/app
+    depends_on:
+      - db-dev
+      - redis-dev
+      - celery-dev
+
+volumes:
+  postgres_dev_data:
+    name: django_postgres_dev

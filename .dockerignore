@@ -1,0 +1,26 @@
+# .dockerignore
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+.git/
+.gitignore
+.env*
+!envs/.env.example
+*.log
+logs/
+media/
+staticfiles/
+.pytest_cache/
+.mypy_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+node_modules/
+.DS_Store
+README.md
+DEPLOYMENT.md
+docs/
