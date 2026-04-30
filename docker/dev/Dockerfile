@@ -16,9 +16,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     postgresql-client \
     && rm -rf /var/lib/apt/lists/*
 
-COPY requirements/dev.txt .
+COPY requirements/ ./requirements/
+
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r dev.txt
+    pip install --no-cache-dir -r requirements/dev.txt
 
 COPY . .
 
