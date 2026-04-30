@@ -1,6 +1,8 @@
 # requirements/dev.txt
 -r base.txt
 
+gunicorn==25.3.0
+
 # Debug toolbar
 django-debug-toolbar>=4.4.0
 
