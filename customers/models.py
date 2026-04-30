@@ -1,5 +1,7 @@
+# customers/models.py
+
 from django.db import models
-from django_tenants.models import TenantMixin
+from django_tenants.models import DomainMixin, TenantMixin
 
 
 class Client(TenantMixin):
@@ -9,3 +11,7 @@ class Client(TenantMixin):
     created_on = models.DateField(auto_now_add=True)
 
     auto_create_schema = True
+
+
+class Domain(DomainMixin):
+    pass
