@@ -9,8 +9,10 @@ https://docs.djangoproject.com/en/6.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
-import dj_database_url
+
 from pathlib import Path
+
+from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -30,6 +32,7 @@ ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
 # Application definition
 
+# ✅ Core Django apps
 DJANGO_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -39,30 +42,40 @@ DJANGO_APPS = [
     "django.contrib.staticfiles",
 ]
 
+# ✅ Third-party apps
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "corsheaders",
     "django_prometheus",
-    "health_check",
-    "health_check.db",
-    "health_check.cache",
-    "health_check.storage",
-    "health_check.contrib.migrations",
     "django_celery_results",
     "django_celery_beat",
     "axes",
-    "django_tenants",
 ]
 
-LOCAL_APPS = [
+# ✅ Shared apps (must come AFTER above)
+SHARED_APPS = (
+    [
+        "django_tenants",  # MUST be first
+        "customers",
+    ]
+    + DJANGO_APPS
+    + THIRD_PARTY_APPS
+)
+
+# ✅ Tenant apps
+TENANT_APPS = [
     "apps.core",
     "apps.api",
     "apps.tenants",
     "apps.monitoring",
 ]
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
+# ✅ Final installed apps
+INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+TENANT_MODEL = "customers.Client"  # example
+TENANT_DOMAIN_MODEL = "customers.Domain"
 
 
 MIDDLEWARE = [
@@ -105,13 +118,15 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASE_URL = config("DATABASE_URL", default="")
 DATABASES = {
-    "default": dj_database_url.parse(
-        DATABASE_URL,
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
+    "default": {
+        "ENGINE": "django_tenants.postgresql_backend",
+        "NAME": "myapp_dev",
+        "USER": "myapp_user",
+        "PASSWORD": "newpassword123",
+        "HOST": "localhost",
+        "PORT": "5432",
+    }
 }
 
 # Multi-tenant database router
@@ -149,7 +164,6 @@ CELERY_TIMEZONE = "UTC"
 CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
 
-
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -175,12 +189,8 @@ REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
-    "DEFAULT_PERMISSION_CLASSES": (
-        "rest_framework.permissions.IsAuthenticated",
-    ),
-    "DEFAULT_RENDERER_CLASSES": (
-        "rest_framework.renderers.JSONRenderer",
-    ),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_RENDERER_CLASSES": ("rest_framework.renderers.JSONRenderer",),
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 20,
     "DEFAULT_THROTTLE_CLASSES": (
@@ -280,8 +290,8 @@ ENVIRONMENT = config("ENVIRONMENT", default="dev")
 SENTRY_DSN = config("SENTRY_DSN", default="")
 if SENTRY_DSN:
     import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
     from sentry_sdk.integrations.celery import CeleryIntegration
+    from sentry_sdk.integrations.django import DjangoIntegration
 
     sentry_sdk.init(
         dsn=SENTRY_DSN,

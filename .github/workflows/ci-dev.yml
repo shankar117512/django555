@@ -1,0 +1,210 @@
+# .github/workflows/ci-dev.yml
+name: CI — Development
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [dev]
+
+env:
+  PYTHON_VERSION: "3.12"
+  ENVIRONMENT: dev
+  DJANGO_SETTINGS_MODULE: config.settings.dev
+
+jobs:
+  # ────────────────────────────────────────────────
+  # Job 1: Lint & Format Check
+  # ────────────────────────────────────────────────
+  lint:
+    name: Lint & Format
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-dev-${{ hashFiles('requirements/dev.txt') }}
+
+      - name: Install lint tools
+        run: |
+          pip install black isort flake8 mypy django-stubs
+
+      - name: Run Black
+        run: black --check .
+
+      - name: Run isort
+        run: isort --check-only .
+
+      - name: Run flake8
+        run: flake8 . --max-line-length=120 --exclude=venv,migrations
+
+  # ────────────────────────────────────────────────
+  # Job 2: Tests
+  # ────────────────────────────────────────────────
+  test-dev:
+    name: Run Tests (Dev)
+    runs-on: ubuntu-latest
+    needs: lint
+
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_DB: test_django_dev
+          POSTGRES_USER: testuser
+          POSTGRES_PASSWORD: testpassword
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+      redis:
+        image: redis:7-alpine
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 6379:6379
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: pip-dev-${{ hashFiles('requirements/dev.txt') }}
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install -r requirements/dev.txt
+
+      - name: Create logs directory
+        run: mkdir -p logs
+
+      - name: Run migrations
+        env:
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/test_django_dev
+          REDIS_URL: redis://localhost:6379/0
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_DEV }}
+          DEBUG: "True"
+        run: python manage.py migrate --noinput
+
+      - name: Run tests with coverage
+        env:
+          DATABASE_URL: postgres://testuser:testpassword@localhost:5432/test_django_dev
+          REDIS_URL: redis://localhost:6379/0
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_DEV }}
+          DEBUG: "True"
+          ENVIRONMENT: dev
+        run: |
+          pytest \
+            --cov=apps \
+            --cov-report=xml \
+            --cov-report=html \
+            --cov-fail-under=80 \
+            -v \
+            --tb=short \
+            -x
+
+      - name: Upload coverage report
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: dev
+
+  # ────────────────────────────────────────────────
+  # Job 3: Docker Build Check
+  # ────────────────────────────────────────────────
+  docker-build:
+    name: Docker Build (Dev)
+    runs-on: ubuntu-latest
+    needs: test-dev
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build dev Docker image
+        run: |
+          docker build \
+            -f docker/dev/Dockerfile \
+            -t django-app:dev-${{ github.sha }} \
+            .
+
+  # ────────────────────────────────────────────────
+  # Job 4: Deploy to Railway Dev
+  # ────────────────────────────────────────────────
+  deploy-dev:
+    name: Deploy to Railway Dev
+    runs-on: ubuntu-latest
+    needs: docker-build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
+    environment:
+      name: development
+      url: https://dev.yourapp.up.railway.app
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: bash <(curl -fsSL cli.new)
+
+      - name: Deploy to Railway Dev
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_DEV }}
+        run: |
+          railway up \
+            --service django-web \
+            --environment dev \
+            --detach
+
+      - name: Wait for deployment health check
+        run: |
+          echo "Waiting 60s for deployment to complete..."
+          sleep 60
+
+      - name: Verify deployment
+        run: |
+          STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" \
+            https://dev.yourapp.up.railway.app/health/)
+          if [ "$STATUS_CODE" -ne 200 ]; then
+            echo "Health check failed: HTTP $STATUS_CODE"
+            exit 1
+          fi
+          echo "Deployment verified: HTTP $STATUS_CODE"
+
+      - name: Notify on success
+        if: success()
+        run: |
+          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{"text":"✅ Dev deploy succeeded: ${{ github.sha }}"}'
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
+            -H "Content-Type: application/json" \
+            -d '{"text":"❌ Dev deploy FAILED: ${{ github.sha }}"}'

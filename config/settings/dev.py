@@ -1,5 +1,5 @@
 # config/settings/dev.py
-from .base import *
+from .base import DATABASES, INSTALLED_APPS, MIDDLEWARE
 
 DEBUG = True
 

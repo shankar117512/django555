@@ -15,15 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 
+from django.conf import settings
+
 # config/urls.py
 from django.contrib import admin
-from django.urls import path, include
-from django.conf import settings
+from django.urls import include, path
+
+from .views import health
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/v1/", include("apps.api.urls")),
-    path("health/", include("health_check.urls")),
+    path("health/", health),
     path("monitoring/", include("apps.monitoring.urls")),
     path("", include("apps.core.urls")),
     path("metrics/", include("django_prometheus.urls")),
@@ -31,6 +34,7 @@ urlpatterns = [
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns
