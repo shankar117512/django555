@@ -10,8 +10,10 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
+import dj_database_url
 from decouple import Csv, config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -80,7 +82,7 @@ TENANT_DOMAIN_MODEL = "customers.Domain"
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
-    "django_tenants.middleware.main.TenantMainMiddleware",
+    "apps.core.middleware.TenantMiddlewareWithHealthCheck",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -119,15 +121,14 @@ TEMPLATES = [
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django_tenants.postgresql_backend",
-        "NAME": "myapp_dev",
-        "USER": "myapp_user",
-        "PASSWORD": "newpassword123",
-        "HOST": "localhost",
-        "PORT": "5432",
-    }
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        engine="django_tenants.postgresql_backend",
+    )
 }
+# Make sure the schema key is preserved:
+DATABASES["default"]["SCHEMA"] = "public"
 
 # Multi-tenant database router
 DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)

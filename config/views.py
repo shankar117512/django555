@@ -1,4 +1,4 @@
-# views.py
+# config/views.py
 from django.http import JsonResponse
 
 
