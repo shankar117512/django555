@@ -28,7 +28,7 @@ RUN mkdir -p /app/logs /app/staticfiles /app/media
 COPY docker/dev/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-EXPOSE 8000
+EXPOSE 8080
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "gunicorn myproject.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8080} --workers 4 --timeout 120"]
