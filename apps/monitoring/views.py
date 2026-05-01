@@ -168,31 +168,25 @@ def db_metrics(request):
     """Return database performance metrics."""
     with connection.cursor() as cursor:
         # Active connections
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT count(*) FROM pg_stat_activity
             WHERE state = 'active'
-        """
-        )
+        """)
         active_connections = cursor.fetchone()[0]
 
         # Database size
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT pg_database_size(current_database())
-        """
-        )
+        """)
         db_size_bytes = cursor.fetchone()[0]
 
         # Slow queries (last 10)
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT query, calls, mean_exec_time, rows
             FROM pg_stat_statements
             ORDER BY mean_exec_time DESC
             LIMIT 10
-        """
-        )
+        """)
         try:
             slow_queries = [
                 {
@@ -207,14 +201,12 @@ def db_metrics(request):
             slow_queries = []
 
         # Table stats
-        cursor.execute(
-            """
+        cursor.execute("""
             SELECT relname, n_live_tup, n_dead_tup, last_vacuum, last_analyze
             FROM pg_stat_user_tables
             ORDER BY n_live_tup DESC
             LIMIT 20
-        """
-        )
+        """)
         table_stats = [
             {
                 "table": row[0],
