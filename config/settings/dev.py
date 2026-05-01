@@ -3,7 +3,9 @@ from .base import *  # noqa: F403, F405
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["django555-dev.up.railway.app"]
+
+CSRF_TRUSTED_ORIGINS = ["https://django555-dev.up.railway.app"]
 
 # Dev-specific installed apps
 INSTALLED_APPS += [
