@@ -6,12 +6,6 @@ from rest_framework.test import APIClient
 User = get_user_model()
 
 
-@pytest.fixture(scope="session")
-def django_db_setup():
-    """Use the test database."""
-    pass
-
-
 @pytest.fixture
 def api_client():
     """Return an authenticated DRF test client."""
