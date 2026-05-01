@@ -1,7 +1,11 @@
 # apps/api/views.py
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.views import APIView
 
-from django.http import JsonResponse
 
+class APIRootView(APIView):
+    permission_classes = [IsAuthenticated]
 
-def home(request):
-    return JsonResponse({"message": "API is working"})
+    def get(self, request):
+        return Response({"message": "API Root"})

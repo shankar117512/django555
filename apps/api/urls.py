@@ -1,9 +1,8 @@
 # apps/api/urls.py
-
 from django.urls import path
 
-from . import views
+from .views import APIRootView
 
 urlpatterns = [
-    path("", views.home, name="api-home"),
+    path("v1/", APIRootView.as_view()),
 ]

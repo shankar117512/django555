@@ -21,11 +21,14 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.api.views import APIRootView
+
 from .views import health
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("api/v1/", include("apps.api.urls")),
+    path("api/", include("apps.api.urls")),
+    path("api/v1/", APIRootView.as_view()),
     path("health/", health),
     path("monitoring/", include("apps.monitoring.urls")),
     path("", include("apps.core.urls")),
