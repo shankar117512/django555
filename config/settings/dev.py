@@ -3,7 +3,7 @@ from .base import *  # noqa: F403, F405
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["django555-dev.up.railway.app"]
+ALLOWED_HOSTS = ["django555-dev.up.railway.app", "healthcheck.railway.app"]
 
 CSRF_TRUSTED_ORIGINS = ["https://django555-dev.up.railway.app"]
 
