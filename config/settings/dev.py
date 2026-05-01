@@ -35,3 +35,6 @@ CELERY_TASK_EAGER_PROPAGATES = True
 
 # Disable axes in dev
 AXES_ENABLED = False
+
+# Option B: Set it to 0 explicitly to force main-app serving
+PROMETHEUS_METRICS_EXPORT_PORT = 0
