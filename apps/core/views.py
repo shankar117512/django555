@@ -2,4 +2,4 @@ from django.http import HttpResponse
 
 
 def home(request):
-    return HttpResponse("Hello, this is home page")
+    return HttpResponse("Django dev environment deployed was successfully!...")
