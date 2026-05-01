@@ -79,6 +79,10 @@ INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_
 TENANT_MODEL = "customers.Client"  # example
 TENANT_DOMAIN_MODEL = "customers.Domain"
 
+# Use Django's cache to store tenant lookups
+TENANT_CACHE_BACKEND = "default"  # uses your DEFAULT cache backend
+TENANT_CACHE_SECONDS = 300  # cache each tenant lookup for 5 minutes (adjust as needed)
+
 
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
