@@ -23,7 +23,7 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.api.urls")),
-    path("", include("apps.monitoring.urls")),
+    path("monitoring/", include("apps.monitoring.urls")),
     path("", include("apps.core.urls")),
     path("metrics/", include("django_prometheus.urls")),
 ]
