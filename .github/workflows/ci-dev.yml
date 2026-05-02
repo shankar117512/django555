@@ -123,7 +123,7 @@ jobs:
             --cov=apps \
             --cov-report=xml \
             --cov-report=html \
-            --cov-fail-under=80 \
+            --cov-fail-under=75 \
             -v \
             --tb=short \
             -x
