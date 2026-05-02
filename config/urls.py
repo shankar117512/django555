@@ -23,7 +23,11 @@ from django.urls import include, path
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.api.urls")),
+    # Public monitoring: /health/
     path("", include("apps.monitoring.urls")),
+    # Admin-only monitoring: /monitoring/server/, /monitoring/db/
+    path("monitoring/", include("apps.monitoring.admin_urls")),
+    # Core: / (home)
     path("", include("apps.core.urls")),
     path("metrics/", include("django_prometheus.urls")),
 ]

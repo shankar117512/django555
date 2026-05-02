@@ -4,5 +4,5 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("", views.APIRootView.as_view(), name="api-root"),
+    path("protected/", views.protected_view, name="api-protected"),
 ]

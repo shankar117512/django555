@@ -1,24 +1,4 @@
 # pyproject.toml (test configuration section)
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.dev"
-python_files = ["test_*.py", "*_test.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-addopts = [
-    "-v",
-    "--tb=short",
-    "--strict-markers",
-    "--no-header",
-]
-markers = [
-    "slow: marks tests as slow",
-    "integration: marks integration tests",
-    "e2e: marks end-to-end tests",
-    "unit: marks unit tests",
-]
-filterwarnings = [
-    "ignore::DeprecationWarning",
-]
 
 [tool.coverage.run]
 source = ["apps"]

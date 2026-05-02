@@ -1,14 +1,20 @@
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework.response import Response
+# apps/core/views.py
+from django.http import HttpResponse
 
 
-@api_view(["GET"])
-@permission_classes([AllowAny])
 def home_view(request):
-    return Response(
-        {
-            "message": "Django Dev Environment Deployed Successfully...!",
-            "status": "ok",
-        }
-    )
+    """
+    Public home endpoint. Returns 200 with success message.
+    """
+    html = """
+    <!DOCTYPE html>
+    <html>
+      <head><title>Django App</title></head>
+      <body>
+        <h1>Django Dev Environment Deployed Successfully!</h1>
+        <p>Welcome. The API is available at <a href="/api/">/api/</a></p>
+        <p>Health check: <a href="/health/">/health/</a></p>
+      </body>
+    </html>
+    """
+    return HttpResponse(html)

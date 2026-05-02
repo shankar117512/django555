@@ -10,9 +10,11 @@ User = get_user_model()
 
 @pytest.fixture
 def mock_conn():
-    # ✅ Now works because connection is a module-level name in views.py
+    """
+    Patches django.db.connection as imported in apps.monitoring.views.
+    Supports `with connection.cursor() as cursor:` context manager pattern.
+    """
     with patch("apps.monitoring.views.connection") as mock:
-        # Ensure the context manager (__enter__/__exit__) works for `with connection.cursor()`
         cursor_mock = MagicMock()
         mock.cursor.return_value.__enter__ = MagicMock(return_value=cursor_mock)
         mock.cursor.return_value.__exit__ = MagicMock(return_value=False)
@@ -21,6 +23,7 @@ def mock_conn():
 
 @pytest.fixture
 def mock_cache():
+    """Patches cache as imported in apps.monitoring.views."""
     with patch("apps.monitoring.views.cache") as mock:
         yield mock
 
@@ -41,7 +44,9 @@ def authenticated_client(db):
 @pytest.fixture
 def admin_client(db):
     admin = User.objects.create_superuser(
-        username="adminuser", password="adminpass123", email="admin@example.com"
+        username="adminuser",
+        password="adminpass123",
+        email="admin@example.com",
     )
     client = APIClient()
     client.force_authenticate(user=admin)
