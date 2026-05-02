@@ -20,21 +20,15 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
-from apps.core.views import home_view
-
 from .views import health
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", home_view, name="home"),
-    path("api/", include("apps.api.urls")),
     path("health/", health),
-    path("health/", include("apps.monitoring.urls")),
-    path(
-        "", include("apps.monitoring.urls")
-    ),  # fixes /health/, /monitoring/server/, /monitoring/db/
-    path("", include("apps.core.urls")),  # fixes /
-    path("metrics/metrics", include("django_prometheus.urls")),
+    path("api/", include("apps.api.urls")),
+    path("", include("apps.monitoring.urls")),
+    path("", include("apps.core.urls")),
+    path("metrics/", include("django_prometheus.urls")),
 ]
 
 if settings.DEBUG:
