@@ -1,4 +1,3 @@
-# apps/core/views.py
 from django.http import HttpResponse
 
 
@@ -11,7 +10,7 @@ def home_view(request):
     <html>
       <head><title>Django App</title></head>
       <body>
-        <h1>Django Dev Environment Deployed Successfully!</h1>
+        <h1>Django dev environment deployed successfully!</h1>
         <p>Welcome. The API is available at <a href="/api/">/api/</a></p>
         <p>Health check: <a href="/health/">/health/</a></p>
       </body>

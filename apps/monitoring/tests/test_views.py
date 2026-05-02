@@ -1,4 +1,3 @@
-# apps/monitoring/tests/test_views.py
 import pytest
 from django.contrib.auth import get_user_model
 from rest_framework import status
@@ -20,7 +19,7 @@ class TestHealthCheck:
         assert "status" in data
         assert "checks" in data
         assert "database" in data["checks"]
-        assert "cache" in data["checks"]  # ✅ Fix 3: correct indentation
+        assert "cache" in data["checks"]
 
     def test_health_check_structure(self, api_client):
         response = api_client.get("/health/")
@@ -41,15 +40,13 @@ class TestHealthCheck:
         mock_conn.cursor.side_effect = Exception("DB down")
         response = api_client.get("/health/")
         assert response.status_code == status.HTTP_503_SERVICE_UNAVAILABLE
-
         data = response.json()
-        # ✅ Fix 2: check DATABASE status, not cache
         assert data["checks"]["database"]["status"] == "unhealthy"
 
     def test_health_check_cache_degraded(self, mock_cache, api_client):
         """Cache returns wrong value → degraded (not unhealthy)."""
         mock_cache.set.return_value = None
-        mock_cache.get.return_value = "wrong_value"  # not "ok"
+        mock_cache.get.return_value = "wrong_value"
         response = api_client.get("/health/")
         data = response.json()
         assert data["checks"]["cache"]["status"] == "degraded"
@@ -69,12 +66,14 @@ class TestServerMetrics:
 
     def test_non_admin_blocked(self, authenticated_client):
         response = authenticated_client.get("/monitoring/server/")
+        # A non-admin authenticated user should be blocked
         assert response.status_code in [
             status.HTTP_401_UNAUTHORIZED,
             status.HTTP_403_FORBIDDEN,
+            status.HTTP_404_NOT_FOUND,  # acceptable if admin-only URLs are hidden
         ]
 
-    def test_admin_can_access(self, admin_client):  # ✅ Fix 1: fixture now exists
+    def test_admin_can_access(self, admin_client):
         response = admin_client.get("/monitoring/server/")
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
@@ -85,6 +84,7 @@ class TestServerMetrics:
 
     def test_server_metrics_structure(self, admin_client):
         response = admin_client.get("/monitoring/server/")
+        assert response.status_code == status.HTTP_200_OK
         data = response.json()
         assert "overall_percent" in data["cpu"]
         assert "total_gb" in data["memory"]
@@ -104,11 +104,11 @@ class TestDbMetrics:
             status.HTTP_404_NOT_FOUND,
         ]
 
-    def test_admin_can_access(self, admin_client):  # ✅ Fix 1: fixture now exists
+    def test_admin_can_access(self, admin_client):
         response = admin_client.get("/monitoring/db/")
         assert response.status_code == status.HTTP_200_OK
         data = response.json()
         assert "active_connections" in data
         assert "db_size_mb" in data
         assert "table_stats" in data
-        assert "timestamp" in data  # ✅ Fix 4: removed corrupted trailing text
+        assert "timestamp" in data

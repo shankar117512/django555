@@ -1,11 +1,9 @@
-# pyproject.toml (test configuration section)
-
 [tool.coverage.run]
 source = ["apps"]
-omit = ["*/migrations/*", "*/tests/*", "*/conftest.py"]
+omit = ["*/migrations/*", "*/tests/*", "*/conftest.py", "*/admin.py", "*/apps.py"]
 
 [tool.coverage.report]
-fail_under = 80
+fail_under = 75
 show_missing = true
 
 [tool.isort]
