@@ -20,11 +20,8 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
-from .views import health
-
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("health/", health),
     path("api/", include("apps.api.urls")),
     path("", include("apps.monitoring.urls")),
     path("", include("apps.core.urls")),
