@@ -1,7 +1,5 @@
-from rest_framework.decorators import api_view
-from rest_framework.response import Response
+from django.http import HttpResponse
 
 
-@api_view(["GET"])
-def home_view(request):
-    return Response({"message": "API running successfully"})
+def home(request):
+    return HttpResponse("Django dev Deployed was successfully", status=200)

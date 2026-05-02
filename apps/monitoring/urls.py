@@ -1,10 +1,10 @@
 # apps/monitoring/urls.py
 from django.urls import path
 
-from .views import db_metrics, health_check, server_metrics
+from . import views
 
 urlpatterns = [
-    path("health/", health_check),
-    path("server/", server_metrics),
-    path("db/", db_metrics),
+    path("health/", views.health_check, name="health_check"),
+    path("monitoring/server/", views.server_metrics, name="server_metrics"),
+    path("monitoring/db/", views.db_metrics, name="db_metrics"),
 ]
