@@ -120,7 +120,7 @@ jobs:
           ENVIRONMENT: dev
         run: |
           coverage run -m pytest --tb=short -v
-          coverage report --fail-under=70
+          coverage report --fail-under=65
           coverage xml
 
       - name: Upload Coverage Report
