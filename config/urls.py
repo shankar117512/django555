@@ -20,9 +20,12 @@ from django.conf import settings
 from django.contrib import admin
 from django.urls import include, path
 
+from apps.monitoring.views import health_check  # ← add this import
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/", include("apps.api.urls")),
+    path("health/", health_check, name="health-check"),  # ← add this BEFORE monitoring/
     path("monitoring/", include("apps.monitoring.urls")),
     path("metrics/", include("django_prometheus.urls")),
     path("", include("apps.core.urls")),
