@@ -50,7 +50,7 @@ def health_check(request):
         {
             "status": overall_status,
             "checks": checks,
-            "timestamp": datetime.datetime.utcnow().isoformat(),
+            "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
             "version": "1.0.0",
         },
         status=http_status,
@@ -118,6 +118,6 @@ def db_metrics(request):
             "active_connections": active_connections,
             "db_size_mb": round(db_size_bytes / (1024**2), 2),
             "table_stats": table_stats,
-            "timestamp": datetime.datetime.utcnow().isoformat(),
+            "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
         }
     )

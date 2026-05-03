@@ -1,31 +1,6 @@
-# conftest.py  ← project root (same level as manage.py)
-from unittest.mock import MagicMock, patch
-
+# conftest.py
 import pytest
-from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
-
-User = get_user_model()
-
-
-@pytest.fixture
-def mock_conn():
-    """
-    Patches django.db.connection as imported in apps.monitoring.views.
-    Supports `with connection.cursor() as cursor:` context manager pattern.
-    """
-    with patch("apps.monitoring.views.connection") as mock:
-        cursor_mock = MagicMock()
-        mock.cursor.return_value.__enter__ = MagicMock(return_value=cursor_mock)
-        mock.cursor.return_value.__exit__ = MagicMock(return_value=False)
-        yield mock
-
-
-@pytest.fixture
-def mock_cache():
-    """Patches cache as imported in apps.monitoring.views."""
-    with patch("apps.monitoring.views.cache") as mock:
-        yield mock
 
 
 @pytest.fixture
@@ -33,25 +8,20 @@ def api_client():
     return APIClient()
 
 
-@pytest.fixture
-def authenticated_client(db):
-    user = User.objects.create_user(
-        username="testuser",
-        password="testpass123",
-        email="testuser@example.com",
-    )
-    client = APIClient()
-    client.force_authenticate(user=user)
-    return client
+@pytest.fixture(scope="session")
+def django_db_setup(django_db_blocker):
+    with django_db_blocker.unblock():
+        from django_tenants.utils import get_public_schema_name, get_tenant_model
 
+        TenantModel = get_tenant_model()
+        tenant, _ = TenantModel.objects.get_or_create(
+            schema_name=get_public_schema_name(),
+            defaults={"name": "Public"},
+        )
+        from django.apps import apps
 
-@pytest.fixture
-def admin_client(db):
-    admin = User.objects.create_superuser(
-        username="adminuser",
-        password="adminpass123",
-        email="admin@example.com",
-    )
-    client = APIClient()
-    client.force_authenticate(user=admin)
-    return client
+        DomainModel = apps.get_model("customers", "Domain")
+        DomainModel.objects.get_or_create(
+            domain="localhost",
+            defaults={"tenant": tenant, "is_primary": True},
+        )
