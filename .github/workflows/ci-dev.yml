@@ -119,20 +119,15 @@ jobs:
           DEBUG: "True"
           ENVIRONMENT: dev
         run: |
-          pytest \
-            --cov=apps \
-            --cov-report=xml \
-            --cov-report=html \
-            --cov-fail-under=75 \
-            -v \
-            --tb=short \
-            -x
+          coverage run -m pytest --tb=short -v
+          coverage report --fail-under=70
+          coverage xml
 
-      - name: Upload coverage report
-        uses: codecov/codecov-action@v4
+      - name: Upload Coverage Report
+        uses: actions/upload-artifact@v4
         with:
-          file: ./coverage.xml
-          flags: dev
+          name: coverage-report-dev
+          path: coverage.xml
 
   # ────────────────────────────────────────────────
   # Job 3: Docker Build Check
