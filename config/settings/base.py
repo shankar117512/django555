@@ -56,7 +56,8 @@ THIRD_PARTY_APPS = [
 # ✅ Shared apps (must come AFTER above)
 SHARED_APPS = (
     [
-        "django_tenants",  # MUST be first
+        "django_tenants",
+        "products",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
@@ -72,6 +73,13 @@ TENANT_APPS = [
 
 # ✅ Final installed apps
 INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+TENANT_MODEL = "products.Client"  # example
+TENANT_DOMAIN_MODEL = "products.Domain"
+
+# Use Django's cache to store tenant lookups
+TENANT_CACHE_BACKEND = "default"  # uses your DEFAULT cache backend
+TENANT_CACHE_SECONDS = 300  # cache each tenant lookup for 5 minutes (adjust as needed)
 
 
 MIDDLEWARE = [
