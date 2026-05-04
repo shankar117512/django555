@@ -1,0 +1,10 @@
+[tool.coverage.run]
+source = ["apps"]
+omit = ["*/migrations/*", "*/tests/*", "*/conftest.py", "*/admin.py", "*/apps.py"]
+
+[tool.coverage.report]
+fail_under = 65
+show_missing = true
+
+[tool.isort]
+profile = "black"
