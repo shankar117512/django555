@@ -38,6 +38,8 @@ COPY --from=builder /opt/venv /opt/venv
 
 RUN groupadd -r appuser && useradd -r -g appuser appuser
 
+RUN mkdir -p /home/appuser && chown -R appuser:appuser /home/appuser
+
 COPY --chown=appuser:appuser . .
 RUN mkdir -p /app/logs /app/staticfiles /app/media && \
     chown -R appuser:appuser /app/logs /app/staticfiles /app/media
@@ -53,7 +55,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8001/health/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "config.wsgi:application", \
-     "--bind", "0.0.0.0:8001", \
-     "--workers", "2", \
-     "--timeout", "120"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:8001 --workers 2 --timeout 120"]
