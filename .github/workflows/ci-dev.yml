@@ -181,23 +181,12 @@ jobs:
       - name: Verify deployment
         run: |
           STATUS_CODE=$(curl -o /dev/null -s -w "%{http_code}" \
-            https://dev.yourapp.up.railway.app/health/)
+            https://django555-dev.up.railway.app/health/)
           if [ "$STATUS_CODE" -ne 200 ]; then
             echo "Health check failed: HTTP $STATUS_CODE"
             exit 1
           fi
           echo "Deployment verified: HTTP $STATUS_CODE"
 
-      - name: Notify on success
-        if: success()
-        run: |
-          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{"text":"✅ Dev deploy succeeded: ${{ github.sha }}"}'
-
-      - name: Notify on failure
-        if: failure()
-        run: |
-          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d '{"text":"❌ Dev deploy FAILED: ${{ github.sha }}"}'
+      - name: Notify Success
+        run: echo "✅ Dev deployment successful — Commit ${{ github.sha }}"
