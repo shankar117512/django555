@@ -1,18 +1,18 @@
 # railway.toml
 [build]
 builder = "dockerfile"
-dockerfilePath = "Dockerfile"
+dockerfilePath = "docker/staging/Dockerfile"
 watchPatterns = ["**/*.py", "requirements*.txt", "Dockerfile"]
 
 [deploy]
-startCommand = "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120"
+startCommand = "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
 healthcheckPath = "/health/"
-healthcheckTimeout = 300
+healthcheckTimeout = 60
 restartPolicyType = "on_failure"
 restartPolicyMaxRetries = 3
 
 [[services]]
-name = "django-web"
+name = "charming-passion"
 source = "."
 
 [[services]]
