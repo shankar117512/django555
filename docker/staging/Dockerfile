@@ -14,9 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY requirements/staging.txt .
+COPY requirements/ ./requirements/
+
 RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r staging.txt
+    pip install --no-cache-dir -r requirements/staging.txt
 
 FROM python:3.12-slim AS staging
 
