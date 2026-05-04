@@ -157,7 +157,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/dev'
     environment:
       name: development
-      url: https://dev.yourapp.up.railway.app
+      url: https://django555-dev.up.railway.app
 
     steps:
       - name: Checkout code
@@ -170,10 +170,8 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_DEV }}
         run: |
-          railway up \
-            --service django-web \
-            --environment dev \
-            --detach
+          railway environment dev
+          railway up --service django555 --detach
 
       - name: Wait for deployment health check
         run: |
