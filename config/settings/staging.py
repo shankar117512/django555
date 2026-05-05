@@ -3,6 +3,9 @@ from .base import *
 
 DEBUG = False
 
+ALLOWED_HOSTS = ["charming-passion-staging.up.railway.app", "healthcheck.railway.app"]
+CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
+
 # Security (partially relaxed for staging)
 SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
 SESSION_COOKIE_SECURE = True
