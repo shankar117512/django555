@@ -3,11 +3,16 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["charming-passion-staging.up.railway.app", "healthcheck.railway.app"]
+ALLOWED_HOSTS = [
+    "charming-passion-staging.up.railway.app",
+    "healthcheck.railway.app",
+    "localhost",  # ← Railway internal healthcheck
+    "127.0.0.1",  # ← Railway internal healthcheck
+]
 CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
 
 # Security (partially relaxed for staging)
-SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=True, cast=bool)
+SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 3600  # 1 hour (shorter than prod for testing)

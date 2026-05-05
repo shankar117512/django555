@@ -55,4 +55,4 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
     CMD curl -f http://localhost:8001/health/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:8001 --workers 2 --timeout 120"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8001} --workers 4 --timeout 120"]
