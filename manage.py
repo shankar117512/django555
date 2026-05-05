@@ -13,7 +13,7 @@ def main():
         "production": "config.settings.production",
     }
     os.environ.setdefault(
-        "DJANGO_SETTINGS_MODULE", settings_map.get(env, "config.settings.dev")
+        "DJANGO_SETTINGS_MODULE", settings_map.get(env, "config.settings.staging")
     )
     try:
         from django.core.management import execute_from_command_line

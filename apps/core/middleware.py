@@ -1,15 +1,11 @@
-class TenantMiddlewareWithHealthCheck:
-    def __init__(self, get_response):
-        self.get_response = get_response
+# apps/core/middleware.py
+from django_tenants.middleware.main import TenantMainMiddleware
 
-    def __call__(self, request):
-        # Skip tenant logic for health check endpoints
-        if request.path in ("/health/", "/healthz/", "/ready/"):
-            return self.get_response(request)
 
-        # Your tenant resolution logic goes here
-        # e.g., resolve tenant from request.get_host() or subdomain
-        # request.tenant = ...
+class TenantMiddlewareWithHealthCheck(TenantMainMiddleware):
+    HEALTH_CHECK_PATH = "/health/"
 
-        response = self.get_response(request)
-        return response
+    def process_request(self, request):
+        if request.path == self.HEALTH_CHECK_PATH:
+            return None  # skip tenant resolution entirely
+        return super().process_request(request)
