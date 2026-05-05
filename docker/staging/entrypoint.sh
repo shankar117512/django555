@@ -1,5 +1,5 @@
-# docker/staging/entrypoint.sh
 #!/bin/bash
+# docker/staging/entrypoint.sh
 set -e
 
 echo "==> [STAGING ENTRYPOINT] Environment: $ENVIRONMENT"
@@ -11,17 +11,18 @@ db = dj_database_url.parse(os.environ["DATABASE_URL"])
 for i in range(30):
     try:
         c = psycopg2.connect(
-            host=db["HOST"],
-            port=db["PORT"],
-            user=db["USER"],
-            password=db["PASSWORD"],
-            dbname=db["NAME"]
+            host=db["HOST"], port=db["PORT"],
+            user=db["USER"], password=db["PASSWORD"], dbname=db["NAME"]
         )
         c.close()
+        print("DB ready.")
         break
     except Exception as e:
-        print("DB not ready, retrying...", e)
+        print(f"DB not ready ({i+1}/30), retrying in 2s...", e)
         time.sleep(2)
+else:
+    print("ERROR: DB never became ready.")
+    exit(1)
 PYTHON
 
 echo "==> Running migrations"
@@ -30,9 +31,6 @@ python manage.py migrate --noinput
 echo "==> Collecting static files"
 python manage.py collectstatic --noinput
 
-echo "==> Starting Gunicorn"
-
-exec gunicorn config.wsgi:application \
-  --bind 0.0.0.0:${PORT:-8001} \
-  --workers ${WEB_CONCURRENCY:-2} \
-  --timeout 120
+echo "==> Starting server: $@"
+# KEY FIX: exec "$@" passes Railway's startCommand through correctly
+exec "$@"

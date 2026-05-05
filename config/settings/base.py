@@ -29,8 +29,9 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
+# ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
 
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 # Application definition
 
@@ -122,13 +123,16 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL"),
-        conn_max_age=600,
-        engine="django_tenants.postgresql_backend",
-    )
-}
+# DATABASES = {
+#    "default": dj_database_url.config(
+#        default=os.environ.get("DATABASE_URL"),
+#        conn_max_age=600,
+#        engine="django_tenants.postgresql_backend",
+#    )
+# }
+
+DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=True)}
+
 # Make sure the schema key is preserved:
 DATABASES["default"]["SCHEMA"] = "public"
 
