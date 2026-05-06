@@ -34,9 +34,6 @@ python manage.py migrate_schemas --noinput
 echo "==> Collecting static files"
 python manage.py collectstatic --noinput
 
-echo "==> Testing health endpoint"
-curl -v http://localhost:${PORT:-8001}/health/ || true
-
 echo "==> Ensuring public tenant exists"
 python manage.py shell -c "
 from products.models import Client, Domain
@@ -64,6 +61,20 @@ if [ "$#" -eq 0 ]; then
         --access-logfile - \
         --error-logfile -
 fi
+
+GUNICORN_PID=$!
+
+echo "==> Testing health endpoint"
+for i in $(seq 1 10); do
+  if curl -sf http://localhost:${PORT:-8000}/health/; then
+    echo "Health check passed"
+    break
+  fi
+  echo "Waiting for server... ($i/10)"
+  sleep 2
+done
+
+wait $GUNICORN_PID
 
 echo "==> Starting server: $@"
 exec "$@"
