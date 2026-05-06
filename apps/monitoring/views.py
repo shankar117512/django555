@@ -59,6 +59,15 @@ def health_check(request):
     )
 
 
+def db_metrics(request):
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        return JsonResponse({"db": "ok"})
+    except Exception as e:
+        return JsonResponse({"db": "error", "detail": str(e)}, status=500)
+
+
 def ping(request):
     """Bare-minimum liveness check — no DB, no cache. Always 200."""
     return JsonResponse({"status": "ok"})
