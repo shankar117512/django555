@@ -39,7 +39,7 @@ services:
       DATABASE_URL: postgres://staginguser:stagingpassword@db-staging:5432/django_staging
       REDIS_URL: redis://redis-staging:6379/0
     ports:
-      - "8001:8001"
+      - "8000:8000"
     depends_on:
       db-staging:
         condition: service_healthy

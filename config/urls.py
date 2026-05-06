@@ -22,12 +22,12 @@ from django.http import JsonResponse
 from django.urls import include, path
 
 
-def root_health(request):
-    return JsonResponse({"status": "ok"})
+def health_check(request):
+    return JsonResponse({"status": "ok"}, status=200)
 
 
 urlpatterns = [
-    path("health/", root_health),  # ✅ GLOBAL health (Railway uses this)
+    path("health/", health_check, name="health_check"),
     path("admin/", admin.site.urls),
     path("api/", include("apps.api.urls")),
     path("monitoring/", include("apps.monitoring.urls")),

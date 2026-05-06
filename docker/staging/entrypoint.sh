@@ -56,9 +56,9 @@ else:
 
 # Guard: if no args passed, start gunicorn with $PORT fallback
 if [ "$#" -eq 0 ]; then
-    echo "==> No command provided, starting gunicorn on port ${PORT:-8001}"
+    echo "==> No command provided, starting gunicorn on port ${PORT:-8000}"
     exec gunicorn config.wsgi:application \
-        --bind "0.0.0.0:${PORT:-8001}" \
+        --bind "0.0.0.0:${PORT:-8000}" \
         --workers 2 \
         --timeout 120 \
         --access-logfile - \
