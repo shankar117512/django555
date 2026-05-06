@@ -25,16 +25,18 @@ else:
     exit(1)
 PYTHON
 
-echo "==> Running shared schema migrations (creates products_client table)"
+echo "==> Running shared schema migrations"
 python manage.py migrate_schemas --shared --noinput
 
-echo "==> Running tenant schema migrations (iterates over products_client rows)"
+echo "==> Running tenant schema migrations"
 python manage.py migrate_schemas --noinput
 
 echo "==> Collecting static files"
 python manage.py collectstatic --noinput
 
-# after the migration block, before gunicorn starts
+echo "==> Testing health endpoint"
+curl -v http://localhost:${PORT:-8001}/health/ || true
+
 echo "==> Ensuring public tenant exists"
 python manage.py shell -c "
 from products.models import Client, Domain
@@ -51,6 +53,17 @@ if not Client.objects.filter(schema_name='public').exists():
 else:
     print('Public tenant already exists')
 "
+
+# Guard: if no args passed, start gunicorn with $PORT fallback
+if [ "$#" -eq 0 ]; then
+    echo "==> No command provided, starting gunicorn on port ${PORT:-8001}"
+    exec gunicorn config.wsgi:application \
+        --bind "0.0.0.0:${PORT:-8001}" \
+        --workers 2 \
+        --timeout 120 \
+        --access-logfile - \
+        --error-logfile -
+fi
 
 echo "==> Starting server: $@"
 exec "$@"

@@ -18,12 +18,19 @@ Including another URLconf
 # config/urls.py
 from django.conf import settings
 from django.contrib import admin
+from django.http import JsonResponse
 from django.urls import include, path
 
+
+def root_health(request):
+    return JsonResponse({"status": "ok"})
+
+
 urlpatterns = [
+    path("health/", root_health),  # ✅ GLOBAL health (Railway uses this)
     path("admin/", admin.site.urls),
     path("api/", include("apps.api.urls")),
-    path("health/", include("apps.monitoring.urls")),
+    path("monitoring/", include("apps.monitoring.urls")),
     path("metrics/", include("django_prometheus.urls")),
     path("", include("apps.core.urls")),
 ]

@@ -6,7 +6,6 @@ watchPatterns = ["**/*.py", "requirements*.txt", "Dockerfile"]
 
 [deploy]
 [start]
-cmd = "/entrypoint.sh"
 healthcheckPath = "/health/"
 healthcheckTimeout = 60
 restartPolicyType = "on_failure"
