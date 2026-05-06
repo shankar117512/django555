@@ -241,47 +241,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # ─────────────────────────────────────────────────
 # LOGGING
 # ─────────────────────────────────────────────────
-LOG_LEVEL = config("LOG_LEVEL", default="INFO")
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "json": {
-            "()": "structlog.stdlib.ProcessorFormatter",
-            "processor": "structlog.dev.ConsoleRenderer",
-        },
-    },
     "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
-        "file": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": BASE_DIR / "logs" / "django.log",
-            "maxBytes": 1024 * 1024 * 10,  # 10 MB
-            "backupCount": 5,
-            "formatter": "verbose",
-        },
-    },
-    "root": {
-        "handlers": ["console"],
-        "level": LOG_LEVEL,
+        "console": {"class": "logging.StreamHandler"},
     },
     "loggers": {
-        "django": {
-            "handlers": ["console", "file"],
-            "level": LOG_LEVEL,
-            "propagate": False,
-        },
-        "apps": {
-            "handlers": ["console", "file"],
-            "level": LOG_LEVEL,
-            "propagate": False,
+        "axes": {
+            "handlers": ["console"],
+            "level": "WARNING",  # suppress INFO messages from axes
         },
     },
 }
