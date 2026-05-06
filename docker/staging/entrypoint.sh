@@ -51,30 +51,26 @@ else:
     print('Public tenant already exists')
 "
 
-# Guard: if no args passed, start gunicorn with $PORT fallback
-if [ "$#" -eq 0 ]; then
-    echo "==> No command provided, starting gunicorn on port ${PORT:-8000}"
-    exec gunicorn config.wsgi:application \
-        --bind "0.0.0.0:${PORT:-8000}" \
-        --workers 2 \
-        --timeout 120 \
-        --access-logfile - \
-        --error-logfile -
+# Determine the command to run
+if [ "$#" -gt 0 ]; then
+    CMD="$@"
+else
+    CMD="gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120 --access-logfile - --error-logfile -"
 fi
 
+echo "==> Starting server in background for health check: $CMD"
+$CMD &
 GUNICORN_PID=$!
 
 echo "==> Testing health endpoint"
 for i in $(seq 1 10); do
-  if curl -sf http://localhost:${PORT:-8000}/health/; then
-    echo "Health check passed"
-    break
-  fi
-  echo "Waiting for server... ($i/10)"
-  sleep 2
+    if curl -sf http://localhost:${PORT:-8000}/health/; then
+        echo "Health check passed"
+        break
+    fi
+    echo "Waiting for server... ($i/10)"
+    sleep 2
 done
 
+# Hand off — wait for gunicorn to exit (keeps container alive)
 wait $GUNICORN_PID
-
-echo "==> Starting server: $@"
-exec "$@"
