@@ -1,10 +1,14 @@
 # config/settings/staging.py
+import os
+
 from .base import *
 
 DEBUG = False
 
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
+
 ALLOWED_HOSTS = [
-    "charming-passion-staging.up.railway.app",
+    os.environ.get("charming-passion-staging.up.railway.app", "*"),
     "healthcheck.railway.app",
     "localhost",  # ← Railway internal healthcheck
     "127.0.0.1",  # ← Railway internal healthcheck
