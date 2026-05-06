@@ -1,13 +1,14 @@
 # config/settings/staging.py
 import os
 
+from decouple import config
+
 from .base import *
 
-DEBUG = True
+DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
-ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
 
 # Security (partially relaxed for staging)
@@ -21,7 +22,7 @@ SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # Staging DB enforces SSL
 DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 
-# Email: use real backend in staging for testing
+# Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config("EMAIL_HOST", default="smtp.mailgun.org")
 EMAIL_PORT = config("EMAIL_PORT", default=587, cast=int)
@@ -29,7 +30,7 @@ EMAIL_HOST_USER = config("EMAIL_HOST_USER", default="")
 EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = True
 
-# Stricter throttling
+# Throttling
 REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
     "anon": "50/day",
     "user": "500/day",
