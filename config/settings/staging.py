@@ -12,17 +12,12 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
 
 # Security (partially relaxed for staging)
-# SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
+SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-SECURE_HSTS_SECONDS = 3600  # 1 hour (shorter than prod for testing)
-# Tell Django to trust Railway's forwarded protocol header
+SECURE_HSTS_SECONDS = 31536000
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-
-# Only redirect to HTTPS in production (optional but recommended)
-SECURE_SSL_REDIRECT = (
-    not DEBUG
-)  # or just: SECURE_SSL_REDIRECT = False if Railway handles it
 
 # Staging DB enforces SSL
 DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
