@@ -33,6 +33,9 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
+# base.py — add anywhere in the file
+APPEND_SLASH = True  # Django default, but confirm it's not overridden
+
 # Application definition
 
 DJANGO_APPS = [

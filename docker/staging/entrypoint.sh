@@ -34,5 +34,23 @@ python manage.py migrate_schemas --noinput
 echo "==> Collecting static files"
 python manage.py collectstatic --noinput
 
+# after the migration block, before gunicorn starts
+echo "==> Ensuring public tenant exists"
+python manage.py shell -c "
+from products.models import Client, Domain
+import os
+
+hostname = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'localhost')
+
+if not Client.objects.filter(schema_name='public').exists():
+    t = Client(schema_name='public', name='Public Tenant', paid_until='2099-12-31', on_trial=False)
+    t.save(verbosity=0)
+    d = Domain(domain=hostname, tenant=t, is_primary=True)
+    d.save()
+    print(f'Public tenant created for {hostname}')
+else:
+    print('Public tenant already exists')
+"
+
 echo "==> Starting server: $@"
 exec "$@"
