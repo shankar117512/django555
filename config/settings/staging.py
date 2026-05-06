@@ -9,6 +9,11 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
+ALLOWED_HOSTS = [
+    "charming-passion-staging.up.railway.app",
+    "healthcheck.railway.app",
+]
+
 CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
 
 # Security (partially relaxed for staging)
