@@ -123,15 +123,15 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-# DATABASES = {
-#    "default": dj_database_url.config(
-#        default=os.environ.get("DATABASE_URL"),
-#        conn_max_age=600,
-#        engine="django_tenants.postgresql_backend",
-#    )
-# }
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
+        conn_max_age=600,
+        engine="django_tenants.postgresql_backend",
+    )
+}
 
-DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=True)}
+# DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=True)}
 
 # Make sure the schema key is preserved:
 DATABASES["default"]["SCHEMA"] = "public"
