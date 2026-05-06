@@ -73,7 +73,9 @@ TENANT_APPS = [
 ]
 
 # ✅ Final installed apps
-INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
+INSTALLED_APPS = list(SHARED_APPS) + [
+    app for app in TENANT_APPS if app not in SHARED_APPS
+]
 
 TENANT_MODEL = "products.Client"  # example
 TENANT_DOMAIN_MODEL = "products.Domain"

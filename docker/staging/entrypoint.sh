@@ -25,12 +25,14 @@ else:
     exit(1)
 PYTHON
 
-echo "==> Running migrations"
-python manage.py migrate --noinput
+echo "==> Running shared schema migrations (creates products_client table)"
+python manage.py migrate_schemas --shared --noinput
+
+echo "==> Running tenant schema migrations (iterates over products_client rows)"
+python manage.py migrate_schemas --noinput
 
 echo "==> Collecting static files"
 python manage.py collectstatic --noinput
 
 echo "==> Starting server: $@"
-# KEY FIX: exec "$@" passes Railway's startCommand through correctly
 exec "$@"
