@@ -3,16 +3,11 @@ import os
 
 from .base import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
 
-ALLOWED_HOSTS = [
-    os.environ.get("charming-passion-staging.up.railway.app", "*"),
-    "healthcheck.railway.app",
-    "localhost",  # ← Railway internal healthcheck
-    "127.0.0.1",  # ← Railway internal healthcheck
-]
+ALLOWED_HOSTS = ["*"]
 CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
 
 # Security (partially relaxed for staging)
