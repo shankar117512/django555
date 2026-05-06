@@ -1,7 +1,6 @@
 #!/bin/bash
 # docker/staging/entrypoint.sh
 set -e
-
 echo "==> [STAGING ENTRYPOINT] Environment: $ENVIRONMENT"
 
 # Wait for PostgreSQL
@@ -38,9 +37,7 @@ echo "==> Ensuring public tenant exists"
 python manage.py shell -c "
 from products.models import Client, Domain
 import os
-
 hostname = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'localhost')
-
 if not Client.objects.filter(schema_name='public').exists():
     t = Client(schema_name='public', name='Public Tenant', paid_until='2099-12-31', on_trial=False)
     t.save(verbosity=0)
@@ -51,20 +48,27 @@ else:
     print('Public tenant already exists')
 "
 
-# Determine the command to run
+# Build the command array to avoid word-splitting
 if [ "$#" -gt 0 ]; then
-    CMD="$@"
+    # Docker CMD args passed in — use them directly as an array
+    set -- "$@"
 else
-    CMD="gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120 --access-logfile - --error-logfile -"
+    # Default: run gunicorn with explicit args
+    set -- gunicorn config.wsgi:application \
+        --bind "0.0.0.0:${PORT:-8000}" \
+        --workers 2 \
+        --timeout 120 \
+        --access-logfile - \
+        --error-logfile -
 fi
 
-echo "==> Starting server in background for health check: $CMD"
-$CMD &
+echo "==> Starting server in background for health check: $*"
+"$@" &
 GUNICORN_PID=$!
 
 echo "==> Testing health endpoint"
 for i in $(seq 1 10); do
-    if curl -sf http://localhost:${PORT:-8000}/health/; then
+    if curl -sf "http://localhost:${PORT:-8000}/health/"; then
         echo "Health check passed"
         break
     fi
