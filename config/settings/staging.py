@@ -1,4 +1,3 @@
-# config/settings/staging.py
 import os
 
 from decouple import config
@@ -7,14 +6,25 @@ from .base import *
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS", "*").split(",")
+RAILWAY_DOMAIN = os.environ.get("RAILWAY_PUBLIC_DOMAIN", "")
 
 ALLOWED_HOSTS = [
     "charming-passion-staging.up.railway.app",
     "healthcheck.railway.app",
+    "localhost",
+    "127.0.0.1",
+    ".railway.app",  # covers all railway subdomains
 ]
 
-CSRF_TRUSTED_ORIGINS = ["https://charming-passion-staging.up.railway.app"]
+# Also include the dynamic Railway domain if set
+if RAILWAY_DOMAIN and RAILWAY_DOMAIN not in ALLOWED_HOSTS:
+    ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://charming-passion-staging.up.railway.app",
+]
+if RAILWAY_DOMAIN:
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_DOMAIN}")
 
 # Security (partially relaxed for staging)
 SECURE_SSL_REDIRECT = False

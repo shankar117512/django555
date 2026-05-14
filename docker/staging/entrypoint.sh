@@ -45,36 +45,57 @@ if not Client.objects.filter(schema_name='public').exists():
     d.save()
     print(f'Public tenant created for {hostname}')
 else:
-    print('Public tenant already exists')
+    # Update domain if it changed (e.g. new Railway deployment URL)
+    from products.models import Domain
+    t = Client.objects.get(schema_name='public')
+    d = Domain.objects.filter(tenant=t, is_primary=True).first()
+    if d and d.domain != hostname:
+        d.domain = hostname
+        d.save()
+        print(f'Public tenant domain updated to {hostname}')
+    else:
+        print('Public tenant already exists')
 "
 
-# Build the command array to avoid word-splitting
+# Determine the command to run
+APP_PORT="${PORT:-8000}"
+
 if [ "$#" -gt 0 ]; then
-    # Docker CMD args passed in — use them directly as an array
-    set -- "$@"
+    CMD=("$@")
 else
-    # Default: run gunicorn with explicit args
-    set -- gunicorn config.wsgi:application \
-        --bind "0.0.0.0:${PORT:-8000}" \
-        --workers 2 \
-        --timeout 120 \
-        --access-logfile - \
+    CMD=(
+        gunicorn config.wsgi:application
+        --bind "0.0.0.0:${APP_PORT}"
+        --workers 2
+        --timeout 120
+        --access-logfile -
         --error-logfile -
+    )
 fi
 
-echo "==> Starting server in background for health check: $*"
-"$@" &
+echo "==> Starting server: ${CMD[*]}"
+
+# Start in background only to run the health check, then exec to make it PID 1
+"${CMD[@]}" &
 GUNICORN_PID=$!
 
-echo "==> Testing health endpoint"
-for i in $(seq 1 10); do
-    if curl -sf "http://localhost:${PORT:-8000}/health/"; then
-        echo "Health check passed"
+echo "==> Testing health endpoint on port ${APP_PORT}"
+HEALTH_OK=0
+for i in $(seq 1 15); do
+    if curl -sf "http://localhost:${APP_PORT}/health/" > /dev/null 2>&1; then
+        echo "==> Health check passed on attempt $i"
+        HEALTH_OK=1
         break
     fi
-    echo "Waiting for server... ($i/10)"
+    echo "Waiting for server... ($i/15)"
     sleep 2
 done
 
-# Hand off — wait for gunicorn to exit (keeps container alive)
-wait $GUNICORN_PID
+if [ "$HEALTH_OK" -eq 0 ]; then
+    echo "ERROR: Health check never passed. Aborting."
+    kill "$GUNICORN_PID" 2>/dev/null || true
+    exit 1
+fi
+
+# Hand off: wait for gunicorn (keeps container alive, propagates exit code)
+wait "$GUNICORN_PID"
