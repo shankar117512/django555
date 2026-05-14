@@ -1,7 +1,6 @@
 [build]
 builder = "dockerfile"
 dockerfilePath = "docker/staging/Dockerfile"
-watchPatterns = ["**/*.py", "requirements*.txt", "Dockerfile"]
 
 [deploy]
 healthcheckPath = "/health/"
