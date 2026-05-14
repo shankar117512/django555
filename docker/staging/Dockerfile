@@ -31,12 +31,12 @@ COPY --chown=appuser:appuser docker/staging/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 USER appuser
-EXPOSE 8000
+EXPOSE 8080
 
 # KEY FIX: healthcheck uses $PORT (Railway sets this), falls back to 8001
 HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
-    CMD curl -f http://localhost:${PORT:-8001}/health/ || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/health/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
 # KEY FIX: CMD is now passed as args to entrypoint's exec "$@"
-CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8000} --workers 2 --timeout 120 --access-logfile - --error-logfile -"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8080} --workers 2 --timeout 120 --access-logfile - --error-logfile -"]

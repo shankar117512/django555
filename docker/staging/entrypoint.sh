@@ -68,7 +68,7 @@ else:
 "
 
 # ── Start server ─────────────────────────────────────────────────────────────
-APP_PORT="${PORT:-8000}"
+APP_PORT="${PORT:-8080}"
 
 if [ "$#" -gt 0 ]; then
     # Allow overriding the command (e.g. for celery workers)
