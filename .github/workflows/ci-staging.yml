@@ -75,7 +75,7 @@ jobs:
 
       - name: Run migrations
         env:
-          DATABASE_URL: postgres://staginguser:stagingpassword@localhost:5432/test_django_staging
+          DATABASE_URL: postgres://user:password@localhost:5432/test_django_staging?sslmode=disable
           REDIS_URL: redis://localhost:6379/0
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_STAGING }}
           DEBUG: "False"
