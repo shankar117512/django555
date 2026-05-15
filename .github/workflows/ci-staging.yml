@@ -75,7 +75,7 @@ jobs:
 
       - name: Run migrations
         env:
-          DATABASE_URL: postgres://user:password@localhost:5432/test_django_staging?sslmode=disable
+          DATABASE_URL: postgres://staginguser:stagingpassword@localhost:5432/test_django_staging?sslmode=disable
           REDIS_URL: redis://localhost:6379/0
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_STAGING }}
           DEBUG: "False"
@@ -83,7 +83,7 @@ jobs:
 
       - name: Run full test suite
         env:
-          DATABASE_URL: postgres://staginguser:stagingpassword@localhost:5432/test_django_staging
+          DATABASE_URL: postgres://staginguser:stagingpassword@localhost:5432/test_django_staging?sslmode=disable
           REDIS_URL: redis://localhost:6379/0
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_STAGING }}
           DEBUG: "False"
@@ -122,7 +122,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/staging'
     environment:
       name: staging
-      url: https://staging.yourapp.up.railway.app
+      url: https://charming-passion-staging.up.railway.app
 
     steps:
       - uses: actions/checkout@v4
@@ -134,17 +134,15 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
         run: |
-          railway up \
-            --service django-web \
-            --environment staging \
-            --detach
+          railway environment dev
+          railway up --service charming-passion --detach
 
       - name: Wait for deployment
         run: sleep 90
 
       - name: Run smoke tests on staging
         run: |
-          BASE_URL="https://staging.yourapp.up.railway.app"
+          BASE_URL="https://charming-passion-staging.up.railway.app"
 
           # Health endpoint
           curl -f "$BASE_URL/health/" || exit 1
