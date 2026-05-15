@@ -133,6 +133,7 @@ DATABASES = {
         default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
         engine="django_tenants.postgresql_backend",
+        # ← no ssl_require=True here, good
     )
 }
 

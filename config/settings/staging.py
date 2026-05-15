@@ -1,8 +1,10 @@
+# config/settings/staging.py
+
 import os
 
 from decouple import config
 
-from .base import *
+from .base import *  # noqa: F401, F403
 
 DEBUG = config("DEBUG", default=False, cast=bool)
 
@@ -13,10 +15,9 @@ ALLOWED_HOSTS = [
     "healthcheck.railway.app",
     "localhost",
     "127.0.0.1",
-    ".railway.app",  # covers all railway subdomains
+    ".railway.app",
 ]
 
-# Also include the dynamic Railway domain if set
 if RAILWAY_DOMAIN and RAILWAY_DOMAIN not in ALLOWED_HOSTS:
     ALLOWED_HOSTS.append(RAILWAY_DOMAIN)
 
@@ -26,7 +27,7 @@ CSRF_TRUSTED_ORIGINS = [
 if RAILWAY_DOMAIN:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_DOMAIN}")
 
-# Security (partially relaxed for staging)
+# Security
 SECURE_SSL_REDIRECT = False
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -34,8 +35,13 @@ SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
-# Staging DB enforces SSL
-DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
+# SSL: only require it when DATABASE_URL doesn't explicitly disable it
+# dj_database_url already parsed the URL in base.py, so we patch OPTIONS here
+_db_url = os.environ.get("DATABASE_URL", "")
+if "sslmode=disable" in _db_url:
+    DATABASES["default"]["OPTIONS"] = {"sslmode": "disable"}
+else:
+    DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
