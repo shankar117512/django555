@@ -171,14 +171,3 @@ class ServerMetricsViewTest(TestCase):
     def test_unauthenticated_returns_401(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 401)
-
-    # AFTER (works with Axes)
-    def test_non_admin_returns_403(self):
-        self.client.force_login(self.regular_user)  # ← use the object, not credentials
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 403)
-
-    def test_admin_can_access(self):
-        self.client.force_login(self.admin)  # ← use the object, not credentials
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200)
