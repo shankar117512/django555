@@ -1,5 +1,5 @@
-# docker/production/entrypoint.sh
 #!/bin/bash
+# docker/production/entrypoint.sh
 set -e
 
 echo "==> [ENTRYPOINT] Environment: $ENVIRONMENT"
