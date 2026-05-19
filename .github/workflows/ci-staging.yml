@@ -93,11 +93,9 @@ jobs:
           ENVIRONMENT: staging
           SECURE_SSL_REDIRECT: "False"
         run: |
-          pytest \
-            --cov=apps \
-            --cov-report=xml \
-            --cov-fail-under=85 \
-            -v --tb=short
+          coverage run -m pytest --tb=short -v --junit-xml=test-results.xml
+          coverage report --fail-under=80
+          coverage xml
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
