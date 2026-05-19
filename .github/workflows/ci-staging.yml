@@ -30,7 +30,7 @@ jobs:
       - name: flake8
         run: flake8 . --max-line-length=120 --exclude=venv,migrations
       - name: Bandit security scan
-        run: bandit -r apps/ -x apps/*/tests/ -ll
+        run: bandit -r apps/ -x 'apps/*/tests/' -ll
       - name: Safety dependency check
         run: safety check -r requirements/staging.txt
 
