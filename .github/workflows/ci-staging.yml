@@ -135,7 +135,7 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
         run: |
           railway environment staging
-          PREV=$(railway deployments list --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} --json \
+          PREV=$(railway deployment list --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} --json \
             | python3 -c "import sys,json; deps=json.load(sys.stdin); \
               active=[d for d in deps if d.get('status')=='SUCCESS']; \
               print(active[0]['id'] if active else 'none')" 2>/dev/null || echo "none")
@@ -177,6 +177,6 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
         run: |
           echo "🔄 Rolling back to: ${{ steps.pre_deploy.outputs.previous_deployment }}"
-          railway deployments rollback ${{ steps.pre_deploy.outputs.previous_deployment }} \
+          railway deployment rollback ${{ steps.pre_deploy.outputs.previous_deployment }} \
             --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }}
           echo "✅ Rollback completed"
