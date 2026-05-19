@@ -135,7 +135,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
         run: |
-          railway environment dev
+          railway environment staging
           railway up --service charming-passion --detach
 
       - name: Wait for deployment
