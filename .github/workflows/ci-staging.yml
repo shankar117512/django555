@@ -81,6 +81,9 @@ jobs:
           DEBUG: "False"
         run: python manage.py migrate --noinput
 
+      - name: Clear pycache
+        run: find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
+
       - name: Run full test suite
         env:
           DATABASE_URL: postgres://staginguser:stagingpassword@localhost:5432/test_django_staging?sslmode=disable
