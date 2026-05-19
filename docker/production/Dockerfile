@@ -61,17 +61,10 @@ RUN chmod +x /entrypoint.sh
 
 USER appuser
 
-EXPOSE 8000
+EXPOSE 8080
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD curl -f http://localhost:8000/health/ || exit 1
+    CMD curl -f http://localhost:${PORT:-8080}/health/ || exit 1
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["gunicorn", "config.wsgi:application", \
-     "--bind", "0.0.0.0:8000", \
-     "--workers", "4", \
-     "--worker-class", "gthread", \
-     "--threads", "2", \
-     "--timeout", "120", \
-     "--access-logfile", "-", \
-     "--error-logfile", "-"]
+CMD ["sh", "-c", "gunicorn config.wsgi:application --bind 0.0.0.0:${PORT:-8080} --workers 4 --worker-class gthread --threads 2 --timeout 120 --access-logfile - --error-logfile -"]
