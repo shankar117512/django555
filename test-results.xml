@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="utf-8"?><testsuites name="pytest tests"><testsuite name="pytest" errors="0" failures="44" skipped="0" tests="51" time="300.013" timestamp="2026-05-19T09:35:29.025731+00:00" hostname="ubuntu1"><testcase classname="apps.api.tests.ProtectedViewUnauthenticatedTest" name="test_post_unauthenticated_returns_401_or_405" time="12.258"><failure message="AssertionError: 404 not found in [401, 405]">apps/api/tests.py:24: in test_post_unauthenticated_returns_401_or_405
+    self.assertIn(
+E   AssertionError: 404 not found in [401, 405]</failure></testcase><testcase classname="apps.api.tests.ProtectedViewUnauthenticatedTest" name="test_unauthenticated_returns_401" time="3.739"><failure message="AssertionError: 404 != 401">apps/api/tests.py:20: in test_unauthenticated_returns_401
+    self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+E   AssertionError: 404 != 401</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_authenticated_returns_200" time="8.487"><failure message="AssertionError: 404 != 200">apps/api/tests.py:43: in test_authenticated_returns_200
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_delete_method_not_allowed" time="6.196"><failure message="AssertionError: 404 != 405">apps/api/tests.py:71: in test_delete_method_not_allowed
+    self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+E   AssertionError: 404 != 405</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_only_get_method_allowed" time="5.709"><failure message="AssertionError: 404 != 405">apps/api/tests.py:63: in test_only_get_method_allowed
+    self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+E   AssertionError: 404 != 405</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_put_method_not_allowed" time="5.594"><failure message="AssertionError: 404 != 405">apps/api/tests.py:67: in test_put_method_not_allowed
+    self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+E   AssertionError: 404 != 405</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_response_contains_message_key" time="5.877"><failure message="AttributeError: 'HttpResponseNotFound' object has no attribute 'data'">apps/api/tests.py:47: in test_response_contains_message_key
+    self.assertIn("message", response.data)
+                             ^^^^^^^^^^^^^
+E   AttributeError: 'HttpResponseNotFound' object has no attribute 'data'</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_response_contains_user_key" time="5.081"><failure message="AttributeError: 'HttpResponseNotFound' object has no attribute 'data'">apps/api/tests.py:55: in test_response_contains_user_key
+    self.assertIn("user", response.data)
+                          ^^^^^^^^^^^^^
+E   AttributeError: 'HttpResponseNotFound' object has no attribute 'data'</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_response_message_is_authenticated" time="6.516"><failure message="AttributeError: 'HttpResponseNotFound' object has no attribute 'data'">apps/api/tests.py:51: in test_response_message_is_authenticated
+    self.assertEqual(response.data["message"], "authenticated")
+                     ^^^^^^^^^^^^^
+E   AttributeError: 'HttpResponseNotFound' object has no attribute 'data'</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAuthenticatedTest" name="test_response_user_matches_logged_in_user" time="6.747"><failure message="AttributeError: 'HttpResponseNotFound' object has no attribute 'data'">apps/api/tests.py:59: in test_response_user_matches_logged_in_user
+    self.assertIn("testuser", response.data["user"])
+                              ^^^^^^^^^^^^^
+E   AttributeError: 'HttpResponseNotFound' object has no attribute 'data'</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAdminUserTest" name="test_admin_authenticated_returns_200" time="12.151"><failure message="AssertionError: 404 != 200">apps/api/tests.py:87: in test_admin_authenticated_returns_200
+    self.assertEqual(response.status_code, status.HTTP_200_OK)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.api.tests.ProtectedViewAdminUserTest" name="test_admin_response_user_matches" time="6.195"><failure message="AttributeError: 'HttpResponseNotFound' object has no attribute 'data'">apps/api/tests.py:91: in test_admin_response_user_matches
+    self.assertIn("admin", response.data["user"])
+                           ^^^^^^^^^^^^^
+E   AttributeError: 'HttpResponseNotFound' object has no attribute 'data'</failure></testcase><testcase classname="apps.core.tests.HomeViewTest" name="test_home_contains_api_link" time="5.528"><failure message="AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)">apps/core/tests.py:29: in test_home_contains_api_link
+    self.assertContains(response, "/api/")
+E   AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)</failure></testcase><testcase classname="apps.core.tests.HomeViewTest" name="test_home_contains_expected_heading" time="3.979"><failure message="AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)">apps/core/tests.py:23: in test_home_contains_expected_heading
+    self.assertContains(
+E   AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)</failure></testcase><testcase classname="apps.core.tests.HomeViewTest" name="test_home_contains_health_link" time="3.492"><failure message="AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)">apps/core/tests.py:33: in test_home_contains_health_link
+    self.assertContains(response, "/health/")
+E   AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)</failure></testcase><testcase classname="apps.core.tests.HomeViewTest" name="test_home_content_type_is_html" time="3.100" /><testcase classname="apps.core.tests.HomeViewTest" name="test_home_html_structure" time="3.706"><failure message="AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)">apps/core/tests.py:50: in test_home_html_structure
+    self.assertContains(response, "&lt;html")
+E   AssertionError: 404 != 200 : Couldn't retrieve content: Response code was 404 (expected 200)</failure></testcase><testcase classname="apps.core.tests.HomeViewTest" name="test_home_is_accessible_without_auth" time="3.363" /><testcase classname="apps.core.tests.HomeViewTest" name="test_home_post_not_allowed" time="3.519" /><testcase classname="apps.core.tests.HomeViewTest" name="test_home_returns_200" time="3.691"><failure message="AssertionError: 404 != 200">apps/core/tests.py:15: in test_home_returns_200
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.core.tests.TenantMiddlewareWithHealthCheckTest" name="test_health_path_returns_none" time="5.204" /><testcase classname="apps.core.tests.TenantMiddlewareWithHealthCheckTest" name="test_health_sub_path_returns_none" time="3.274" /><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_cache_check_present" time="6.293"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:50: in test_cache_check_present
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_cache_failure_status_degraded" time="4.873"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:88: in test_cache_failure_status_degraded
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_cache_failure_still_returns_200" time="3.520"><failure message="AssertionError: 404 != 200">apps/monitoring/tests.py:83: in test_cache_failure_still_returns_200
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_cache_unexpected_value_is_degraded" time="3.016"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:95: in test_cache_unexpected_value_is_degraded
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_database_check_present" time="4.307"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:46: in test_database_check_present
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_db_failure_check_reports_unhealthy" time="3.438"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:74: in test_db_failure_check_reports_unhealthy
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_db_failure_returns_503" time="4.087"><failure message="AssertionError: 404 != 503">apps/monitoring/tests.py:63: in test_db_failure_returns_503
+    self.assertEqual(response.status_code, 503)
+E   AssertionError: 404 != 503</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_db_failure_status_unhealthy" time="3.096"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:68: in test_db_failure_status_unhealthy
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_healthy_returns_200" time="2.983"><failure message="AssertionError: 404 != 200">apps/monitoring/tests.py:19: in test_healthy_returns_200
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_healthy_status_string" time="3.660"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:54: in test_healthy_status_string
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_response_has_checks_key" time="3.429"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:30: in test_response_has_checks_key
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_response_has_status_key" time="5.804"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:26: in test_response_has_status_key
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_response_has_timestamp_key" time="3.569"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:34: in test_response_has_timestamp_key
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_response_has_version_key" time="8.902"><failure message="psycopg.OperationalError: consuming input failed: server closed the connection unexpectedly&#10;&#09;This probably means the server terminated abnormally&#10;&#09;before or while processing the request.&#10;server closed the connection unexpectedly&#10;&#09;This probably means the server terminated abnormally&#10;&#09;before or while processing the request.">apps/monitoring/tests.py:38: in test_response_has_version_key
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:1127: in get
+    response = super().get(
+venv/lib/python3.12/site-packages/django/test/client.py:475: in get
+    return self.generic(
+venv/lib/python3.12/site-packages/django/test/client.py:671: in generic
+    return self.request(**r)
+           ^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:1090: in request
+    self.check_exception(response)
+venv/lib/python3.12/site-packages/django/test/client.py:805: in check_exception
+    raise exc_value
+venv/lib/python3.12/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/deprecation.py:308: in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps/core/middleware.py:10: in process_request
+    return super().process_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/middleware/main.py:45: in process_request
+    tenant = self.get_tenant(domain_model, hostname)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/middleware/main.py:29: in get_tenant
+    domain = domain_model.objects.select_related('tenant').get(domain=hostname)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:635: in get
+    num = len(clone)
+          ^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:372: in __len__
+    self._fetch_all()
+venv/lib/python3.12/site-packages/django/db/models/query.py:2000: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:95: in __iter__
+    results = compiler.execute_sql(
+venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py:1622: in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:320: in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/postgresql_backend/base.py:171: in _cursor
+    cursor_for_search_path.execute('SET search_path = {0}'.format(','.join(formatted_search_paths)))
+venv/lib/python3.12/site-packages/psycopg/cursor.py:117: in execute
+    raise ex.with_traceback(None)
+E   psycopg.OperationalError: consuming input failed: server closed the connection unexpectedly
+E   	This probably means the server terminated abnormally
+E   	before or while processing the request.
+E   server closed the connection unexpectedly
+E   	This probably means the server terminated abnormally
+E   	before or while processing the request.</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_response_is_json" time="1.477"><failure message="django.db.utils.OperationalError: the connection is closed">venv/lib/python3.12/site-packages/django/db/backends/base/base.py:298: in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py:430: in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/psycopg/connection.py:240: in cursor
+    self._check_connection_ok()
+venv/lib/python3.12/site-packages/psycopg/_connection_base.py:532: in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+E   psycopg.OperationalError: the connection is closed
+
+The above exception was the direct cause of the following exception:
+apps/monitoring/tests.py:22: in test_response_is_json
+    response = self.client.get(self.url)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:1127: in get
+    response = super().get(
+venv/lib/python3.12/site-packages/django/test/client.py:475: in get
+    return self.generic(
+venv/lib/python3.12/site-packages/django/test/client.py:671: in generic
+    return self.request(**r)
+           ^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:1090: in request
+    self.check_exception(response)
+venv/lib/python3.12/site-packages/django/test/client.py:805: in check_exception
+    raise exc_value
+venv/lib/python3.12/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/deprecation.py:308: in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps/core/middleware.py:10: in process_request
+    return super().process_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/middleware/main.py:45: in process_request
+    tenant = self.get_tenant(domain_model, hostname)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/middleware/main.py:29: in get_tenant
+    domain = domain_model.objects.select_related('tenant').get(domain=hostname)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:635: in get
+    num = len(clone)
+          ^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:372: in __len__
+    self._fetch_all()
+venv/lib/python3.12/site-packages/django/db/models/query.py:2000: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:95: in __iter__
+    results = compiler.execute_sql(
+venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py:1622: in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:320: in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/postgresql_backend/base.py:144: in _cursor
+    cursor = super()._cursor()
+             ^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:297: in _cursor
+    with self.wrap_database_errors:
+venv/lib/python3.12/site-packages/django/db/utils.py:94: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:298: in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py:430: in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/psycopg/connection.py:240: in cursor
+    self._check_connection_ok()
+venv/lib/python3.12/site-packages/psycopg/_connection_base.py:532: in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+E   django.db.utils.OperationalError: the connection is closed</failure></testcase><testcase classname="apps.monitoring.tests.HealthCheckViewTest" name="test_version_value" time="1.969"><failure message="django.db.utils.OperationalError: the connection is closed">venv/lib/python3.12/site-packages/django/db/backends/base/base.py:298: in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py:430: in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/psycopg/connection.py:240: in cursor
+    self._check_connection_ok()
+venv/lib/python3.12/site-packages/psycopg/_connection_base.py:532: in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+E   psycopg.OperationalError: the connection is closed
+
+The above exception was the direct cause of the following exception:
+apps/monitoring/tests.py:42: in test_version_value
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:1127: in get
+    response = super().get(
+venv/lib/python3.12/site-packages/django/test/client.py:475: in get
+    return self.generic(
+venv/lib/python3.12/site-packages/django/test/client.py:671: in generic
+    return self.request(**r)
+           ^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:1090: in request
+    self.check_exception(response)
+venv/lib/python3.12/site-packages/django/test/client.py:805: in check_exception
+    raise exc_value
+venv/lib/python3.12/site-packages/django/core/handlers/exception.py:55: in inner
+    response = get_response(request)
+               ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/deprecation.py:308: in __call__
+    response = self.process_request(request)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+apps/core/middleware.py:10: in process_request
+    return super().process_request(request)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/middleware/main.py:45: in process_request
+    tenant = self.get_tenant(domain_model, hostname)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/middleware/main.py:29: in get_tenant
+    domain = domain_model.objects.select_related('tenant').get(domain=hostname)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:635: in get
+    num = len(clone)
+          ^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:372: in __len__
+    self._fetch_all()
+venv/lib/python3.12/site-packages/django/db/models/query.py:2000: in _fetch_all
+    self._result_cache = list(self._iterable_class(self))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/models/query.py:95: in __iter__
+    results = compiler.execute_sql(
+venv/lib/python3.12/site-packages/django/db/models/sql/compiler.py:1622: in execute_sql
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:320: in cursor
+    return self._cursor()
+           ^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django_tenants/postgresql_backend/base.py:144: in _cursor
+    cursor = super()._cursor()
+             ^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:297: in _cursor
+    with self.wrap_database_errors:
+venv/lib/python3.12/site-packages/django/db/utils.py:94: in __exit__
+    raise dj_exc_value.with_traceback(traceback) from exc_value
+venv/lib/python3.12/site-packages/django/db/backends/base/base.py:298: in _cursor
+    return self._prepare_cursor(self.create_cursor(name))
+                                ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/utils/asyncio.py:26: in inner
+    return func(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/db/backends/postgresql/base.py:430: in create_cursor
+    cursor = self.connection.cursor()
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/psycopg/connection.py:240: in cursor
+    self._check_connection_ok()
+venv/lib/python3.12/site-packages/psycopg/_connection_base.py:532: in _check_connection_ok
+    raise e.OperationalError("the connection is closed")
+E   django.db.utils.OperationalError: the connection is closed</failure></testcase><testcase classname="apps.monitoring.tests.PingViewTest" name="test_ping_response_json" time="4.954"><failure message="AssertionError: 'text/html; charset=utf-8' != 'application/json'&#10;- text/html; charset=utf-8&#10;+ application/json">apps/monitoring/tests.py:112: in test_ping_response_json
+    self.assertEqual(response["Content-Type"], "application/json")
+E   AssertionError: 'text/html; charset=utf-8' != 'application/json'
+E   - text/html; charset=utf-8
+E   + application/json</failure></testcase><testcase classname="apps.monitoring.tests.PingViewTest" name="test_ping_returns_200" time="2.962"><failure message="AssertionError: 404 != 200">apps/monitoring/tests.py:108: in test_ping_returns_200
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.monitoring.tests.PingViewTest" name="test_ping_status_ok" time="2.962"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:115: in test_ping_status_ok
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.PingViewTest" name="test_ping_works_even_when_db_is_down" time="3.222"><failure message="AssertionError: 404 != 200">apps/monitoring/tests.py:123: in test_ping_works_even_when_db_is_down
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.monitoring.tests.DbMetricsViewTest" name="test_db_metrics_failure_payload" time="5.257"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:150: in test_db_metrics_failure_payload
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.DbMetricsViewTest" name="test_db_metrics_failure_returns_500" time="3.400"><failure message="AssertionError: 404 != 500">apps/monitoring/tests.py:145: in test_db_metrics_failure_returns_500
+    self.assertEqual(response.status_code, 500)
+E   AssertionError: 404 != 500</failure></testcase><testcase classname="apps.monitoring.tests.DbMetricsViewTest" name="test_db_metrics_healthy_payload" time="3.246"><failure message="ValueError: Content-Type header is &quot;text/html; charset=utf-8&quot;, not &quot;application/json&quot;">apps/monitoring/tests.py:138: in test_db_metrics_healthy_payload
+    data = self.client.get(self.url).json()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+venv/lib/python3.12/site-packages/django/test/client.py:951: in _parse_json
+    raise ValueError(
+E   ValueError: Content-Type header is "text/html; charset=utf-8", not "application/json"</failure></testcase><testcase classname="apps.monitoring.tests.DbMetricsViewTest" name="test_db_metrics_healthy_returns_200" time="3.874"><failure message="AssertionError: 404 != 200">apps/monitoring/tests.py:135: in test_db_metrics_healthy_returns_200
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.monitoring.tests.ServerMetricsViewTest" name="test_admin_can_access" time="22.652"><failure message="AssertionError: 404 != 200">apps/monitoring/tests.py:184: in test_admin_can_access
+    self.assertEqual(response.status_code, 200)
+E   AssertionError: 404 != 200</failure></testcase><testcase classname="apps.monitoring.tests.ServerMetricsViewTest" name="test_non_admin_returns_403" time="14.730"><failure message="AssertionError: 404 != 403">apps/monitoring/tests.py:179: in test_non_admin_returns_403
+    self.assertEqual(response.status_code, 403)
+E   AssertionError: 404 != 403</failure></testcase><testcase classname="apps.monitoring.tests.ServerMetricsViewTest" name="test_unauthenticated_returns_401" time="10.186"><failure message="AssertionError: 404 != 401">apps/monitoring/tests.py:173: in test_unauthenticated_returns_401
+    self.assertEqual(response.status_code, 401)
+E   AssertionError: 404 != 401</failure></testcase><testcase classname="apps.tenants.tests.TenantsAppConfigTest" name="test_app_config_name" time="5.528" /><testcase classname="apps.tenants.tests.TenantsAppConfigTest" name="test_app_is_in_installed_apps" time="3.548" /></testsuite></testsuites>

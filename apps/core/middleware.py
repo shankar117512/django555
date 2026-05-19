@@ -1,10 +1,13 @@
 # apps/core/middleware.py
 from django_tenants.middleware.main import TenantMainMiddleware
 
+# Paths that must never block on tenant DB lookup
+BYPASS_PREFIXES = ("/health/", "/monitoring/ping/")
+
 
 class TenantMiddlewareWithHealthCheck(TenantMainMiddleware):
     def process_request(self, request):
-        if request.path.startswith("/health/"):
-            return None  # skip tenant resolution
+        if any(request.path.startswith(p) for p in BYPASS_PREFIXES):
+            return None  # skip tenant resolution entirely
 
         return super().process_request(request)
