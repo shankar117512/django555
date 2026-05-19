@@ -1,19 +1,7 @@
-from django.http import HttpResponse
+from django.shortcuts import render
+from django.views.decorators.http import require_http_methods
 
 
-def home_view(request):
-    """
-    Public home endpoint. Returns 200 with success message.
-    """
-    html = """
-    <!DOCTYPE html>
-    <html>
-      <head><title>Django App</title></head>
-      <body>
-        <h1>Django staging environment deployed successfully!</h1>
-        <p>Welcome. The API is available at <a href="/api/">/api/</a></p>
-        <p>Health check: <a href="/health/">/health/</a></p>
-      </body>
-    </html>
-    """
-    return HttpResponse(html)
+@require_http_methods(["GET"])
+def home(request):
+    return render(request, "core/home.html")
