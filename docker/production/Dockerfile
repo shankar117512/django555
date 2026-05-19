@@ -20,9 +20,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN python -m venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-COPY requirements.txt .
-RUN pip install --upgrade pip && \
-    pip install --no-cache-dir -r requirements.txt
+COPY requirements/ ./requirements/
+RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements/production.txt
 
 # ─────────────────────────────────────────────────
 # Stage 2: Production image
@@ -47,6 +46,7 @@ COPY --from=builder /opt/venv /opt/venv
 
 # Create non-root user
 RUN groupadd -r appuser && useradd -r -g appuser appuser
+RUN mkdir -p /home/appuser && chown -R appuser:appuser /home/appuser
 
 # Copy application source
 COPY --chown=appuser:appuser . .
