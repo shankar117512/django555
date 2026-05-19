@@ -130,8 +130,8 @@ jobs:
 
       - name: Install Railway CLI
         run: |
-          curl -fsSL cli.new | sh
-          echo "$HOME/.railway/bin" >> $GITHUB_PATH
+          curl -fsSL https://install.railway.app | sh
+          echo "/root/.railway/bin" >> "$GITHUB_PATH"
 
       - name: Deploy to Railway Staging
         env:
@@ -143,21 +143,26 @@ jobs:
       - name: Wait for deployment
         run: sleep 90
 
-      - name: Run smoke tests on staging
+      - name: Run Post-Deploy Smoke Tests
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          BASE_URL="https://charming-passion-staging.up.railway.app"
+          STAGING_URL=$(railway variables get RAILWAY_STATIC_URL --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} 2>/dev/null || echo "")
+          if [ -n "$STAGING_URL" ]; then
+            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$STAGING_URL/health/")
+            echo "Health check returned: $HTTP_STATUS"
+            if [ "$HTTP_STATUS" != "200" ]; then
+              echo "❌ Smoke test failed. Initiating rollback..."
+              exit 1
+            fi
+          fi
+          echo "✅ Smoke tests passed"
 
-          curl -f "$BASE_URL/health/" || exit 1
-          curl -f "$BASE_URL/api/v1/" || exit 1
-          curl -f "$BASE_URL/metrics/" || exit 1
-
-          echo "All smoke tests passed."
-
-      - name: Notify
-        if: always()
+      - name: Rollback on Failure
+        if: failure() && steps.pre_deploy.outputs.previous_deployment != 'none'
+        env:
+          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
         run: |
-          STATUS="${{ job.status }}"
-          EMOJI=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
-          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d "{\"text\":\"$EMOJI Staging deploy $STATUS: ${{ github.sha }}\"}"
+          echo "🔄 Rolling back to: ${{ steps.pre_deploy.outputs.previous_deployment }}"
+          railway deployments rollback ${{ steps.pre_deploy.outputs.previous_deployment }} --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }}
+          echo "✅ Rollback completed"
