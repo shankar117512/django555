@@ -125,71 +125,60 @@ jobs:
       name: staging
       url: https://charming-passion-staging.up.railway.app
 
-    steps:
-      - uses: actions/checkout@v4
+  steps:
+    - uses: actions/checkout@v4
 
-      # ✅ FIX 1: Use the official Railway GitHub Action instead of curl | sh
-      # This avoids the sh vs bash issue entirely and handles PATH automatically
-      - name: Install Railway CLI
-        uses: railwayapp/nixpacks-action@v1
-        # If you prefer direct CLI install, use the correct method below:
-        # (uncomment this block and remove the action above)
-        # run: |
-        #   bash <(curl -fsSL https://install.railway.app)
-        #   echo "$HOME/.railway/bin" >> "$GITHUB_PATH"
+    - name: Install Railway CLI
+      run: npm install -g @railway/cli      # ← FIXED
 
-      # ✅ FIX 2: Capture the current deployment ID BEFORE deploying
-      # so the rollback step actually has something to roll back to
-      - name: Capture pre-deploy state
-        id: pre_deploy
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-        run: |
-          railway environment staging
-          PREV=$(railway deployments list --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} --json \
-            | python3 -c "import sys,json; deps=json.load(sys.stdin); \
-              active=[d for d in deps if d.get('status')=='SUCCESS']; \
-              print(active[0]['id'] if active else 'none')" 2>/dev/null || echo "none")
-          echo "previous_deployment=$PREV" >> "$GITHUB_OUTPUT"
-          echo "Captured previous deployment: $PREV"
+    - name: Capture pre-deploy state
+      id: pre_deploy
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
+      run: |
+        railway environment staging
+        PREV=$(railway deployments list --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} --json \
+          | python3 -c "import sys,json; deps=json.load(sys.stdin); \
+            active=[d for d in deps if d.get('status')=='SUCCESS']; \
+            print(active[0]['id'] if active else 'none')" 2>/dev/null || echo "none")
+        echo "previous_deployment=$PREV" >> "$GITHUB_OUTPUT"
+        echo "Captured previous deployment: $PREV"
 
-      - name: Deploy to Railway Staging
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-        run: |
-          railway environment staging
-          railway up --service charming-passion --detach
+    - name: Deploy to Railway Staging
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
+      run: |
+        railway environment staging
+        railway up --service charming-passion --detach
 
-      - name: Wait for deployment
-        run: sleep 90
+    - name: Wait for deployment
+      run: sleep 90
 
-      - name: Run Post-Deploy Smoke Tests
-        id: smoke_test
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-        run: |
-          STAGING_URL=$(railway variables get RAILWAY_STATIC_URL \
-            --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} 2>/dev/null || echo "")
-          if [ -n "$STAGING_URL" ]; then
-            HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$STAGING_URL/health/")
-            echo "Health check returned: $HTTP_STATUS"
-            if [ "$HTTP_STATUS" != "200" ]; then
-              echo "❌ Smoke test failed with status $HTTP_STATUS. Initiating rollback..."
-              exit 1
-            fi
-          else
-            echo "⚠️ Could not resolve STAGING_URL — skipping smoke test"
+    - name: Run Post-Deploy Smoke Tests
+      id: smoke_test
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
+      run: |
+        STAGING_URL=$(railway variables get RAILWAY_STATIC_URL \
+          --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }} 2>/dev/null || echo "")
+        if [ -n "$STAGING_URL" ]; then
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" "https://$STAGING_URL/health/")
+          echo "Health check returned: $HTTP_STATUS"
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "❌ Smoke test failed with status $HTTP_STATUS. Initiating rollback..."
+            exit 1
           fi
-          echo "✅ Smoke tests passed"
+        else
+          echo "⚠️ Could not resolve STAGING_URL — skipping smoke test"
+        fi
+        echo "✅ Smoke tests passed"
 
-      # ✅ FIX 3: Rollback now references the real pre_deploy step id
-      # and uses the correct token (STAGING token, not the bare one)
-      - name: Rollback on Failure
-        if: failure() && steps.pre_deploy.outputs.previous_deployment != 'none'
-        env:
-          RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
-        run: |
-          echo "🔄 Rolling back to: ${{ steps.pre_deploy.outputs.previous_deployment }}"
-          railway deployments rollback ${{ steps.pre_deploy.outputs.previous_deployment }} \
-            --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }}
-          echo "✅ Rollback completed"
+    - name: Rollback on Failure
+      if: failure() && steps.pre_deploy.outputs.previous_deployment != 'none'
+      env:
+        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_STAGING }}
+      run: |
+        echo "🔄 Rolling back to: ${{ steps.pre_deploy.outputs.previous_deployment }}"
+        railway deployments rollback ${{ steps.pre_deploy.outputs.previous_deployment }} \
+          --service ${{ secrets.RAILWAY_SERVICE_ID_STAGING }}
+        echo "✅ Rollback completed"
