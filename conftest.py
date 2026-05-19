@@ -20,7 +20,7 @@ def django_db_setup(django_db_blocker):
             schema_name=get_public_schema_name(),
             defaults={"name": "Public"},
         )
-        DomainModel = apps.get_model("customers", "Domain")
+        DomainModel = apps.get_model("products", "Domain")
         DomainModel.objects.get_or_create(
             domain="localhost",
             defaults={"tenant": tenant, "is_primary": True},
