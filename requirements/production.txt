@@ -12,3 +12,6 @@ datadog>=0.49.0
 # AWS / Storage (optional)
 boto3>=1.34.0
 django-storages[s3]>=1.14.0
+
+# Environment
+python-decouple>=3.8
