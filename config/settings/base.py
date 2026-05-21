@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 import dj_database_url
@@ -28,7 +29,12 @@ SECRET_KEY = config("DJANGO_SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config("DEBUG", default=False, cast=bool)
 
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
+# ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=Csv())
+
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
+
+# base.py — add anywhere in the file
+APPEND_SLASH = True  # Django default, but confirm it's not overridden
 
 
 # Application definition
@@ -56,6 +62,7 @@ THIRD_PARTY_APPS = [
 SHARED_APPS = (
     [
         "django_tenants",
+        "orders",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
@@ -122,18 +129,19 @@ TEMPLATES = [
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases
 
-DATABASE_URL = config("DATABASE_URL", default="")
 DATABASES = {
-    "default": dj_database_url.parse(
-        DATABASE_URL,
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL"),
         conn_max_age=600,
-        conn_health_checks=True,
+        engine="django_tenants.postgresql_backend",
+        # ← no ssl_require=True here, good
     )
 }
 
+# DATABASES = {"default": dj_database_url.config(conn_max_age=600, ssl_require=True)}
+
 # Make sure the schema key is preserved:
 DATABASES["default"]["SCHEMA"] = "public"
-
 
 # Multi-tenant database router
 DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
