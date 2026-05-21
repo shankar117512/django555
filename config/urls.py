@@ -16,21 +16,28 @@ Including another URLconf
 """
 
 # config/urls.py
-from django.contrib import admin
-from django.urls import path, include
 from django.conf import settings
+from django.contrib import admin
+from django.http import JsonResponse
+from django.urls import include, path
+
+
+def health_check(request):
+    return JsonResponse({"status": "ok"}, status=200)
+
 
 urlpatterns = [
+    path("health/", health_check, name="health_check"),
     path("admin/", admin.site.urls),
-    path("api/v1/", include("apps.api.urls")),
-    path("health/", include("health_check.urls")),
-    path("monitoring/", include("apps.monitoring.urls")),
-    path("", include("apps.core.urls")),
+    path("", include("apps.core.urls", namespace="core")),
+    path("api/", include("apps.api.urls", namespace="api")),
+    path("monitoring/", include("apps.monitoring.urls", namespace="monitoring")),
     path("metrics/", include("django_prometheus.urls")),
 ]
 
 if settings.DEBUG:
     import debug_toolbar
+
     urlpatterns = [
         path("__debug__/", include(debug_toolbar.urls)),
     ] + urlpatterns
