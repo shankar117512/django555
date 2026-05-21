@@ -62,6 +62,7 @@ THIRD_PARTY_APPS = [
 SHARED_APPS = (
     [
         "django_tenants",
+        "orders",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
