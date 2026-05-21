@@ -35,9 +35,19 @@ else:
     exit(1)
 PYTHON
 
-# Run database migrations
-echo "==> [ENTRYPOINT] Running migrations..."
-python manage.py migrate --noinput
+# ─────────────────────────────────────────────────────────────────
+# FIX: django-tenants requires a two-step migration.
+#
+# Step 1 — migrate SHARED apps only (public schema).
+#           This creates the orders_client (tenant) table.
+# Step 2 — migrate ALL tenant schemas.
+#           Now orders_client exists and can be queried safely.
+# ─────────────────────────────────────────────────────────────────
+echo "==> [ENTRYPOINT] Running shared schema migrations..."
+python manage.py migrate_schemas --shared --noinput
+
+echo "==> [ENTRYPOINT] Running tenant schema migrations..."
+python manage.py migrate_schemas --noinput
 
 # Collect static files
 echo "==> [ENTRYPOINT] Collecting static files..."
