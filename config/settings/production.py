@@ -3,9 +3,18 @@ from .base import *
 
 DEBUG = False
 
+ALLOWED_HOSTS = [
+    "gregarious-purpose-production-98d4.up.railway.app",
+    "healthcheck.railway.app",
+]
+
+CSRF_TRUSTED_ORIGINS = ["https://gregarious-purpose-production-98d4.up.railway.app"]
+
 # Security headers (strict)
 SECURE_SSL_REDIRECT = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# ✅ ADD THIS — exempt the health check from SSL redirect
+SECURE_REDIRECT_EXEMPT = [r"^health/$"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_BROWSER_XSS_FILTER = True
