@@ -1,0 +1,55 @@
+# monitoring/prometheus/prometheus.yml
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    monitor: 'django-railway-monitor'
+
+rule_files:
+  - "/etc/prometheus/alert-rules.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+            - alertmanager:9093
+
+scrape_configs:
+  # Django App Metrics (dev)
+  - job_name: 'django-dev'
+    static_configs:
+      - targets: ['app-dev:8000']
+    metrics_path: '/metrics/'
+    scrape_interval: 30s
+
+  # Django App Metrics (staging)
+  - job_name: 'django-staging'
+    static_configs:
+      - targets: ['app-staging:8080']
+    metrics_path: '/metrics/'
+    scrape_interval: 30s
+
+  # Django App Metrics (production)
+  - job_name: 'django-production'
+    static_configs:
+      - targets: ['app-production:8080']
+    metrics_path: '/metrics/'
+    scrape_interval: 15s
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 30s
+
+  # Redis Exporter
+  - job_name: 'redis'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 30s
+
+  # Node/Server Exporter
+  - job_name: 'node'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 30s
