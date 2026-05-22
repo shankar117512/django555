@@ -126,7 +126,7 @@ jobs:
     steps:                    # ✅ Now correctly indented inside the job
       - uses: actions/checkout@v4
 
-      - name: Install Railway CRT
+      - name: Install Railway CLI
         run: npm install -g @railway/cli
 
       - name: Capture pre-deploy state
