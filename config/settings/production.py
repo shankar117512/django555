@@ -13,7 +13,7 @@ ALLOWED_HOSTS = [
 CSRF_TRUSTED_ORIGINS = ["https://gregarious-purpose-production-98d4.up.railway.app"]
 
 # Security headers (strict)
-SECURE_SSL_REDIRECT = True
+SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "True") == "True"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 # ✅ ADD THIS — exempt the health check from SSL redirect
 SECURE_REDIRECT_EXEMPT = [r"^health/$"]
