@@ -1,4 +1,6 @@
 # config/settings/production.py
+import os
+
 from .base import *
 
 DEBUG = False
@@ -25,7 +27,9 @@ SECURE_HSTS_PRELOAD = True
 X_FRAME_OPTIONS = "DENY"
 
 # Production DB with SSL
-DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
+# Only enforce SSL when NOT in CI (GitHub Actions sets CI=true automatically)
+if not os.environ.get("CI"):
+    DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 
 # Email: production provider
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
