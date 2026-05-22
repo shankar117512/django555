@@ -164,7 +164,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Railway CLI
-        run: bash <(curl -fsSL cli.new)
+        run: npm install -g @railway/cli
 
       - name: Deploy to Railway Dev
         env:
