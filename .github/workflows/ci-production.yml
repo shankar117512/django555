@@ -115,29 +115,29 @@ jobs:
       contents: read
       packages: write          # Required to push to GHCR
 
-  steps:
-    - uses: actions/checkout@v4
+    steps:
+      - uses: actions/checkout@v4
 
-    - name: Login to GitHub Container Registry
-      uses: docker/login-action@v3
-      with:
-        registry: ghcr.io
-        username: ${{ github.actor }}
-        password: ${{ secrets.GITHUB_TOKEN }}   # No secrets setup needed
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}   # No secrets setup needed
 
-    - name: Build and push production image
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: docker/production/Dockerfile
-        push: true
-        tags: |
-          ghcr.io/${{ github.repository }}/django-app:production-${{ github.sha }}
-          ghcr.io/${{ github.repository }}/django-app:latest
-        build-args: |
-          PYTHON_VERSION=3.12
-          ENVIRONMENT=production
-          DJANGO_SETTINGS_MODULE=config.settings.production
+      - name: Build and push production image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: docker/production/Dockerfile
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository }}/django-app:production-${{ github.sha }}
+            ghcr.io/${{ github.repository }}/django-app:latest
+          build-args: |
+            PYTHON_VERSION=3.12
+            ENVIRONMENT=production
+            DJANGO_SETTINGS_MODULE=config.settings.production
 
   deploy-production:
     name: Deploy to Railway Production
