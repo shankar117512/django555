@@ -64,7 +64,7 @@ jobs:
 
       - name: Migrations check
         env:
-          DATABASE_URL: postgres://produser:prodpassword@localhost:5432/test_django_prod
+          DATABASE_URL: postgres://produser:prodpassword@localhost:5432/test_django_prod?sslmode=disable
           REDIS_URL: redis://localhost:6379/0
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_PROD }}
           DEBUG: "False"
@@ -75,7 +75,7 @@ jobs:
 
       - name: Run full test suite (90% coverage required)
         env:
-          DATABASE_URL: postgres://produser:prodpassword@localhost:5432/test_django_prod
+          DATABASE_URL: postgres://produser:prodpassword@localhost:5432/test_django_prod?sslmode=disable
           REDIS_URL: redis://localhost:6379/0
           DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY_PROD }}
           DEBUG: "False"
@@ -163,10 +163,8 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
-          railway up \
-            --service django-web \
-            --environment production \
-            --detach
+          railway environment production
+          railway up --service gregarious-purpose --detach
           echo "deploy_sha=${{ github.sha }}" >> $GITHUB_OUTPUT
 
       - name: Wait for production deployment
