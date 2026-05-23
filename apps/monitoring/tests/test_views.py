@@ -1,5 +1,6 @@
 # apps/monitoring/tests/test_views.py
-import patch
+from unittest.mock import patch
+
 import pytest
 
 
