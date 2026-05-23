@@ -4,6 +4,18 @@ from django.test import RequestFactory
 
 from apps.core.middleware import TenantMiddlewareWithHealthCheck
 
+# Add inside the existing TestMiddleware class or as a new class:
+
+
+class TestCoreViews:
+    def test_home_view_returns_200(self, client):
+        response = client.get("/")
+        assert response.status_code == 200
+
+    def test_home_view_contains_expected_content(self, client):
+        response = client.get("/")
+        assert b"Django" in response.content
+
 
 class TestMiddleware:
     def get_middleware(self):
