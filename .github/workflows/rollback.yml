@@ -1,6 +1,5 @@
 # .github/workflows/rollback.yml
 name: Manual Rollback
-
 on:
   workflow_dispatch:
     inputs:
@@ -20,7 +19,6 @@ on:
         description: "Type CONFIRM to proceed"
         required: true
         type: string
-
 jobs:
   validate-rollback:
     name: Validate Rollback Request
@@ -33,19 +31,20 @@ jobs:
             exit 1
           fi
           echo "Rollback confirmed for: ${{ github.event.inputs.environment }}"
-
   rollback:
     name: Execute Rollback
     runs-on: ubuntu-latest
     needs: validate-rollback
     environment: ${{ github.event.inputs.environment }}
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
       - name: Install Railway CLI
-        run: bash <(curl -fsSL cli.new)
+        run: npm install -g @railway/cli
+
+      - name: Verify Railway CLI
+        run: railway --version
 
       - name: Select token based on environment
         id: select_token
@@ -77,20 +76,8 @@ jobs:
           elif [ "$ENV" = "staging" ]; then
             URL="https://staging.yourapp.up.railway.app"
           else
-            URL="https://dev.yourapp.up.railway.app"
+            URL="https://django555-dev.up.railway.app"
           fi
-
           sleep 60
           curl -f "$URL/health/" || exit 1
           echo "Rollback verified successfully."
-
-      - name: Notify rollback
-        if: always()
-        run: |
-          STATUS="${{ job.status }}"
-          EMOJI=$([ "$STATUS" = "success" ] && echo "✅" || echo "❌")
-          curl -X POST "${{ secrets.SLACK_WEBHOOK_URL }}" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"text\": \"$EMOJI ROLLBACK $STATUS — Env: ${{ github.event.inputs.environment }} — Reason: ${{ github.event.inputs.reason }} — By: ${{ github.actor }}\"
-            }"
