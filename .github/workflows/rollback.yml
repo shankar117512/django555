@@ -1,16 +1,9 @@
 # .github/workflows/rollback.yml
-name: Manual Rollback
+name: Manual Rollback (Dev)
+
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: "Environment to rollback"
-        required: true
-        type: choice
-        options:
-          - production
-          - staging
-          - dev
       reason:
         description: "Reason for rollback"
         required: true
@@ -19,6 +12,12 @@ on:
         description: "Type CONFIRM to proceed"
         required: true
         type: string
+
+env:
+  RAILWAY_SERVICE: django555
+  RAILWAY_ENVIRONMENT: dev
+  HEALTH_URL: https://django555-dev.up.railway.app/health/
+
 jobs:
   validate-rollback:
     name: Validate Rollback Request
@@ -30,12 +29,16 @@ jobs:
             echo "Rollback not confirmed. Aborting."
             exit 1
           fi
-          echo "Rollback confirmed for: ${{ github.event.inputs.environment }}"
+          echo "Rollback confirmed for dev."
+          echo "Reason: ${{ github.event.inputs.reason }}"
+
   rollback:
     name: Execute Rollback
     runs-on: ubuntu-latest
     needs: validate-rollback
-    environment: ${{ github.event.inputs.environment }}
+    environment: dev
+    env:
+      RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_DEV }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -46,38 +49,58 @@ jobs:
       - name: Verify Railway CLI
         run: railway --version
 
-      - name: Select token based on environment
-        id: select_token
+      - name: Find previous successful deployment
+        id: find_deployment
         run: |
-          ENV="${{ github.event.inputs.environment }}"
-          if [ "$ENV" = "production" ]; then
-            echo "token=${{ secrets.RAILWAY_TOKEN_PRODUCTION }}" >> $GITHUB_OUTPUT
-          elif [ "$ENV" = "staging" ]; then
-            echo "token=${{ secrets.RAILWAY_TOKEN_STAGING }}" >> $GITHUB_OUTPUT
-          else
-            echo "token=${{ secrets.RAILWAY_TOKEN_DEV }}" >> $GITHUB_OUTPUT
+          set -e
+          echo "Fetching recent deployments for $RAILWAY_SERVICE ($RAILWAY_ENVIRONMENT)..."
+          railway deployment list \
+            --service "$RAILWAY_SERVICE" \
+            --environment "$RAILWAY_ENVIRONMENT" \
+            --json --limit 10 > deployments.json
+
+          cat deployments.json
+
+          # Skip index 0 (current/latest) and pick the next SUCCESS deployment.
+          ROLLBACK_ID=$(jq -r '[.[] | select(.status=="SUCCESS")][1].id // empty' deployments.json)
+
+          if [ -z "$ROLLBACK_ID" ]; then
+            echo "No earlier successful deployment found to roll back to."
+            exit 1
           fi
 
-      - name: Execute rollback
-        env:
-          RAILWAY_TOKEN: ${{ steps.select_token.outputs.token }}
+          echo "Rolling back to deployment: $ROLLBACK_ID"
+          echo "rollback_id=$ROLLBACK_ID" >> "$GITHUB_OUTPUT"
+
+      - name: Execute rollback via Railway API
         run: |
-          ENV="${{ github.event.inputs.environment }}"
-          echo "Rolling back $ENV environment..."
-          railway rollback \
-            --environment "$ENV" \
-            --service django-web
+          set -e
+          ROLLBACK_ID="${{ steps.find_deployment.outputs.rollback_id }}"
+
+          RESPONSE=$(curl -s -X POST https://backboard.railway.com/graphql/v2 \
+            -H "Project-Access-Token: $RAILWAY_TOKEN" \
+            -H "Content-Type: application/json" \
+            --data-binary @- <<EOF
+          {
+            "query": "mutation deploymentRollback(\$id: String!) { deploymentRollback(id: \$id) { id status } }",
+            "variables": { "id": "$ROLLBACK_ID" }
+          }
+          EOF
+          )
+
+          echo "$RESPONSE"
+
+          if echo "$RESPONSE" | jq -e '.errors' > /dev/null 2>&1; then
+            echo "Rollback request failed:"
+            echo "$RESPONSE" | jq '.errors'
+            exit 1
+          fi
+
+          echo "Rollback triggered successfully for deployment $ROLLBACK_ID."
 
       - name: Verify rollback
         run: |
-          ENV="${{ github.event.inputs.environment }}"
-          if [ "$ENV" = "production" ]; then
-            URL="https://yourapp.com"
-          elif [ "$ENV" = "staging" ]; then
-            URL="https://staging.yourapp.up.railway.app"
-          else
-            URL="https://django555-dev.up.railway.app"
-          fi
+          echo "Waiting for rollback deployment to come up..."
           sleep 60
-          curl -f "$URL/health/" || exit 1
-          echo "Rollback verified successfully."
+          curl -f "$HEALTH_URL" || exit 1
+          echo "Rollback verified successfully against $HEALTH_URL."
