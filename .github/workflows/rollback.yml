@@ -58,9 +58,7 @@ jobs:
             --service "$RAILWAY_SERVICE" \
             --environment "$RAILWAY_ENVIRONMENT" \
             --json --limit 10 > deployments.json
-
           cat deployments.json
-
           # Railway flips old deployments to "REMOVED" once superseded, even if
           # they were healthy when live — only "SUCCESS" describes the *current*
           # deploy. So treat SUCCESS and REMOVED as valid rollback candidates,
@@ -70,12 +68,10 @@ jobs:
               (.status=="SUCCESS" or .status=="REMOVED")
             )][1].id // empty
           ' deployments.json)
-
           if [ -z "$ROLLBACK_ID" ]; then
             echo "No earlier deployment found to roll back to."
             exit 1
           fi
-
           echo "Rolling back to deployment: $ROLLBACK_ID"
           echo "rollback_id=$ROLLBACK_ID" >> "$GITHUB_OUTPUT"
 
@@ -88,7 +84,7 @@ jobs:
             -H "Content-Type: application/json" \
             --data-binary @- <<EOF
           {
-            "query": "mutation deploymentRollback(\$id: String!) { deploymentRollback(id: \$id) { id status } }",
+            "query": "mutation deploymentRollback(\$id: String!) { deploymentRollback(id: \$id) }",
             "variables": { "id": "$ROLLBACK_ID" }
           }
           EOF
@@ -97,6 +93,11 @@ jobs:
           if echo "$RESPONSE" | jq -e '.errors' > /dev/null 2>&1; then
             echo "Rollback request failed:"
             echo "$RESPONSE" | jq '.errors'
+            exit 1
+          fi
+          OK=$(echo "$RESPONSE" | jq -r '.data.deploymentRollback')
+          if [ "$OK" != "true" ]; then
+            echo "Rollback call returned no errors but did not report success: $RESPONSE"
             exit 1
           fi
           echo "Rollback triggered successfully for deployment $ROLLBACK_ID."
