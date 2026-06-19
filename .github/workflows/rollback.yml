@@ -49,7 +49,7 @@ jobs:
       - name: Verify Railway CLI
         run: railway --version
 
-      - name: Find previous successful deployment
+      - name: Find previous deployable deployment
         id: find_deployment
         run: |
           set -e
@@ -61,11 +61,18 @@ jobs:
 
           cat deployments.json
 
-          # Skip index 0 (current/latest) and pick the next SUCCESS deployment.
-          ROLLBACK_ID=$(jq -r '[.[] | select(.status=="SUCCESS")][1].id // empty' deployments.json)
+          # Railway flips old deployments to "REMOVED" once superseded, even if
+          # they were healthy when live — only "SUCCESS" describes the *current*
+          # deploy. So treat SUCCESS and REMOVED as valid rollback candidates,
+          # and explicitly exclude statuses that mean the build/deploy itself failed.
+          ROLLBACK_ID=$(jq -r '
+            [.[] | select(
+              (.status=="SUCCESS" or .status=="REMOVED")
+            )][1].id // empty
+          ' deployments.json)
 
           if [ -z "$ROLLBACK_ID" ]; then
-            echo "No earlier successful deployment found to roll back to."
+            echo "No earlier deployment found to roll back to."
             exit 1
           fi
 
@@ -76,7 +83,6 @@ jobs:
         run: |
           set -e
           ROLLBACK_ID="${{ steps.find_deployment.outputs.rollback_id }}"
-
           RESPONSE=$(curl -s -X POST https://backboard.railway.com/graphql/v2 \
             -H "Project-Access-Token: $RAILWAY_TOKEN" \
             -H "Content-Type: application/json" \
@@ -87,15 +93,12 @@ jobs:
           }
           EOF
           )
-
           echo "$RESPONSE"
-
           if echo "$RESPONSE" | jq -e '.errors' > /dev/null 2>&1; then
             echo "Rollback request failed:"
             echo "$RESPONSE" | jq '.errors'
             exit 1
           fi
-
           echo "Rollback triggered successfully for deployment $ROLLBACK_ID."
 
       - name: Verify rollback
