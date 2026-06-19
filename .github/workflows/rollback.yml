@@ -1,0 +1,83 @@
+# .github/workflows/rollback.yml
+name: Manual Rollback
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: "Environment to rollback"
+        required: true
+        type: choice
+        options:
+          - production
+          - staging
+          - dev
+      reason:
+        description: "Reason for rollback"
+        required: true
+        type: string
+      confirm:
+        description: "Type CONFIRM to proceed"
+        required: true
+        type: string
+jobs:
+  validate-rollback:
+    name: Validate Rollback Request
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate confirmation
+        run: |
+          if [ "${{ github.event.inputs.confirm }}" != "CONFIRM" ]; then
+            echo "Rollback not confirmed. Aborting."
+            exit 1
+          fi
+          echo "Rollback confirmed for: ${{ github.event.inputs.environment }}"
+  rollback:
+    name: Execute Rollback
+    runs-on: ubuntu-latest
+    needs: validate-rollback
+    environment: ${{ github.event.inputs.environment }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Railway CLI
+        run: npm install -g @railway/cli
+
+      - name: Verify Railway CLI
+        run: railway --version
+
+      - name: Select token based on environment
+        id: select_token
+        run: |
+          ENV="${{ github.event.inputs.environment }}"
+          if [ "$ENV" = "production" ]; then
+            echo "token=${{ secrets.RAILWAY_TOKEN_PRODUCTION }}" >> $GITHUB_OUTPUT
+          elif [ "$ENV" = "staging" ]; then
+            echo "token=${{ secrets.RAILWAY_TOKEN_STAGING }}" >> $GITHUB_OUTPUT
+          else
+            echo "token=${{ secrets.RAILWAY_TOKEN_DEV }}" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Execute rollback
+        env:
+          RAILWAY_TOKEN: ${{ steps.select_token.outputs.token }}
+        run: |
+          ENV="${{ github.event.inputs.environment }}"
+          echo "Rolling back $ENV environment..."
+          railway rollback \
+            --environment "$ENV" \
+            --service django-web
+
+      - name: Verify rollback
+        run: |
+          ENV="${{ github.event.inputs.environment }}"
+          if [ "$ENV" = "production" ]; then
+            URL="https://yourapp.com"
+          elif [ "$ENV" = "staging" ]; then
+            URL="https://staging.yourapp.up.railway.app"
+          else
+            URL="https://django555-dev.up.railway.app"
+          fi
+          sleep 60
+          curl -f "$URL/health/" || exit 1
+          echo "Rollback verified successfully."
