@@ -29,4 +29,5 @@ pre-commit>=3.7.0
 # Development utils
 django-extensions>=3.2.3
 ipython>=8.24.0
+typing-extensions>=4.9.0
 watchdog>=4.0.0
