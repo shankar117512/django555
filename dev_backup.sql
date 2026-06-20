@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
-\restrict hD1jToBNjdo7DfK2otbSBT9Dm1sxtineFbnpIjuZpu7wUoMaK7kKSR55UBAiQB0
+\restrict wohXxlTnKimhagl522FcFqcxWqR0dSRXZOjuWh7HgLfRSWVa2yeYx8PeAHtBpKa
 
 -- Dumped from database version 18.4 (Debian 18.4-1.pgdg13+1)
 -- Dumped by pg_dump version 18.4 (Ubuntu 18.4-1.pgdg24.04+1)
@@ -2443,4 +2443,4 @@ ALTER TABLE ONLY public.products_domain
 -- PostgreSQL database dump complete
 --
 
-\unrestrict hD1jToBNjdo7DfK2otbSBT9Dm1sxtineFbnpIjuZpu7wUoMaK7kKSR55UBAiQB0
+\unrestrict wohXxlTnKimhagl522FcFqcxWqR0dSRXZOjuWh7HgLfRSWVa2yeYx8PeAHtBpKa
