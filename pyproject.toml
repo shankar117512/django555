@@ -1,3 +1,4 @@
+# pyproject.toml (staging)
 [tool.coverage.run]
 source = ["apps"]
 omit = ["*/migrations/*", "*/tests/*", "*/conftest.py", "*/admin.py", "*/apps.py"]
