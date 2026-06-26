@@ -21,11 +21,13 @@ from django.contrib import admin
 from django.urls import include, path
 
 urlpatterns = [
-    path("health/", include("apps.monitoring.urls")),  # no namespace here
+    path("health/", include("apps.monitoring.urls", namespace="monitoring")),
     path("admin/", admin.site.urls),
     path("", include("apps.core.urls", namespace="core")),
     path("api/", include("apps.api.urls", namespace="api")),
-    path("monitoring/", include("apps.monitoring.urls", namespace="monitoring")),
+    path(
+        "monitoring/", include("apps.monitoring.metrics_urls")
+    ),  # no app_name, no namespace conflict
     path("metrics/", include("django_prometheus.urls")),
 ]
 
