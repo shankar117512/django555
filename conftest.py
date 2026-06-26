@@ -2,8 +2,8 @@
 import os
 from pathlib import Path
 
-from decouple import AutoConfig, Config, RepositoryEnv
 import pytest
+from decouple import AutoConfig, Config, RepositoryEnv
 from rest_framework.test import APIClient
 
 # ── Load envs/.env.staging so decouple can find DJANGO_SECRET_KEY etc. ──
@@ -46,8 +46,7 @@ def django_db_setup(django_db_blocker):
     """Set up public tenant with both localhost and testserver domains."""
     with django_db_blocker.unblock():
         from django.apps import apps
-        from django_tenants.utils import (get_public_schema_name,
-                                          get_tenant_model)
+        from django_tenants.utils import get_public_schema_name, get_tenant_model
 
         TenantModel = get_tenant_model()
         tenant, _ = TenantModel.objects.get_or_create(
