@@ -9,7 +9,7 @@
 #
 # Requires: RAILWAY_TOKEN_STAGING (a Railway *project* access token for the
 # staging environment) to be set in your shell before running, e.g.:
-#   export RAILWAY_TOKEN_DEV="xxxxx"
+#   export RAILWAY_TOKEN_STAGING="xxxxx"
 
 set -euo pipefail
 
