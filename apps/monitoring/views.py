@@ -15,13 +15,13 @@ CACHE_VALUE = "ok"
 
 def health_check(request):
     """
-    GET /monitoring/  — full health check (public).
+    GET /health/  — full health check (public).
     Returns 200 when healthy or degraded, 503 when unhealthy (DB down).
     """
     checks = {}
     overall = "healthy"
 
-    # ── Database ─────────────────────────────────────────────────────────────
+    # ── Database ──────────────────────────────────────────────────────────────
     try:
         with connection.cursor() as cursor:
             cursor.execute("SELECT 1")
@@ -49,7 +49,8 @@ def health_check(request):
     payload = {
         "status": overall,
         "version": VERSION,
-        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        # FIX: datetime.utcnow() is deprecated in Python 3.12+
+        "timestamp": datetime.datetime.now(datetime.UTC).isoformat(),
         "checks": checks,
     }
     return JsonResponse(payload, status=status_code)
@@ -57,27 +58,36 @@ def health_check(request):
 
 def ping(request):
     """
-    GET /monitoring/ping/  — bare liveness probe (never touches the DB).
+    GET /health/ping/  — bare liveness probe (never touches the DB).
     """
     return JsonResponse({"status": "ok"})
 
 
-def db_metrics(request):
+class DbMetricsView(APIView):
     """
-    GET /monitoring/db/  — detailed DB metrics (public).
-    Returns 200 with {db: "ok"} or 500 with {db: "error", detail: "..."}.
+    GET /health/db/  — detailed DB metrics (admin-only).
+
+    FIX: Was a plain function view with no auth — test_views.py expects
+    401/403 for unauthenticated requests, so this must be a DRF APIView
+    with IsAuthenticated + IsAdminUser permissions.
+
+    401 for unauthenticated, 403 for non-admin, 200 for admin.
     """
-    try:
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT 1")
-        return JsonResponse({"db": "ok"})
-    except Exception as exc:
-        return JsonResponse({"db": "error", "detail": str(exc)}, status=500)
+
+    permission_classes = [IsAuthenticated, IsAdminUser]
+
+    def get(self, request):
+        try:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT 1")
+            return Response({"db": "ok"})
+        except Exception as exc:
+            return Response({"db": "error", "detail": str(exc)}, status=500)
 
 
 class ServerMetricsView(APIView):
     """
-    GET /monitoring/server/  — admin-only server metrics.
+    GET /health/server/  — admin-only server metrics.
     401 for unauthenticated, 403 for non-admin, 200 for admin.
     """
 

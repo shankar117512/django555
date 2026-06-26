@@ -1,8 +1,10 @@
-# apps/monitoring/tests.py
+# apps/monitoring/tests/test_models.py
 from unittest.mock import patch
 
+from django.contrib.auth import get_user_model
 from django.test import Client, TestCase
 from django.urls import reverse
+from rest_framework.test import APIClient
 
 
 class HealthCheckViewTest(TestCase):
@@ -124,11 +126,27 @@ class PingViewTest(TestCase):
 
 
 class DbMetricsViewTest(TestCase):
-    """Tests for the /health/db/ endpoint."""
+    """
+    Tests for the /health/db/ endpoint (admin-only).
+
+    FIX: Uses DRF's APIClient with force_authenticate() instead of Django's
+    session-based force_login(). DbMetricsView is a DRF APIView, so DRF's
+    IsAuthenticated checks DRF's own auth backends — session login via Django's
+    test Client is not recognised unless SessionAuthentication is explicitly
+    configured in DEFAULT_AUTHENTICATION_CLASSES.
+    """
 
     def setUp(self):
-        self.client = Client()
         self.url = reverse("monitoring:db-metrics")
+
+        User = get_user_model()
+        self.admin = User.objects.create_superuser(
+            username="db_admin", password="adminpass123"
+        )
+
+        # Use DRF's APIClient and bypass the auth layer entirely.
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.admin)
 
     def test_db_metrics_healthy_returns_200(self):
         response = self.client.get(self.url)
@@ -156,11 +174,9 @@ class ServerMetricsViewTest(TestCase):
     """Tests for the admin-only /health/server/ endpoint."""
 
     def setUp(self):
-        from django.contrib.auth import get_user_model
-
+        User = get_user_model()
         self.client = Client()
         self.url = reverse("monitoring:server-metrics")
-        User = get_user_model()
         self.admin = User.objects.create_superuser(
             username="admin", password="adminpass123"
         )

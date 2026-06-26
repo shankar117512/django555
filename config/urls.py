@@ -18,16 +18,10 @@ Including another URLconf
 # config/urls.py
 from django.conf import settings
 from django.contrib import admin
-from django.http import JsonResponse
 from django.urls import include, path
 
-
-def health_check(request):
-    return JsonResponse({"status": "ok"}, status=200)
-
-
 urlpatterns = [
-    path("health/", health_check, name="health_check"),
+    path("health/", include("apps.monitoring.urls")),  # no namespace here
     path("admin/", admin.site.urls),
     path("", include("apps.core.urls", namespace="core")),
     path("api/", include("apps.api.urls", namespace="api")),
