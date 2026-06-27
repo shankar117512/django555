@@ -68,6 +68,7 @@ TENANT_APPS = [
     "apps.core",
     "apps.api",
     "apps.monitoring",
+    "apps.tenants",
 ]
 
 # FIX 4: INSTALLED_APPS must be a list; dedup correctly.
