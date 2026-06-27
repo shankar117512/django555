@@ -1,9 +1,19 @@
-# pyproject.toml (root) Staging
+# pyproject.toml (root) — Staging
+
 [tool.coverage.run]
 source = ["apps"]
-omit = ["*/migrations/*", "*/tests/*", "*/conftest.py", "*/admin.py", "*/apps.py"]
+omit = [
+    "*/migrations/*",
+    "*/tests/*",
+    "*/conftest.py",
+    "*/admin.py",
+    "*/apps.py",
+]
 
 [tool.coverage.report]
+# FIX: fail_under is also declared in setup.cfg [coverage:report]. Having it in
+# two places causes the LAST one loaded to win, which is non-obvious.
+# Removed from setup.cfg (see that file) — single source of truth here.
 fail_under = 85
 show_missing = true
 
