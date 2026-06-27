@@ -45,26 +45,32 @@ import os
 
 hostname = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'localhost')
 
-if not Client.objects.filter(schema_name='public').exists():
-    t = Client(
-        schema_name='public',
-        name='Public Tenant',
-        paid_until='2099-12-31',
-        on_trial=False
-    )
-    t.save(verbosity=0)
-    d = Domain(domain=hostname, tenant=t, is_primary=True)
-    d.save()
-    print(f'Public tenant created for {hostname}')
+# FIX 1: Use get_or_create for the tenant itself — safe on re-runs
+tenant, tenant_created = Client.objects.get_or_create(
+    schema_name='public',
+    defaults={
+        'name': 'Public Tenant',
+        'paid_until': '2099-12-31',
+        'on_trial': False,
+    }
+)
+if tenant_created:
+    print(f'Public tenant created.')
 else:
-    t = Client.objects.get(schema_name='public')
-    d = Domain.objects.filter(tenant=t, is_primary=True).first()
-    if d and d.domain != hostname:
-        d.domain = hostname
-        d.save()
-        print(f'Public tenant domain updated to {hostname}')
-    else:
-        print('Public tenant already exists')
+    print(f'Public tenant already exists.')
+
+# FIX 2: Use update_or_create for the Domain — eliminates IntegrityError on
+# duplicate keys AND handles the case where no primary domain row exists yet.
+# This is the line that was crashing before.
+domain, domain_created = Domain.objects.update_or_create(
+    tenant=tenant,
+    is_primary=True,
+    defaults={'domain': hostname},
+)
+if domain_created:
+    print(f'Primary domain created: {hostname}')
+else:
+    print(f'Primary domain updated/confirmed: {domain.domain}')
 "
 
 # ── Start server ─────────────────────────────────────────────────────────────
