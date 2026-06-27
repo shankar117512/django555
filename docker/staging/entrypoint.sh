@@ -45,7 +45,6 @@ import os
 
 hostname = os.environ.get('RAILWAY_PUBLIC_DOMAIN', 'localhost')
 
-# FIX 1: Use get_or_create for the tenant itself — safe on re-runs
 tenant, tenant_created = Client.objects.get_or_create(
     schema_name='public',
     defaults={
@@ -59,13 +58,12 @@ if tenant_created:
 else:
     print(f'Public tenant already exists.')
 
-# FIX 2: Use update_or_create for the Domain — eliminates IntegrityError on
-# duplicate keys AND handles the case where no primary domain row exists yet.
-# This is the line that was crashing before.
+# KEY FIX: look up by 'domain' (the unique-constrained column),
+# not by (tenant, is_primary) which has no unique constraint and
+# caused Django to INSERT instead of UPDATE, hitting the duplicate key error.
 domain, domain_created = Domain.objects.update_or_create(
-    tenant=tenant,
-    is_primary=True,
-    defaults={'domain': hostname},
+    domain=hostname,
+    defaults={'tenant': tenant, 'is_primary': True},
 )
 if domain_created:
     print(f'Primary domain created: {hostname}')
@@ -74,16 +72,15 @@ else:
 "
 
 # ── Start server ─────────────────────────────────────────────────────────────
-APP_PORT="${PORT:-8080}"
+APP_PORT="\${PORT:-8080}"
 
-if [ "$#" -gt 0 ]; then
-    # Allow overriding the command (e.g. for celery workers)
-    echo "==> Running custom command: $*"
-    exec "$@"
+if [ "\$#" -gt 0 ]; then
+    echo "==> Running custom command: \$*"
+    exec "\$@"
 else
-    echo "==> Starting gunicorn on 0.0.0.0:${APP_PORT}"
+    echo "==> Starting gunicorn on 0.0.0.0:\${APP_PORT}"
     exec gunicorn config.wsgi:application \
-        --bind "0.0.0.0:${APP_PORT}" \
+        --bind "0.0.0.0:\${APP_PORT}" \
         --workers 2 \
         --timeout 120 \
         --access-logfile - \
