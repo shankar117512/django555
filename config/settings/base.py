@@ -269,19 +269,19 @@ ENVIRONMENT = config("ENVIRONMENT", default="dev")
 # ─────────────────────────────────────────────────
 # SENTRY (production error tracking)
 # ─────────────────────────────────────────────────
-SENTRY_DSN = config("SENTRY_DSN", default="")
-if SENTRY_DSN:
-    import sentry_sdk
-    from sentry_sdk.integrations.celery import CeleryIntegration
-    from sentry_sdk.integrations.django import DjangoIntegration
+# SENTRY_DSN = config("SENTRY_DSN", default="")
+# if SENTRY_DSN:
+#    import sentry_sdk
+#    from sentry_sdk.integrations.celery import CeleryIntegration
+#    from sentry_sdk.integrations.django import DjangoIntegration
 
-    sentry_sdk.init(
-        dsn=SENTRY_DSN,
-        integrations=[DjangoIntegration(), CeleryIntegration()],
-        environment=ENVIRONMENT,
-        traces_sample_rate=0.1,
-        send_default_pii=False,
-    )
+#    sentry_sdk.init(
+#        dsn=SENTRY_DSN,
+#        integrations=[DjangoIntegration(), CeleryIntegration()],
+#        environment=ENVIRONMENT,
+#        traces_sample_rate=0.1,
+#        send_default_pii=False,
+#    )
 
 # ─────────────────────────────────────────────────
 # CORS

@@ -1,2 +1,11 @@
+# .coveragerc
+[run]
+source = .
+omit =
+    */settings/*
+    */migrations/*
+    manage.py
+    venv/*
+
 [report]
 fail_under = 85
