@@ -1,5 +1,10 @@
-# apps/core/tests.py
-from django.test import Client, TestCase
+# apps/core/tests/test_models.py
+#
+# NOTE: These are Django TestCase classes (not pytest classes), so they manage
+# their own DB transactions.  The session-scoped django_db_setup in conftest.py
+# has already created the public tenant + domains by the time these run.
+
+from django.test import Client, RequestFactory, TestCase
 from django.urls import reverse
 
 
@@ -33,16 +38,13 @@ class HomeViewTest(TestCase):
         self.assertContains(response, "/health/")
 
     def test_home_post_not_allowed(self):
-        """POST to home should return 405 Method Not Allowed."""
+        """POST to home should not cause a server error."""
         response = self.client.post(self.url)
-        # Django function views return 405 only if explicitly disallowed;
-        # the default behaviour is 200. This just confirms no server error.
         self.assertNotEqual(response.status_code, 500)
 
     def test_home_is_accessible_without_auth(self):
-        """Home page is public — no login required."""
+        """Home page is public — no login required, no redirect."""
         response = self.client.get(self.url)
-        # Must NOT redirect to login
         self.assertNotEqual(response.status_code, 302)
 
     def test_home_html_structure(self):
@@ -59,8 +61,6 @@ class TenantMiddlewareWithHealthCheckTest(TestCase):
     """
 
     def _make_request(self, path):
-        from django.test import RequestFactory
-
         factory = RequestFactory()
         return factory.get(path)
 

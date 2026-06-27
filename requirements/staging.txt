@@ -12,3 +12,4 @@ locust>=2.29.0
 
 # Utils
 typing-extensions>=4.9.0
+sentry-sdk==2.63.0
