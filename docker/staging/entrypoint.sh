@@ -58,9 +58,6 @@ if tenant_created:
 else:
     print(f'Public tenant already exists.')
 
-# KEY FIX: look up by 'domain' (the unique-constrained column),
-# not by (tenant, is_primary) which has no unique constraint and
-# caused Django to INSERT instead of UPDATE, hitting the duplicate key error.
 domain, domain_created = Domain.objects.update_or_create(
     domain=hostname,
     defaults={'tenant': tenant, 'is_primary': True},
@@ -72,15 +69,15 @@ else:
 "
 
 # ── Start server ─────────────────────────────────────────────────────────────
-APP_PORT="\${PORT:-8080}"
+APP_PORT="${PORT:-8080}"
 
-if [ "\$#" -gt 0 ]; then
-    echo "==> Running custom command: \$*"
-    exec "\$@"
+if [ "$#" -gt 0 ]; then
+    echo "==> Running custom command: $*"
+    exec "$@"
 else
-    echo "==> Starting gunicorn on 0.0.0.0:\${APP_PORT}"
+    echo "==> Starting gunicorn on 0.0.0.0:${APP_PORT}"
     exec gunicorn config.wsgi:application \
-        --bind "0.0.0.0:\${APP_PORT}" \
+        --bind "0.0.0.0:${APP_PORT}" \
         --workers 2 \
         --timeout 120 \
         --access-logfile - \
