@@ -28,7 +28,7 @@ if RAILWAY_DOMAIN:
     CSRF_TRUSTED_ORIGINS.append(f"https://{RAILWAY_DOMAIN}")
 
 # Security
-SECURE_SSL_REDIRECT = False
+SECURE_SSL_REDIRECT = config("SECURE_SSL_REDIRECT", default=False, cast=bool)
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
 SECURE_HSTS_SECONDS = 31536000
@@ -36,12 +36,14 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 # SSL: only require it when DATABASE_URL doesn't explicitly disable it
-# dj_database_url already parsed the URL in base.py, so we patch OPTIONS here
+# dj_database_url already parsed the URL in base.py, so we patch OPTIONS here.
+# Guard against DATABASES not having a 'default' key (e.g. misconfigured base.py).
 _db_url = os.environ.get("DATABASE_URL", "")
-if "sslmode=disable" in _db_url:
-    DATABASES["default"]["OPTIONS"] = {"sslmode": "disable"}
-else:
-    DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
+if DATABASES.get("default"):  # noqa: F405
+    if "sslmode=disable" in _db_url:
+        DATABASES["default"]["OPTIONS"] = {"sslmode": "disable"}  # noqa: F405
+    else:
+        DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}  # noqa: F405
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -52,7 +54,7 @@ EMAIL_HOST_PASSWORD = config("EMAIL_HOST_PASSWORD", default="")
 EMAIL_USE_TLS = True
 
 # Throttling
-REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {
+REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {  # noqa: F405
     "anon": "50/day",
     "user": "500/day",
 }

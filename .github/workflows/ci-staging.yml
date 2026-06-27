@@ -93,7 +93,7 @@ jobs:
           SECURE_SSL_REDIRECT: "False"
         run: |
           coverage run -m pytest --tb=short -v --junit-xml=test-results.xml
-          coverage report --fail-under=80
+          coverage report --fail-under=85
           coverage xml
 
       - name: Upload coverage

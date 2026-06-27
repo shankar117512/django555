@@ -5,39 +5,32 @@ from pathlib import Path
 import pytest
 
 # ── Load .env.staging BEFORE Django settings are imported ──────────────────
-# This fixes: "DJANGO_SECRET_KEY not found" when running pytest locally.
+# Uses python-dotenv directly so the filename (.env.staging) is explicit.
 # In CI, variables are injected as real env vars so this is a no-op.
-from decouple import AutoConfig
-from rest_framework.test import APIClient
 
-_env_path = Path(__file__).resolve().parent / "envs"
-_config = AutoConfig(search_path=str(_env_path))
+_env_file = Path(__file__).resolve().parent / "envs" / ".env.staging"
 
-_ENV_VARS = [
-    "DJANGO_SECRET_KEY",
-    "DATABASE_URL",
-    "REDIS_URL",
-    "CELERY_BROKER_URL",
-    "ALLOWED_HOSTS",
-    "DEBUG",
-    "SECURE_SSL_REDIRECT",
-    "LOG_LEVEL",
-    "SENTRY_DSN",
-    "EMAIL_HOST",
-    "EMAIL_PORT",
-    "EMAIL_HOST_USER",
-    "EMAIL_HOST_PASSWORD",
-    "CORS_ALLOWED_ORIGINS",
-    "ENVIRONMENT",
-    "DJANGO_SETTINGS_MODULE",
-]
+if _env_file.exists():
+    # python-dotenv: load only vars not already set in the environment
+    try:
+        from dotenv import load_dotenv
 
-for _var in _ENV_VARS:
-    if _var not in os.environ:
-        try:
-            os.environ[_var] = _config(_var)
-        except Exception:
-            pass  # Optional vars that may not exist in all envs
+        load_dotenv(dotenv_path=str(_env_file), override=False)
+    except ImportError:
+        # Fallback: manual parse if python-dotenv is not installed
+        with open(_env_file) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, value = line.partition("=")
+                key = key.strip()
+                value = value.strip().strip('"').strip("'")
+                if key and key not in os.environ:
+                    os.environ[key] = value
+
+
+from rest_framework.test import APIClient  # noqa: E402 — must come after env setup
 
 
 @pytest.fixture
@@ -64,7 +57,7 @@ def django_db_setup(django_db_blocker):
             defaults={"name": "Public"},
         )
 
-        # Resolve Domain model safely — adjust app_label if yours differs
+        # Resolve Domain model safely
         try:
             DomainModel = apps.get_model("products", "Domain")
         except LookupError:
