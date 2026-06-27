@@ -1,19 +1,7 @@
-[tool.pytest.ini_options]
-DJANGO_SETTINGS_MODULE = "config.settings.staging"
-python_files = ["tests.py", "test_*.py", "*_tests.py"]
-python_classes = ["Test*"]
-python_functions = ["test_*"]
-asyncio_mode = "strict"
-
+# pyproject.toml (root) Staging
 [tool.coverage.run]
 source = ["apps"]
-omit = [
-    "*/migrations/*",
-    "*/tests/*",
-    "*/conftest.py",
-    "*/admin.py",
-    "*/apps.py",
-]
+omit = ["*/migrations/*", "*/tests/*", "*/conftest.py", "*/admin.py", "*/apps.py"]
 
 [tool.coverage.report]
 fail_under = 85
