@@ -1,86 +1,14 @@
 [
   {
-    "id": "6ae88cff-ba09-450c-a522-ee61e0e709ca",
+    "id": "2fb7d1e9-ba70-4cbb-9cda-e0bb66edc84a",
     "status": "SUCCESS",
-    "createdAt": "2026-06-26T13:18:58.311Z",
-    "meta": {
-      "buildOnly": false,
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE"
-        }
-      },
-      "imageDigest": "sha256:9a9bb2d26d01fc72d86915194cc0fed29c27947be46a370e31d8cde35f755240",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
-      },
-      "reason": "deploy",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": null,
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "f17a46dd-ccfb-4c7c-b9e2-b43e9c1d1087",
-    "status": "REMOVED",
-    "createdAt": "2026-06-26T13:16:57.339Z",
+    "createdAt": "2026-06-27T18:29:03.988Z",
     "meta": {
       "branch": "staging",
       "buildOnly": false,
       "commitAuthor": "shankar117512",
-      "commitHash": "7d6632dc88bb8e05ff6f1dfdc9642a4b4e64b9e9",
-      "commitMessage": "is",
+      "commitHash": "89f4890d1ce71837dbec9ac650e614e726b0a060",
+      "commitMessage": "CI - STAGING",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -94,7 +22,7 @@
           "restartPolicyType": "ON_FAILURE"
         }
       },
-      "imageDigest": "sha256:d6e54e8a651ed17d975829b68193cf44b118d13d2dabadc3eff39c40cf3aa4af",
+      "imageDigest": "sha256:846be8d1066a8c13d56e6ff925a84fa3365cd77bf349aa51f916b335d219a49f",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",
@@ -150,9 +78,9 @@
     }
   },
   {
-    "id": "be4e5f67-4de5-4905-b95f-19e71abd5a6c",
+    "id": "a21a4ecf-09f6-40b8-b123-527b2b6bd1fb",
     "status": "REMOVED",
-    "createdAt": "2026-06-26T13:14:37.611Z",
+    "createdAt": "2026-06-27T18:26:46.787Z",
     "meta": {
       "buildOnly": false,
       "configFile": "/railway.toml",
@@ -168,7 +96,7 @@
           "restartPolicyType": "ON_FAILURE"
         }
       },
-      "imageDigest": "sha256:383cde8b72ca2c34dfed5e7500eef716cd926377a86062142e524358a5d6317d",
+      "imageDigest": "sha256:8e5f987cfd4281af788a3c9d736d88132a39a522df82d41eb2dfa4676b47272d",
       "logsV2": true,
       "nixpacksProviders": [],
       "propertyFileMapping": {
@@ -222,15 +150,15 @@
     }
   },
   {
-    "id": "6fe8aa38-bb9f-4280-9ebd-977cd77660b4",
+    "id": "c2f7866f-3f83-4c23-8274-94ece68a880f",
     "status": "REMOVED",
-    "createdAt": "2026-06-26T13:12:13.968Z",
+    "createdAt": "2026-06-27T18:24:27.632Z",
     "meta": {
       "branch": "staging",
       "buildOnly": false,
       "commitAuthor": "shankar117512",
-      "commitHash": "7d6632dc88bb8e05ff6f1dfdc9642a4b4e64b9e9",
-      "commitMessage": "is",
+      "commitHash": "89f4890d1ce71837dbec9ac650e614e726b0a060",
+      "commitMessage": "CI - STAGING",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -244,7 +172,7 @@
           "restartPolicyType": "ON_FAILURE"
         }
       },
-      "imageDigest": "sha256:d6e54e8a651ed17d975829b68193cf44b118d13d2dabadc3eff39c40cf3aa4af",
+      "imageDigest": "sha256:846be8d1066a8c13d56e6ff925a84fa3365cd77bf349aa51f916b335d219a49f",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",
@@ -300,314 +228,14 @@
     }
   },
   {
-    "id": "3e976395-d34c-4a08-ada6-1cbf8a84f625",
+    "id": "d85ed12f-e6f1-4fb0-be86-dd05e46d2cb7",
     "status": "REMOVED",
-    "createdAt": "2026-06-26T12:48:31.656Z",
+    "createdAt": "2026-06-27T17:54:53.916Z",
     "meta": {
       "branch": "staging",
       "buildOnly": false,
       "commitAuthor": "shankar117512",
-      "commitHash": "1f5b4f94801b81dba2415e19b1b1acd9343f04ea",
-      "commitMessage": "conf",
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE"
-        }
-      },
-      "imageDigest": "sha256:7339ae503114bddbc8a253525975b86bacd02ea17ac6d59aeef639414b900d40",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "plan": "hobby",
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
-      },
-      "reason": "deploy",
-      "repo": "shankar117512/django555",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": null,
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "74d32b09-9b59-4ed1-af8b-ec562a895dfa",
-    "status": "REMOVED",
-    "createdAt": "2026-06-26T12:36:36.523Z",
-    "meta": {
-      "branch": "staging",
-      "buildOnly": false,
-      "commitAuthor": "shankar117512",
-      "commitHash": "607a6587ecb1de013d359c3c4ad65d4b4a5f44c3",
-      "commitMessage": "style: apply black formatting to conftest.py",
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE"
-        }
-      },
-      "imageDigest": "sha256:720eb2cda46c03bfdfd7ef8a8fe9bd8d22077a4c52b1231003db67dcc8501156",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "plan": "hobby",
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
-      },
-      "reason": "deploy",
-      "repo": "shankar117512/django555",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": null,
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "a4a7f8cf-27cd-4e4a-a255-75071162ca9a",
-    "status": "REMOVED",
-    "createdAt": "2026-06-26T12:31:05.471Z",
-    "meta": {
-      "buildOnly": false,
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE"
-        }
-      },
-      "imageDigest": "sha256:b29630ad47fd987f244ddb7d5e1d246d5ea6b514133bb143a9dea23ffd44bc37",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
-      },
-      "reason": "deploy",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": null,
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "1af64ca3-4695-4af1-896d-e93d71d21734",
-    "status": "REMOVED",
-    "createdAt": "2026-06-26T12:22:27.876Z",
-    "meta": {
-      "buildOnly": false,
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE"
-        }
-      },
-      "imageDigest": "sha256:b29630ad47fd987f244ddb7d5e1d246d5ea6b514133bb143a9dea23ffd44bc37",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
-      },
-      "reason": "deploy",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/staging/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": null,
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "e482cca1-c02e-4d59-a3ef-5b397467d4f8",
-    "status": "REMOVED",
-    "createdAt": "2026-06-26T12:18:49.248Z",
-    "meta": {
-      "branch": "staging",
-      "buildOnly": false,
-      "commitAuthor": "shankar117512",
-      "commitHash": "8e71360142ef69a13d078d2841144ab29303beb4",
+      "commitHash": "7ccc6a790b2ad02369ceebc60109da495d2b21b4",
       "commitMessage": "all",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
@@ -622,7 +250,7 @@
           "restartPolicyType": "ON_FAILURE"
         }
       },
-      "imageDigest": "sha256:d8a95c60e34af555c61a637f91b2246c18f55fece15b09dae2756d7583c305f8",
+      "imageDigest": "sha256:3f687a8b9b6a2a3767259e49b114b05d2fcdde9abf3ba4ada286c8ff5bece864",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",
@@ -678,15 +306,15 @@
     }
   },
   {
-    "id": "f9af36d3-4ba8-4f2c-a203-3f4f4bd16b20",
+    "id": "154837fe-6dbb-409f-95dc-a940b624c135",
     "status": "REMOVED",
-    "createdAt": "2026-06-26T08:09:36.880Z",
+    "createdAt": "2026-06-27T11:42:34.815Z",
     "meta": {
       "branch": "staging",
       "buildOnly": false,
       "commitAuthor": "shankar117512",
-      "commitHash": "af8b6f39ad04af6fc8eaf2cf0da35d3c8870a781",
-      "commitMessage": "Conflict Errors",
+      "commitHash": "23d76f716d9a1f3599be770a75bd8819ded98630",
+      "commitMessage": "CI - STAGING",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -700,7 +328,385 @@
           "restartPolicyType": "ON_FAILURE"
         }
       },
-      "imageDigest": "sha256:26aaefee8e385f6b96e790d55f2ebf4839e56cda374d9bd3ea51f8d618b06454",
+      "imageDigest": "sha256:6f6e6ef8e668a9cc8e6bc5ce22d02ee627fffa0a782bad4622f3b2ed5068c220",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "plan": "hobby",
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+      },
+      "reason": "rollback",
+      "repo": "shankar117512/django555",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": null,
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "54c55c1d-4ddb-4fba-8203-f830a19c3479",
+    "status": "REMOVED",
+    "createdAt": "2026-06-27T11:40:21.158Z",
+    "meta": {
+      "buildOnly": false,
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE"
+        }
+      },
+      "imageDigest": "sha256:a5a8507f832d5465fcd4ebdbfdc2a3033c884ef80d38c3ee6ff8e5c6c50d3185",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+      },
+      "reason": "deploy",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": null,
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "8df04fbb-e417-4e29-862f-2cb392884fd1",
+    "status": "REMOVED",
+    "createdAt": "2026-06-27T11:38:01.068Z",
+    "meta": {
+      "branch": "staging",
+      "buildOnly": false,
+      "commitAuthor": "shankar117512",
+      "commitHash": "23d76f716d9a1f3599be770a75bd8819ded98630",
+      "commitMessage": "CI - STAGING",
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE"
+        }
+      },
+      "imageDigest": "sha256:6f6e6ef8e668a9cc8e6bc5ce22d02ee627fffa0a782bad4622f3b2ed5068c220",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "plan": "hobby",
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+      },
+      "reason": "deploy",
+      "repo": "shankar117512/django555",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": null,
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "39f94a0b-128d-4546-a9c1-5d24d447d259",
+    "status": "REMOVED",
+    "createdAt": "2026-06-27T11:02:25.254Z",
+    "meta": {
+      "branch": "staging",
+      "buildOnly": false,
+      "commitAuthor": "shankar117512",
+      "commitHash": "088284766147970850703590c1aab69ddeead677",
+      "commitMessage": "CI -STAGING",
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE"
+        }
+      },
+      "imageDigest": "sha256:1e15129a4acf000e340349e50b0dd2a06c36dfbb5220021d7ae071f10d11f577",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "plan": "hobby",
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+      },
+      "reason": "rollback",
+      "repo": "shankar117512/django555",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": null,
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "e1a9eaa6-19af-45e7-86b3-9d70c3791859",
+    "status": "REMOVED",
+    "createdAt": "2026-06-27T10:59:59.126Z",
+    "meta": {
+      "buildOnly": false,
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE"
+        }
+      },
+      "imageDigest": "sha256:803310aff291671f0d137f291c99e8ecfe8f2642a298b1e7edbf8b9086efc6ec",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType"
+      },
+      "reason": "deploy",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": null,
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "7c7c7202-85ff-4b55-94f7-7554d04ae194",
+    "status": "REMOVED",
+    "createdAt": "2026-06-27T10:57:42.220Z",
+    "meta": {
+      "branch": "staging",
+      "buildOnly": false,
+      "commitAuthor": "shankar117512",
+      "commitHash": "088284766147970850703590c1aab69ddeead677",
+      "commitMessage": "CI -STAGING",
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/staging/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE"
+        }
+      },
+      "imageDigest": "sha256:1e15129a4acf000e340349e50b0dd2a06c36dfbb5220021d7ae071f10d11f577",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",

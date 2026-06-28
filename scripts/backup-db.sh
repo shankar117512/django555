@@ -10,7 +10,7 @@ BACKUP_DIR="/var/backups/django"
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG_FILE="logs/backup.log"
 
-# ── Load env ─────────────────────────────────────────────────────────────────
+# ── Load env ──────────────────────────────────────────────────────────────────
 source envs/.env.staging
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$(dirname "$LOG_FILE")"
@@ -42,6 +42,15 @@ fi
 
 echo "Parsed connection → user=$DB_USER  host=$DB_HOST  port=$DB_PORT  db=$DB_NAME"
 
+# ── Detect server version ─────────────────────────────────────────────────────
+SERVER_VERSION=$(PGPASSWORD="$DB_PASS" psql \
+    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+    -tAc "SHOW server_version;" 2>/dev/null || echo "unknown")
+echo "Server PostgreSQL version: $SERVER_VERSION"
+
+CLIENT_VERSION=$(pg_dump --version | awk '{print $3}')
+echo "Client pg_dump version:    $CLIENT_VERSION"
+
 # ── Test connection before dumping ────────────────────────────────────────────
 echo "Testing DB connection..."
 if ! PGPASSWORD="$DB_PASS" psql \
@@ -50,16 +59,18 @@ if ! PGPASSWORD="$DB_PASS" psql \
     echo "ERROR: Cannot connect to $DB_NAME as $DB_USER@$DB_HOST:$DB_PORT"
     echo ""
     echo "  Troubleshooting checklist:"
-    echo "  1. Is the Railway database service running? (check Railway dashboard)"
+    echo "  1. Is the database service running?"
     echo "  2. Is your IP whitelisted? Railway may restrict external connections."
     echo "  3. Run manually to see the real error:"
-    echo "     PGPASSWORD='$DB_PASS' psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
+    echo "     PGPASSWORD='...' psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
     exit 1
 fi
 echo "Connection OK."
 
-# ── Run backup (plain SQL so restore is straightforward) ──────────────────────
-# Using --format=plain so the .sql.gz can be restored with psql, not pg_restore
+# ── Run backup ────────────────────────────────────────────────────────────────
+# Plain SQL format so restore uses psql (not pg_restore).
+# We strip SET lines for parameters unknown to older servers (e.g. transaction_timeout
+# added in PG17/18 but not recognised by PG16 and below) so the dump is portable.
 BACKUP_FILE="$BACKUP_DIR/${ENVIRONMENT}_${DB_NAME}_${TIMESTAMP}.sql.gz"
 echo "Backing up $DB_NAME → $BACKUP_FILE"
 echo "[$TIMESTAMP] Backup started — $ENVIRONMENT — $DB_NAME" >> "$LOG_FILE"
@@ -67,6 +78,7 @@ echo "[$TIMESTAMP] Backup started — $ENVIRONMENT — $DB_NAME" >> "$LOG_FILE"
 PGPASSWORD="$DB_PASS" pg_dump \
     -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
     --no-acl --no-owner --format=plain \
+    | grep -v "^SET transaction_timeout" \
     | gzip > "$BACKUP_FILE"
 
 # ── Validate the backup file isn't empty ─────────────────────────────────────

@@ -18,8 +18,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # SECURITY
 # ─────────────────────────────────────────────────
 # FIX 1: Removed the duplicate hardcoded SECRET_KEY line.
-SECRET_KEY = config("DJANGO_SECRET_KEY")
-
+# SECRET_KEY = config("DJANGO_SECRET_KEY")
+SECRET_KEY = config("DJANGO_SECRET_KEY", default="unsafe-development-key")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")

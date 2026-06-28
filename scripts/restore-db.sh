@@ -12,7 +12,7 @@ LOG_FILE="logs/restore.log"
 # ── Validate arguments ────────────────────────────────────────────────────────
 if [ -z "$BACKUP_FILE" ]; then
     echo "Usage: $0 <backup_file>"
-    echo "Example: $0 /var/backups/django/staging_railway_20260625_185648.sql.gz"
+    echo "Example: $0 /var/backups/django/staging_django_staging_20260628_000651.sql.gz"
     exit 1
 fi
 
@@ -52,6 +52,12 @@ fi
 
 echo "Parsed connection → user=$DB_USER  host=$DB_HOST  port=$DB_PORT  db=$DB_NAME"
 
+# ── Detect server version ─────────────────────────────────────────────────────
+SERVER_VERSION=$(PGPASSWORD="$DB_PASS" psql \
+    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+    -tAc "SHOW server_version;" 2>/dev/null || echo "unknown")
+echo "Server PostgreSQL version: $SERVER_VERSION"
+
 # ── Test connection ───────────────────────────────────────────────────────────
 echo "Testing DB connection..."
 if ! PGPASSWORD="$DB_PASS" psql \
@@ -60,13 +66,18 @@ if ! PGPASSWORD="$DB_PASS" psql \
     echo "ERROR: Cannot connect to $DB_NAME as $DB_USER@$DB_HOST:$DB_PORT"
     echo ""
     echo "  Troubleshooting checklist:"
-    echo "  1. Is the Railway database service running? (check Railway dashboard)"
+    echo "  1. Is the database service running?"
     echo "  2. Is your IP whitelisted? Railway may restrict external connections."
     echo "  3. Run manually to see the real error:"
-    echo "     PGPASSWORD='$DB_PASS' psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
+    echo "     PGPASSWORD='...' psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
     exit 1
 fi
 echo "Connection OK."
+
+# ── Peek inside the backup to detect dump-time client version ────────────────
+DUMP_CLIENT_VER=$(gunzip -c "$BACKUP_FILE" 2>/dev/null | head -20 \
+    | grep "^-- Dumped by pg_dump" | grep -oP '\d+\.\d+' | head -1 || echo "unknown")
+echo "Backup was created by pg_dump: $DUMP_CLIENT_VER"
 
 # ── Confirm before destructive restore ───────────────────────────────────────
 echo ""
@@ -88,7 +99,9 @@ mkdir -p logs
 SAFETY_BACKUP="logs/pre_restore_${ENVIRONMENT}_$(date +%Y%m%d_%H%M%S).sql.gz"
 PGPASSWORD="$DB_PASS" pg_dump \
     -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
-    --no-acl --no-owner --format=plain | gzip > "$SAFETY_BACKUP"
+    --no-acl --no-owner --format=plain \
+    | grep -v "^SET transaction_timeout" \
+    | gzip > "$SAFETY_BACKUP"
 echo "Safety backup saved: $SAFETY_BACKUP"
 
 # ── Terminate active connections ──────────────────────────────────────────────
@@ -100,19 +113,23 @@ PGPASSWORD="$DB_PASS" psql \
         WHERE datname = '$DB_NAME'
           AND pid <> pg_backend_pid();" > /dev/null
 
-# ── Drop and recreate all tables (clean slate) ────────────────────────────────
-# Since Railway runs as superuser 'postgres', we can drop/recreate the schema
+# ── Drop and recreate public schema (clean slate) ────────────────────────────
 echo "Dropping public schema and recreating (clean slate)..."
 PGPASSWORD="$DB_PASS" psql \
     -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
     -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
 
-# ── Restore using psql (works with plain-format .sql.gz dumps) ───────────────
+# ── Restore — strip lines that only newer PostgreSQL servers understand ───────
+# Specifically: SET transaction_timeout was introduced in PG17/18.
+# Piping through grep -v removes those lines before psql sees them,
+# making dumps from pg_dump 17/18 safely restorable onto PG16 servers.
 echo "Restoring from $BACKUP_FILE..."
-gunzip -c "$BACKUP_FILE" | PGPASSWORD="$DB_PASS" psql \
-    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
-    --single-transaction \
-    -v ON_ERROR_STOP=1
+gunzip -c "$BACKUP_FILE" \
+    | grep -v "^SET transaction_timeout" \
+    | PGPASSWORD="$DB_PASS" psql \
+        -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+        --single-transaction \
+        -v ON_ERROR_STOP=1
 
 echo "✅ Restore complete."
 echo "[$TIMESTAMP] RESTORE SUCCESS: $BACKUP_FILE → $ENVIRONMENT ($DB_NAME)" >> "$LOG_FILE"
