@@ -1,5 +1,6 @@
-# conftest.py (project root)
+# conftest.py
 import pytest
+from django.core.management import call_command
 from rest_framework.test import APIClient
 
 
@@ -9,9 +10,12 @@ def api_client():
 
 
 @pytest.fixture(scope="session")
-def django_db_setup(django_db_blocker):
-    """Set up public tenant and localhost domain for all tests."""
+def django_db_setup(django_test_environment, django_db_blocker):
+    """Run migrations then set up public tenant for all tests."""
     with django_db_blocker.unblock():
+        # Run all migrations including tenant migrations
+        call_command("migrate_schemas", "--shared", verbosity=0)
+
         from django.apps import apps
         from django_tenants.utils import get_public_schema_name, get_tenant_model
 
