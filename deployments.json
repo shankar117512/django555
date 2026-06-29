@@ -1,10 +1,14 @@
 [
   {
-    "id": "513056cb-65ef-47a2-8b8b-9001ebe43201",
+    "id": "11f81299-0df2-4207-8f81-d3be3e44bbc0",
     "status": "SUCCESS",
-    "createdAt": "2026-06-19T18:51:48.584Z",
+    "createdAt": "2026-06-28T13:09:26.263Z",
     "meta": {
+      "branch": "dev",
       "buildOnly": false,
+      "commitAuthor": "shankar117512",
+      "commitHash": "9c2c5918eaeed098fe44476ee09d28121077b93e",
+      "commitMessage": "CI_DEV",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -19,83 +23,10 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:b6a51fc4263678b472d1b343dfd2d362bcdb77e3f97dd4d1b5a3b9ec1afb61a7",
+      "imageDigest": "sha256:81527cd337502e2eb63c64a615deb01a0fd04fbc82e7d3190a50b9b3d9d13176",
       "logsV2": true,
       "nixpacksProviders": [],
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType",
-        "deploy.startCommand": "$.deploy.startCommand"
-      },
-      "reason": "deploy",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/dev/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'",
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "4299b08b-0f79-4b63-b1ed-1adcd9f3f7c1",
-    "status": "REMOVED",
-    "createdAt": "2026-06-19T18:50:45.383Z",
-    "meta": {
-      "buildOnly": false,
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/dev/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
-        }
-      },
-      "imageDigest": "sha256:bf348271778f4f94f4adeafcba2b1e943c2148b84b9b7a0577160d65b6558ba4",
-      "logsV2": true,
-      "nixpacksProviders": [],
+      "plan": "hobby",
       "propertyFileMapping": {
         "build.builder": "$.build.builder",
         "build.dockerfilePath": "$.build.dockerfilePath",
@@ -106,6 +37,7 @@
         "deploy.startCommand": "$.deploy.startCommand"
       },
       "reason": "rollback",
+      "repo": "shankar117512/django555",
       "rootDirectory": null,
       "runtime": "V2",
       "serviceManifest": {
@@ -148,15 +80,11 @@
     }
   },
   {
-    "id": "970bfe21-ba0c-4f1d-9f20-6dfd914b2477",
+    "id": "a4e18c99-0cc9-4108-9e75-62e041a4a4f7",
     "status": "REMOVED",
-    "createdAt": "2026-06-19T18:49:31.622Z",
+    "createdAt": "2026-06-28T13:07:06.831Z",
     "meta": {
-      "branch": "dev",
       "buildOnly": false,
-      "commitAuthor": "shankar117512",
-      "commitHash": "f79b58b3ff17eb2e2d804f68c48aba8dc1687ec0",
-      "commitMessage": "Rollback Success",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -171,7 +99,85 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:dcbb2b83160a246adea126dec9624bed5fdd78fa014fc5b4069dfd3e0ab214b2",
+      "imageDigest": "sha256:614e2a17ec8ffdbfb8b9fc7edf075b90397c76d7169649f737fc672bda66975b",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType",
+        "deploy.startCommand": "$.deploy.startCommand"
+      },
+      "reason": "deploy",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/dev/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'",
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "8e465f7f-bd5b-4beb-a9d6-0a0ffe61a73a",
+    "status": "REMOVED",
+    "createdAt": "2026-06-28T13:04:55.823Z",
+    "meta": {
+      "branch": "dev",
+      "buildOnly": false,
+      "commitAuthor": "shankar117512",
+      "commitHash": "9c2c5918eaeed098fe44476ee09d28121077b93e",
+      "commitMessage": "CI_DEV",
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/dev/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
+        }
+      },
+      "imageDigest": "sha256:81527cd337502e2eb63c64a615deb01a0fd04fbc82e7d3190a50b9b3d9d13176",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",
@@ -228,9 +234,9 @@
     }
   },
   {
-    "id": "09e7aced-82a0-4c39-9c2a-9f5dbe8396bd",
+    "id": "2b9374fe-ae06-4a91-b9b6-c6293f3cabbf",
     "status": "REMOVED",
-    "createdAt": "2026-06-19T18:41:44.043Z",
+    "createdAt": "2026-06-28T12:18:43.835Z",
     "meta": {
       "buildOnly": false,
       "configFile": "/railway.toml",
@@ -247,7 +253,7 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:bf348271778f4f94f4adeafcba2b1e943c2148b84b9b7a0577160d65b6558ba4",
+      "imageDigest": "sha256:1be6d0aa49ee8eea6f9daeffeb9313dfb35110e05b45292153744c46bc786448",
       "logsV2": true,
       "nixpacksProviders": [],
       "propertyFileMapping": {
@@ -302,15 +308,15 @@
     }
   },
   {
-    "id": "9a1bfea2-6e68-48fd-8d21-c5ccf5e9517c",
+    "id": "84d3efb1-5399-4ced-8d1c-efaa00a63a0f",
     "status": "REMOVED",
-    "createdAt": "2026-06-19T18:39:31.926Z",
+    "createdAt": "2026-06-28T12:16:15.011Z",
     "meta": {
       "branch": "dev",
       "buildOnly": false,
       "commitAuthor": "shankar117512",
-      "commitHash": "c3d62b7cf9007686ac5264138675c84c69b3cb06",
-      "commitMessage": "ROLLBACK.YML",
+      "commitHash": "80c1dd76cd2ee531f961da853c8fbb6dd1a21492",
+      "commitMessage": "fix",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -325,7 +331,7 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:1a60a2d04e7e9afed2195c81ae710e103f343e6d25194704b5699f3f8cecc2c8",
+      "imageDigest": "sha256:b16a7b2d4e3e47679fed2679433cc452b354770524e0b516a9325690114c7844",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",
@@ -382,9 +388,9 @@
     }
   },
   {
-    "id": "9f731b97-16e7-4d48-9f3e-351209ff3245",
+    "id": "7177db22-2e17-4944-adec-b50900a45ea8",
     "status": "REMOVED",
-    "createdAt": "2026-06-19T18:25:43.596Z",
+    "createdAt": "2026-06-20T13:20:35.336Z",
     "meta": {
       "buildOnly": false,
       "configFile": "/railway.toml",
@@ -401,7 +407,7 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:298dd69a6a49e1dcfd55db24fd8d64e0862c80a0f57bda6396f1141f843a6eea",
+      "imageDigest": "sha256:4dea07beb0d6bb952b62c3e718d71832682198ef4146b4ab52df1dca02657eb6",
       "logsV2": true,
       "nixpacksProviders": [],
       "propertyFileMapping": {
@@ -456,15 +462,15 @@
     }
   },
   {
-    "id": "95863f84-b0df-41df-a2f0-071d07f6f055",
+    "id": "750cc9e7-25b1-41fd-9a63-9ba8732e65c0",
     "status": "REMOVED",
-    "createdAt": "2026-06-19T18:23:18.948Z",
+    "createdAt": "2026-06-20T13:13:49.157Z",
     "meta": {
       "branch": "dev",
       "buildOnly": false,
       "commitAuthor": "shankar117512",
-      "commitHash": "7d3a93b7c433c47fbc0269b037c70e68faf0ae91",
-      "commitMessage": "modified rollback",
+      "commitHash": "d8cbaf7f672c550bee9bf254a61916cf178771af",
+      "commitMessage": "CI - DEV",
       "configFile": "/railway.toml",
       "fileServiceManifest": {
         "build": {
@@ -479,7 +485,161 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:c8b1668c30205c4a27662787530a6447820102e43eb09eadb5d81b3110ce4221",
+      "imageDigest": "sha256:5f4a6eae05cc8aed98df258bb5603f43ab05a5cc11ff00f0ffbdacd20d22501a",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "plan": "hobby",
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType",
+        "deploy.startCommand": "$.deploy.startCommand"
+      },
+      "reason": "rollback",
+      "repo": "shankar117512/django555",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/dev/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'",
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "caae24c3-7b77-4e13-bc37-c76ea2f5a3af",
+    "status": "REMOVED",
+    "createdAt": "2026-06-20T13:11:48.406Z",
+    "meta": {
+      "buildOnly": false,
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/dev/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
+        }
+      },
+      "imageDigest": "sha256:bf437d4b22de1345be292501f4f134432672583887fdb0a8bc2d74f08a22f34d",
+      "logsV2": true,
+      "nixpacksProviders": [],
+      "propertyFileMapping": {
+        "build.builder": "$.build.builder",
+        "build.dockerfilePath": "$.build.dockerfilePath",
+        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
+        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
+        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
+        "deploy.restartPolicyType": "$.deploy.restartPolicyType",
+        "deploy.startCommand": "$.deploy.startCommand"
+      },
+      "reason": "deploy",
+      "rootDirectory": null,
+      "runtime": "V2",
+      "serviceManifest": {
+        "build": {
+          "buildCommand": null,
+          "buildEnvironment": "V3",
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/dev/Dockerfile",
+          "nixpacksConfigPath": null,
+          "nixpacksPlan": null,
+          "watchPatterns": []
+        },
+        "deploy": {
+          "cronSchedule": null,
+          "drainingSeconds": null,
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "ipv6EgressEnabled": false,
+          "limitOverride": null,
+          "multiRegionConfig": {
+            "us-west2": {
+              "numReplicas": 1
+            }
+          },
+          "numReplicas": 1,
+          "overlapSeconds": null,
+          "preDeployCommand": null,
+          "region": null,
+          "registryCredentials": null,
+          "requiredMountPath": null,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "runtime": "V2",
+          "sleepApplication": false,
+          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'",
+          "useLegacyStacker": false
+        }
+      },
+      "volumeMounts": []
+    }
+  },
+  {
+    "id": "bd489d4f-e332-44cc-83e0-7963e2c5c646",
+    "status": "REMOVED",
+    "createdAt": "2026-06-20T13:09:43.201Z",
+    "meta": {
+      "branch": "dev",
+      "buildOnly": false,
+      "commitAuthor": "shankar117512",
+      "commitHash": "d8cbaf7f672c550bee9bf254a61916cf178771af",
+      "commitMessage": "CI - DEV",
+      "configFile": "/railway.toml",
+      "fileServiceManifest": {
+        "build": {
+          "builder": "DOCKERFILE",
+          "dockerfilePath": "docker/dev/Dockerfile"
+        },
+        "deploy": {
+          "healthcheckPath": "/health/",
+          "healthcheckTimeout": 60,
+          "restartPolicyMaxRetries": 3,
+          "restartPolicyType": "ON_FAILURE",
+          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
+        }
+      },
+      "imageDigest": "sha256:5f4a6eae05cc8aed98df258bb5603f43ab05a5cc11ff00f0ffbdacd20d22501a",
       "logsV2": true,
       "nixpacksProviders": [],
       "plan": "hobby",
@@ -536,9 +696,9 @@
     }
   },
   {
-    "id": "42c8548b-7ef1-43f5-94a2-88b53b553f45",
+    "id": "a814e4f1-3889-4b58-a0fa-e522a21cda6d",
     "status": "REMOVED",
-    "createdAt": "2026-06-19T17:59:30.240Z",
+    "createdAt": "2026-06-20T11:03:28.529Z",
     "meta": {
       "buildOnly": false,
       "configFile": "/railway.toml",
@@ -555,161 +715,7 @@
           "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
         }
       },
-      "imageDigest": "sha256:e6799e05fa28b3e7bcd76dd13788668e3257d95f2c3eacc353ee5bd7e6796488",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType",
-        "deploy.startCommand": "$.deploy.startCommand"
-      },
-      "reason": "deploy",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/dev/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'",
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "fcdb1697-f037-4cd3-89f8-c1b17f55df57",
-    "status": "REMOVED",
-    "createdAt": "2026-06-19T17:57:12.388Z",
-    "meta": {
-      "branch": "dev",
-      "buildOnly": false,
-      "commitAuthor": "shankar117512",
-      "commitHash": "6b1d4134f6bcb4154b2d11e674e08a31bebacfe6",
-      "commitMessage": "Rollback.yml",
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/dev/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
-        }
-      },
-      "imageDigest": "sha256:6cc107188de9b6deb87c54ee1a5c57c18fe1437ca741642dd4e6b6c124e8500c",
-      "logsV2": true,
-      "nixpacksProviders": [],
-      "plan": "hobby",
-      "propertyFileMapping": {
-        "build.builder": "$.build.builder",
-        "build.dockerfilePath": "$.build.dockerfilePath",
-        "deploy.healthcheckPath": "$.deploy.healthcheckPath",
-        "deploy.healthcheckTimeout": "$.deploy.healthcheckTimeout",
-        "deploy.restartPolicyMaxRetries": "$.deploy.restartPolicyMaxRetries",
-        "deploy.restartPolicyType": "$.deploy.restartPolicyType",
-        "deploy.startCommand": "$.deploy.startCommand"
-      },
-      "reason": "deploy",
-      "repo": "shankar117512/django555",
-      "rootDirectory": null,
-      "runtime": "V2",
-      "serviceManifest": {
-        "build": {
-          "buildCommand": null,
-          "buildEnvironment": "V3",
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/dev/Dockerfile",
-          "nixpacksConfigPath": null,
-          "nixpacksPlan": null,
-          "watchPatterns": []
-        },
-        "deploy": {
-          "cronSchedule": null,
-          "drainingSeconds": null,
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "ipv6EgressEnabled": false,
-          "limitOverride": null,
-          "multiRegionConfig": {
-            "us-west2": {
-              "numReplicas": 1
-            }
-          },
-          "numReplicas": 1,
-          "overlapSeconds": null,
-          "preDeployCommand": null,
-          "region": null,
-          "registryCredentials": null,
-          "requiredMountPath": null,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "runtime": "V2",
-          "sleepApplication": false,
-          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'",
-          "useLegacyStacker": false
-        }
-      },
-      "volumeMounts": []
-    }
-  },
-  {
-    "id": "b23d8bd7-dc05-4365-a3a9-8da0247fa7b8",
-    "status": "REMOVED",
-    "createdAt": "2026-06-19T17:34:37.150Z",
-    "meta": {
-      "buildOnly": false,
-      "configFile": "/railway.toml",
-      "fileServiceManifest": {
-        "build": {
-          "builder": "DOCKERFILE",
-          "dockerfilePath": "docker/dev/Dockerfile"
-        },
-        "deploy": {
-          "healthcheckPath": "/health/",
-          "healthcheckTimeout": 60,
-          "restartPolicyMaxRetries": 3,
-          "restartPolicyType": "ON_FAILURE",
-          "startCommand": "sh -c 'gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 4 --timeout 120'"
-        }
-      },
-      "imageDigest": "sha256:8e33970384221a7fb2df6109354708665d7dfb758cb6e6d3ad37a92085f1a241",
+      "imageDigest": "sha256:4bc3e5904c1d455fcf24f9f46a91168bb1ae8617be5c5c5870b7844fc3b21166",
       "logsV2": true,
       "nixpacksProviders": [],
       "propertyFileMapping": {

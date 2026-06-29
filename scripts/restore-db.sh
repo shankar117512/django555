@@ -1,55 +1,133 @@
 #!/bin/bash
-# scripts/restore-db.sh — dev only
-# Usage: ./scripts/restore-db.sh <backup_file>
+# scripts/restore-db.sh
+# Restores PostgreSQL database from a compressed backup (.sql.gz)
 
-set -e
+set -euo pipefail
 
-BACKUP_FILE="${1}"
 ENVIRONMENT="dev"
-DB_NAME="django_dev"
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 LOG_FILE="logs/restore.log"
 
-if [ -z "$BACKUP_FILE" ]; then
-    echo "Usage: $0 <backup_file>"
-    echo "Example: $0 /var/backups/django/dev_django_dev_20260619_173822.sql.gz"
+#############################################
+# Load Environment Variables
+#############################################
+
+ENV_FILE=".env.dev"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "ERROR: $ENV_FILE not found."
     exit 1
 fi
 
-if [ ! -f "$BACKUP_FILE" ]; then
-    echo "ERROR: Backup file not found: $BACKUP_FILE"
+source "$ENV_FILE"
+
+if [[ -z "${DATABASE_URL:-}" ]]; then
+    echo "ERROR: DATABASE_URL not found in $ENV_FILE"
     exit 1
 fi
 
-source envs/.env.dev
+#############################################
+# Parse DATABASE_URL
+#############################################
 
-DB_USER=$(echo "$DATABASE_URL" | sed 's|postgres://||' | cut -d: -f1)
-DB_PASS=$(echo "$DATABASE_URL" | cut -d: -f3 | cut -d@ -f1)
-DB_HOST=$(echo "$DATABASE_URL" | cut -d@ -f2 | cut -d: -f1)
-DB_PORT=$(echo "$DATABASE_URL" | cut -d@ -f2 | cut -d: -f2 | cut -d/ -f1)
+URL="${DATABASE_URL#postgres://}"
 
-echo "[$TIMESTAMP] RESTORE started: $BACKUP_FILE → $ENVIRONMENT" >> "$LOG_FILE"
+DB_USER="${URL%%:*}"
+URL="${URL#*:}"
 
-echo "Creating pre-restore safety backup..."
-SAFETY_BACKUP="logs/pre_restore_${ENVIRONMENT}_$(date +%Y%m%d_%H%M%S).sql.gz"
-PGPASSWORD="$DB_PASS" pg_dump \
-    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
-    --format=custom | gzip > "$SAFETY_BACKUP"
-echo "Safety backup: $SAFETY_BACKUP"
+DB_PASS="${URL%%@*}"
+URL="${URL#*@}"
 
-echo "Dropping existing database connections..."
-PGPASSWORD="$DB_PASS" psql \
-    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres \
-    -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='$DB_NAME';"
+DB_HOST="${URL%%:*}"
+URL="${URL#*:}"
 
-echo "Restoring from $BACKUP_FILE..."
-gunzip -c "$BACKUP_FILE" | PGPASSWORD="$DB_PASS" pg_restore \
-    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
-    --verbose --no-acl --no-owner --clean --if-exists
+DB_PORT="${URL%%/*}"
+DB_NAME="${URL#*/}"
 
-echo "✅ Restore complete."
-echo "[$TIMESTAMP] RESTORE SUCCESS: $BACKUP_FILE → $ENVIRONMENT" >> "$LOG_FILE"
+#############################################
+# Validate
+#############################################
 
-echo "Running Django migrations..."
-ENVIRONMENT="$ENVIRONMENT" python manage.py migrate --noinput
-echo "Restore and migration complete."
+if [[ -z "$DB_USER" || -z "$DB_PASS" || -z "$DB_HOST" || -z "$DB_PORT" || -z "$DB_NAME" ]]; then
+    echo "ERROR: Failed to parse DATABASE_URL"
+    exit 1
+fi
+
+#############################################
+# Check Required Programs
+#############################################
+
+if ! command -v psql >/dev/null 2>&1; then
+    echo "ERROR: psql not installed."
+    exit 1
+fi
+
+if ! command -v gunzip >/dev/null 2>&1; then
+    echo "ERROR: gunzip not installed."
+    exit 1
+fi
+
+#############################################
+# Check Backup File
+#############################################
+
+if [[ $# -ne 1 ]]; then
+    echo "Usage:"
+    echo "./scripts/restore-db.sh /path/to/backup.sql.gz"
+    exit 1
+fi
+
+BACKUP_FILE="$1"
+
+if [[ ! -f "$BACKUP_FILE" ]]; then
+    echo "ERROR: Backup file not found:"
+    echo "$BACKUP_FILE"
+    exit 1
+fi
+
+#############################################
+# Confirmation
+#############################################
+
+echo ""
+echo "==============================================="
+echo "WARNING!"
+echo "This will completely overwrite database:"
+echo "  $DB_NAME"
+echo "Host: $DB_HOST"
+echo "==============================================="
+echo ""
+
+read -p "Continue? (yes/no): " ANSWER
+
+if [[ "$ANSWER" != "yes" ]]; then
+    echo "Restore cancelled."
+    exit 0
+fi
+
+#############################################
+# Restore
+#############################################
+
+mkdir -p "$(dirname "$LOG_FILE")"
+
+TIMESTAMP=$(date +"%Y%m%d_%H%M%S")
+
+echo "[$TIMESTAMP] Restore Started" >> "$LOG_FILE"
+
+echo ""
+echo "Restoring database..."
+echo "Backup file: $BACKUP_FILE"
+
+PGPASSWORD="$DB_PASS" gunzip -c "$BACKUP_FILE" | \
+psql \
+    -h "$DB_HOST" \
+    -p "$DB_PORT" \
+    -U "$DB_USER" \
+    -d "$DB_NAME"
+
+echo ""
+echo "Restore completed successfully."
+
+echo "[$TIMESTAMP] SUCCESS ($BACKUP_FILE)" >> "$LOG_FILE"
+
+echo "Done."
