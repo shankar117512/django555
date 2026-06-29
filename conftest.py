@@ -11,13 +11,11 @@ import pytest
 _env_file = Path(__file__).resolve().parent / "envs" / ".env.staging"
 
 if _env_file.exists():
-    # python-dotenv: load only vars not already set in the environment
     try:
         from dotenv import load_dotenv
 
         load_dotenv(dotenv_path=str(_env_file), override=False)
     except ImportError:
-        # Fallback: manual parse if python-dotenv is not installed
         with open(_env_file) as f:
             for line in f:
                 line = line.strip()
@@ -38,13 +36,26 @@ def api_client():
     return APIClient()
 
 
-@pytest.fixture(scope="session")
-def django_db_setup(django_db_blocker):
-    """
-    Set up the public tenant with both 'localhost' and 'testserver' domains.
+# ---------------------------------------------------------------------------
+# Tenant bootstrap
+# ---------------------------------------------------------------------------
+# We do NOT override pytest-django's `django_db_setup` fixture by name — doing
+# so bypasses migration execution, which is why `products_client` (and every
+# other table) was missing.  Instead we hook into `django_db_modify_db_settings`
+# (a no-op shim) and do the one-time tenant seed inside a regular
+# session-scoped autouse fixture that explicitly requests `django_db_setup`
+# so migrations have already run by the time our code executes.
+# ---------------------------------------------------------------------------
 
-    'testserver' is the HOST Django's test client always sends — it must be
-    registered or every request will 404 at the tenant-routing middleware.
+
+@pytest.fixture(scope="session", autouse=True)
+def _seed_public_tenant(django_db_setup, django_db_blocker):
+    """
+    Ensure the public tenant + the two domains Django's test client uses
+    ('localhost' and 'testserver') exist in the already-migrated database.
+
+    This fixture runs once per test session, *after* pytest-django has run
+    all migrations (because it depends on `django_db_setup`).
     """
     with django_db_blocker.unblock():
         from django.apps import apps
@@ -57,18 +68,15 @@ def django_db_setup(django_db_blocker):
             defaults={"name": "Public"},
         )
 
-        # Resolve Domain model safely
         try:
             DomainModel = apps.get_model("products", "Domain")
         except LookupError:
-            # Fallback: try the standard django-tenants app label
             DomainModel = apps.get_model("django_tenants", "Domain")
 
-        DomainModel.objects.get_or_create(
-            domain="localhost",
-            defaults={"tenant": tenant, "is_primary": True},
-        )
-        DomainModel.objects.get_or_create(
-            domain="testserver",
-            defaults={"tenant": tenant, "is_primary": False},
-        )
+        # 'testserver' is the HOST Django's test client always sends.
+        # 'localhost' is used by direct API / browser-style tests.
+        for domain, is_primary in [("localhost", True), ("testserver", False)]:
+            DomainModel.objects.get_or_create(
+                domain=domain,
+                defaults={"tenant": tenant, "is_primary": is_primary},
+            )

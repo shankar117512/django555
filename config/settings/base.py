@@ -17,8 +17,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # ─────────────────────────────────────────────────
 # SECURITY
 # ─────────────────────────────────────────────────
-# FIX 1: Removed the duplicate hardcoded SECRET_KEY line.
-# SECRET_KEY = config("DJANGO_SECRET_KEY")
 SECRET_KEY = config("DJANGO_SECRET_KEY", default="unsafe-development-key")
 DEBUG = config("DEBUG", default=False, cast=bool)
 
@@ -48,31 +46,35 @@ THIRD_PARTY_APPS = [
     "axes",
 ]
 
-# FIX 2: django_tenants requires SHARED_APPS to be a *tuple*, and django_tenants
-# must appear FIRST. The previous code used tuple() around a list + list expression
-# which produced a list, not a tuple. Now explicitly cast to tuple().
+# SHARED_APPS: tables live in the *public* schema and are accessible from every
+# tenant schema.  django_tenants itself MUST be first.  The `products` app
+# (which owns the Client/Domain models) MUST also be shared so that the tenant
+# router can resolve tenants before any per-tenant schema is activated.
+#
+# apps.tenants (our internal tenants app) belongs here too: it manages tenant
+# lifecycle and must be queryable from the public schema.
 SHARED_APPS = tuple(
     [
         "django_tenants",  # must be first
-        "products",  # the tenant/domain model lives here
+        "products",  # owns Client + Domain — must be shared
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
+    + [
+        "apps.tenants",  # tenant-management app — lives in public schema
+    ]
 )
 
-# FIX 3: TENANT_APPS must only contain apps that are *tenant-specific* (per-schema).
-# "apps.tenants" was here before but tenant management itself lives in SHARED_APPS
-# ("products"). Removed "apps.tenants" from TENANT_APPS to avoid the circular
-# reference where the app managing tenants is also isolated per-tenant.
+# TENANT_APPS: apps whose tables are created *per tenant schema*.
+# Do NOT put apps.tenants here — it belongs in SHARED_APPS (see above).
 TENANT_APPS = [
     "apps.core",
     "apps.api",
     "apps.monitoring",
-    "apps.tenants",
 ]
 
-# FIX 4: INSTALLED_APPS must be a list; dedup correctly.
-# django_tenants requires SHARED_APPS + TENANT_APPS (no duplicates).
+# INSTALLED_APPS = union of SHARED_APPS + TENANT_APPS (no duplicates).
+# List order is preserved; SHARED_APPS entries come first.
 INSTALLED_APPS = list(SHARED_APPS) + [
     app for app in TENANT_APPS if app not in SHARED_APPS
 ]
@@ -88,8 +90,14 @@ TENANT_CACHE_SECONDS = 300
 
 # ─────────────────────────────────────────────────
 # MIDDLEWARE
-# Order matters: PrometheusBeforeMiddleware first, TenantMiddleware second,
-# AxesMiddleware must come AFTER AuthenticationMiddleware (confirmed below).
+# Order matters:
+#   1. PrometheusBeforeMiddleware  — wraps everything for metrics
+#   2. TenantMiddlewareWithHealthCheck — activates tenant schema early;
+#      health-check paths bypass tenant resolution so the DB doesn't need to
+#      be up for /health/.
+#   3. Standard Django middleware stack.
+#   4. AxesMiddleware — MUST come after AuthenticationMiddleware.
+#   5. PrometheusAfterMiddleware — closes the metrics wrap.
 # ─────────────────────────────────────────────────
 MIDDLEWARE = [
     "django_prometheus.middleware.PrometheusBeforeMiddleware",
@@ -129,6 +137,8 @@ TEMPLATES = [
 
 # ─────────────────────────────────────────────────
 # DATABASE
+# django_tenants requires its own postgresql backend.  The public schema is
+# used for all SHARED_APPS tables (including products_client / products_domain).
 # ─────────────────────────────────────────────────
 DATABASES = {
     "default": dj_database_url.config(
@@ -138,6 +148,8 @@ DATABASES = {
     )
 }
 
+# Explicitly name the public schema so django_tenants knows where shared tables
+# live.  This must match get_public_schema_name() (default: "public").
 DATABASES["default"]["SCHEMA"] = "public"
 
 DATABASE_ROUTERS = ("django_tenants.routers.TenantSyncRouter",)
@@ -159,9 +171,6 @@ CACHES = {
     }
 }
 
-# FIX 5: axes stores lockout records in the DB, not cache. Using cache-based
-# sessions is fine, but do NOT use cache for axes itself (it uses its own DB
-# models by default). Session config below is correct; axes config is separate.
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "default"
 
@@ -210,8 +219,6 @@ REST_FRAMEWORK = {
     },
 }
 
-# FIX 6: Added SIMPLE_JWT config block. simplejwt is used for authentication
-# but was never configured, relying on all defaults silently.
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
@@ -231,9 +238,6 @@ USE_TZ = True
 
 # ─────────────────────────────────────────────────
 # STATIC & MEDIA
-# FIX 7: Django 4.2+ deprecated STATICFILES_STORAGE in favour of the STORAGES
-# dict. Kept the old key for backwards compat with older Django, but added the
-# new STORAGES dict so this works on Django 4.2+ without deprecation warnings.
 # ─────────────────────────────────────────────────
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -291,6 +295,4 @@ AUTHENTICATION_BACKENDS = [
 ]
 AXES_FAILURE_LIMIT = 5
 AXES_COOLOFF_TIME = 1  # hours
-# FIX 8: axes must use DB for lockout storage (not cache), since SESSION_ENGINE
-# is already pointed at cache. Explicitly declare this to avoid silent misconfig.
 AXES_HANDLER = "axes.handlers.database.AxesDatabaseHandler"

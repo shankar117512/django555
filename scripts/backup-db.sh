@@ -11,13 +11,26 @@ TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG_FILE="logs/backup.log"
 
 # ── Load env ──────────────────────────────────────────────────────────────────
-source envs/.env.staging
+ENV_FILE=".env.staging"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "ERROR: $ENV_FILE not found."
+    exit 1
+fi
+
+source "$ENV_FILE"
+
+if [[ -z "${DATABASE_URL:-}" ]]; then
+    echo "ERROR: DATABASE_URL not found in $ENV_FILE"
+    exit 1
+fi
+
 mkdir -p "$BACKUP_DIR"
 mkdir -p "$(dirname "$LOG_FILE")"
 
 # ── Validate DATABASE_URL ─────────────────────────────────────────────────────
 if [ -z "$DATABASE_URL" ]; then
-    echo "ERROR: DATABASE_URL is not set in envs/.env.staging"
+    echo "ERROR: DATABASE_URL is not set in $ENV_FILE"
     exit 1
 fi
 
