@@ -154,11 +154,19 @@ jobs:
       - name: Install Railway CLI
         run: npm install -g @railway/cli
 
+      # NOTE: RAILWAY_TOKEN_PRODUCTION must be a *Project Token*
+      # (Railway dashboard → Project → Settings → Tokens → "Create Token",
+      # generated FROM the production environment screen).
+      # A Project Token is already locked to one project + one environment,
+      # so we must NOT run `railway environment production` — that command
+      # requires an *Account* token and will return "Unauthorized" with a
+      # Project Token. Project tokens also auto-link the project, so
+      # `railway link` is unnecessary too.
+
       - name: Record pre-deploy version
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
-          railway environment production
           railway status --json > pre_deploy_status.txt
           cat pre_deploy_status.txt
           jq -e '.id' pre_deploy_status.txt > /dev/null
@@ -168,7 +176,6 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
-          railway environment production
           railway up --service gregarious-purpose --detach
           echo "deploy_sha=${{ github.sha }}" >> $GITHUB_OUTPUT
 
