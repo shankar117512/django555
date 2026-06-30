@@ -159,8 +159,9 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
           railway environment production
-          railway status --json > pre_deploy_status.txt || railway status > pre_deploy_status.txt
+          railway status --json > pre_deploy_status.txt
           cat pre_deploy_status.txt
+          jq -e '.id' pre_deploy_status.txt > /dev/null
 
       - name: Deploy to Railway Production
         id: deploy
@@ -178,6 +179,13 @@ jobs:
         id: smoke_test
         run: |
           BASE_URL="${{ vars.PRODUCTION_URL }}"
+
+          if [ -z "$BASE_URL" ]; then
+            echo "PRODUCTION_URL is not set. Configure it under Settings > Environments > production > Variables."
+            echo "SMOKE_FAILED=true" >> $GITHUB_OUTPUT
+            exit 1
+          fi
+
           FAILED=0
 
           echo "Testing health endpoint..."
@@ -201,13 +209,16 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
           echo "Smoke tests failed. Initiating automatic rollback..."
-          PREVIOUS_DEPLOYMENT_ID=$(grep -oE '"id":"[a-f0-9-]+"' pre_deploy_status.txt | head -1 | cut -d'"' -f4)
-          if [ -z "$PREVIOUS_DEPLOYMENT_ID" ]; then
+          PREVIOUS_DEPLOYMENT_ID=$(jq -r '.id' pre_deploy_status.txt)
+
+          if [ -z "$PREVIOUS_DEPLOYMENT_ID" ] || [ "$PREVIOUS_DEPLOYMENT_ID" == "null" ]; then
             echo "Could not determine previous deployment id, skipping rollback."
             exit 1
           fi
+
           curl -X POST https://backboard.railway.app/graphql/v2 \
             -H "Authorization: Bearer $RAILWAY_TOKEN" \
             -H "Content-Type: application/json" \
             -d "{\"query\":\"mutation { deploymentRollback(id: \\\"$PREVIOUS_DEPLOYMENT_ID\\\") }\"}"
+
           echo "Rollback request sent."
