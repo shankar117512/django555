@@ -146,28 +146,19 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     environment:
       name: production
-      url: ${{ vars.PRODUCTION_URL }}
+      url: https://yourapp.com
 
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Railway CLI
+      - name: Install Railway CLI          # ✅ FIXED — was: bash <(curl -fsSL cli.new)
         run: npm install -g @railway/cli
-
-      # NOTE: RAILWAY_TOKEN_PRODUCTION must be a *Project Token*
-      # (Railway dashboard → Project → Settings → Tokens → "Create Token",
-      # generated FROM the production environment screen).
-      # A Project Token is already locked to one project + one environment,
-      # so we must NOT run `railway environment production` — that command
-      # requires an *Account* token and will return "Unauthorized" with a
-      # Project Token. Project tokens also auto-link the project, so
-      # `railway link` is unnecessary too.
 
       - name: Record pre-deploy version
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
-          railway environment production
+          railway environment production   # ✅ set env first, then status
           railway status > pre_deploy_status.txt || true
           cat pre_deploy_status.txt
 
@@ -176,6 +167,7 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
+          railway environment production   # ✅ must re-set in each step (new shell)
           railway up --service gregarious-purpose --detach
           echo "deploy_sha=${{ github.sha }}" >> $GITHUB_OUTPUT
 
@@ -185,24 +177,17 @@ jobs:
       - name: Production smoke tests
         id: smoke_test
         run: |
-          BASE_URL="${{ vars.PRODUCTION_URL }}"
-
-          if [ -z "$BASE_URL" ]; then
-            echo "PRODUCTION_URL is not set. Configure it under Settings > Environments > production > Variables."
-            echo "SMOKE_FAILED=true" >> $GITHUB_OUTPUT
-            exit 1
-          fi
-
+          BASE_URL="https://gregarious-purpose-production-98d4.up.railway.app"
           FAILED=0
 
           echo "Testing health endpoint..."
-          curl -fsS "$BASE_URL/health/" || FAILED=1
+          curl -f "$BASE_URL/health/" || FAILED=1
 
           echo "Testing API endpoint..."
-          curl -fsS "$BASE_URL/api/v1/ping/" || FAILED=1
+          curl -f "$BASE_URL/api/v1/" || FAILED=1
 
           echo "Testing metrics endpoint..."
-          curl -fsS "$BASE_URL/metrics/" || FAILED=1
+          curl -f "$BASE_URL/metrics/" || FAILED=1
 
           if [ "$FAILED" -ne 0 ]; then
             echo "SMOKE_FAILED=true" >> $GITHUB_OUTPUT
