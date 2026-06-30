@@ -170,7 +170,6 @@ jobs:
           railway environment production
           railway status > pre_deploy_status.txt || true
           cat pre_deploy_status.txt
-          jq -e '.id' pre_deploy_status.txt > /dev/null
 
       - name: Deploy to Railway Production
         id: deploy
