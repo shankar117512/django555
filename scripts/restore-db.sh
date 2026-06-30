@@ -1,84 +1,134 @@
 #!/bin/bash
-# scripts/restore-db.sh
-# Usage: ./scripts/restore-db.sh [backup_file] [environment]
+# scripts/restore-db.sh — production only
+# Usage: ./scripts/restore-db.sh [/path/to/backup.sql.gz]
+#   If no path is given, the most recent backup in BACKUP_DIR is used.
 
 set -e
+set -o pipefail
 
-BACKUP_FILE="${1}"
-ENVIRONMENT="${2:-production}"
-TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
+ENVIRONMENT="production"
+BACKUP_DIR="/var/backups/django"
+TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG_FILE="logs/restore.log"
 
-if [ -z "$BACKUP_FILE" ]; then
-    echo "Usage: $0 <backup_file> [environment]"
-    echo "Example: $0 /var/backups/django/production_django_production_20260101_120000.sql.gz production"
+# ── Load env ──────────────────────────────────────────────────────────────────
+ENV_FILE=".env.production"
+
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "ERROR: $ENV_FILE not found."
     exit 1
 fi
 
-if [ ! -f "$BACKUP_FILE" ]; then
+source "$ENV_FILE"
+
+if [[ -z "${DATABASE_URL:-}" ]]; then
+    echo "ERROR: DATABASE_URL not found in $ENV_FILE"
+    exit 1
+fi
+
+mkdir -p "$(dirname "$LOG_FILE")"
+
+# ── Resolve backup file ───────────────────────────────────────────────────────
+if [[ -n "${1:-}" ]]; then
+    BACKUP_FILE="$1"
+else
+    echo "No backup file specified — using most recent backup in $BACKUP_DIR ..."
+    BACKUP_FILE=$(ls -t "$BACKUP_DIR"/${ENVIRONMENT}_*.sql.gz 2>/dev/null | head -n 1 || true)
+    if [[ -z "$BACKUP_FILE" ]]; then
+        echo "ERROR: No backup files found in $BACKUP_DIR matching ${ENVIRONMENT}_*.sql.gz"
+        exit 1
+    fi
+fi
+
+if [[ ! -f "$BACKUP_FILE" ]]; then
     echo "ERROR: Backup file not found: $BACKUP_FILE"
     exit 1
 fi
 
-# SAFETY: Require confirmation for production
-if [ "$ENVIRONMENT" = "production" ]; then
-    echo "⚠️  WARNING: You are about to restore the PRODUCTION database!"
-    echo "    This will OVERWRITE all current production data."
-    read -p "Type 'RESTORE PRODUCTION' to confirm: " CONFIRM
-    if [ "$CONFIRM" != "RESTORE PRODUCTION" ]; then
-        echo "Restore cancelled."
-        exit 0
-    fi
+echo "Using backup file: $BACKUP_FILE"
+
+# ── Validate it looks like a gzip file ───────────────────────────────────────
+if ! file "$BACKUP_FILE" | grep -q "gzip"; then
+    echo "ERROR: $BACKUP_FILE does not appear to be a gzip-compressed file."
+    exit 1
 fi
 
-# Load env
-case "$ENVIRONMENT" in
-    production) source envs/.env.production; DB_NAME="django_production" ;;
-    staging)    source envs/.env.staging; DB_NAME="django_staging" ;;
-    dev)        source envs/.env.dev; DB_NAME="django_dev" ;;
-esac
+# ── Parse DATABASE_URL (handles both postgres:// and postgresql://) ───────────
+eval "$(python3 -c "
+from urllib.parse import urlparse
+u = urlparse('$DATABASE_URL')
+print('DB_USER=' + (u.username or ''))
+print('DB_PASS=' + (u.password or ''))
+print('DB_HOST=' + (u.hostname or ''))
+print('DB_PORT=' + str(u.port or 5432))
+print('DB_NAME=' + u.path.lstrip('/'))
+")"
 
-# Parse DATABASE_URL
-DB_USER=$(echo "$DATABASE_URL" | sed 's|postgres://||' | cut -d: -f1)
-DB_PASS=$(echo "$DATABASE_URL" | cut -d: -f3 | cut -d@ -f1)
-DB_HOST=$(echo "$DATABASE_URL" | cut -d@ -f2 | cut -d: -f1)
-DB_PORT=$(echo "$DATABASE_URL" | cut -d@ -f2 | cut -d: -f2 | cut -d/ -f1)
+# ── Sanity-check parsed values ────────────────────────────────────────────────
+if [ -z "$DB_USER" ] || [ -z "$DB_HOST" ] || [ -z "$DB_PASS" ] || [ -z "$DB_NAME" ]; then
+    echo "ERROR: Could not parse DATABASE_URL. Got:"
+    echo "  USER=$DB_USER  HOST=$DB_HOST  PORT=$DB_PORT  DB=$DB_NAME"
+    echo "  Check the format: postgresql://user:pass@host:port/dbname"
+    exit 1
+fi
 
-echo "[$TIMESTAMP] RESTORE started: $BACKUP_FILE → $ENVIRONMENT" >> "$LOG_FILE"
+echo "Parsed connection → user=$DB_USER  host=$DB_HOST  port=$DB_PORT  db=$DB_NAME"
 
-# Step 1: Create pre-restore backup
-echo "Creating pre-restore safety backup..."
-SAFETY_BACKUP="logs/pre_restore_${ENVIRONMENT}_$(date +%Y%m%d_%H%M%S).sql.gz"
-PGPASSWORD="$DB_PASS" pg_dump \
-    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
-    --format=custom | gzip > "$SAFETY_BACKUP"
-echo "Safety backup: $SAFETY_BACKUP"
+# ── Test connection ───────────────────────────────────────────────────────────
+echo "Testing DB connection..."
+if ! PGPASSWORD="$DB_PASS" psql \
+        -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+        -c "SELECT 1;" > /dev/null 2>&1; then
+    echo "ERROR: Cannot connect to $DB_NAME as $DB_USER@$DB_HOST:$DB_PORT"
+    echo ""
+    echo "  Troubleshooting checklist:"
+    echo "  1. Is the database service running?"
+    echo "  2. Is your IP whitelisted? Railway may restrict external connections."
+    echo "  3. Run manually to see the real error:"
+    echo "     PGPASSWORD='...' psql -h $DB_HOST -p $DB_PORT -U $DB_USER -d $DB_NAME"
+    exit 1
+fi
+echo "Connection OK."
 
-# Step 2: Drop & recreate DB
-echo "Dropping existing database connections..."
+# ── Safety prompt ─────────────────────────────────────────────────────────────
+echo ""
+echo "⚠️  WARNING: This will DESTROY and recreate the database '$DB_NAME' on $DB_HOST."
+echo "   All existing data will be permanently lost."
+echo ""
+read -r -p "Type 'yes' to continue, anything else to abort: " CONFIRM
+if [[ "$CONFIRM" != "yes" ]]; then
+    echo "Aborted."
+    exit 0
+fi
+
+# ── Drop & recreate database ──────────────────────────────────────────────────
+# Connect to the default 'postgres' maintenance DB to drop/recreate the target DB.
+echo "Dropping and recreating database '$DB_NAME'..."
+
 PGPASSWORD="$DB_PASS" psql \
-    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" \
-    -d postgres \
-    -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname='$DB_NAME';"
+    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres \
+    -c "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE datname = '$DB_NAME' AND pid <> pg_backend_pid();" \
+    > /dev/null 2>&1 || true
 
-# Step 3: Restore
-echo "Restoring from $BACKUP_FILE..."
-gunzip -c "$BACKUP_FILE" | PGPASSWORD="$DB_PASS" pg_restore \
-    -h "$DB_HOST" \
-    -p "$DB_PORT" \
-    -U "$DB_USER" \
-    -d "$DB_NAME" \
-    --verbose \
-    --no-acl \
-    --no-owner \
-    --clean \
-    --if-exists
+PGPASSWORD="$DB_PASS" psql \
+    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres \
+    -c "DROP DATABASE IF EXISTS \"$DB_NAME\";"
 
-echo "✅ Restore complete."
-echo "[$TIMESTAMP] RESTORE SUCCESS: $BACKUP_FILE → $ENVIRONMENT" >> "$LOG_FILE"
+PGPASSWORD="$DB_PASS" psql \
+    -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d postgres \
+    -c "CREATE DATABASE \"$DB_NAME\" OWNER \"$DB_USER\";"
 
-# Step 4: Run Django migrations to ensure schema is current
-echo "Running Django migrations..."
-ENVIRONMENT="$ENVIRONMENT" python manage.py migrate --noinput
+echo "Database recreated."
 
-echo "Restore and migration complete."
+# ── Restore from backup ───────────────────────────────────────────────────────
+echo "Restoring $BACKUP_FILE → $DB_NAME ..."
+echo "[$TIMESTAMP] Restore started — $ENVIRONMENT — $DB_NAME — file: $BACKUP_FILE" >> "$LOG_FILE"
+
+gunzip -c "$BACKUP_FILE" \
+    | PGPASSWORD="$DB_PASS" psql \
+        -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+        --single-transaction \
+        -v ON_ERROR_STOP=1
+
+echo "✅ Restore complete: $DB_NAME"
+echo "[$TIMESTAMP] Restore SUCCESS: $DB_NAME from $BACKUP_FILE" >> "$LOG_FILE"
