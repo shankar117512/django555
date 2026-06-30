@@ -216,16 +216,6 @@ jobs:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
           echo "Smoke tests failed. Initiating automatic rollback..."
-          PREVIOUS_DEPLOYMENT_ID=$(jq -r '.id' pre_deploy_status.txt)
-
-          if [ -z "$PREVIOUS_DEPLOYMENT_ID" ] || [ "$PREVIOUS_DEPLOYMENT_ID" == "null" ]; then
-            echo "Could not determine previous deployment id, skipping rollback."
-            exit 1
-          fi
-
-          curl -X POST https://backboard.railway.app/graphql/v2 \
-            -H "Authorization: Bearer $RAILWAY_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{\"query\":\"mutation { deploymentRollback(id: \\\"$PREVIOUS_DEPLOYMENT_ID\\\") }\"}"
-
-          echo "Rollback request sent."
+          railway environment production
+          railway rollback --service gregarious-purpose
+          echo "Rollback complete."
