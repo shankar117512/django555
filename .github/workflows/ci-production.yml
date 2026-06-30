@@ -167,7 +167,8 @@ jobs:
         env:
           RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN_PRODUCTION }}
         run: |
-          railway status --json > pre_deploy_status.txt
+          railway environment production
+          railway status > pre_deploy_status.txt || true
           cat pre_deploy_status.txt
           jq -e '.id' pre_deploy_status.txt > /dev/null
 
