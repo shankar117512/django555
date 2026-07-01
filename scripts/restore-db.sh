@@ -1,13 +1,15 @@
 #!/bin/bash
 # scripts/restore-db.sh — production only
-# Usage: ./scripts/restore-db.sh [/path/to/backup.sql.gz]
-#   If no path is given, the most recent backup in BACKUP_DIR is used.
+# Usage: ./scripts/restore-db.sh [/path/to/backup.dump|.sql|.sql.gz]
+#   If no path is given, prefers $BACKUP_DIR/production_backup.dump,
+#   falling back to the most recent timestamped archive.
 
 set -e
 set -o pipefail
 
 ENVIRONMENT="production"
-BACKUP_DIR="/var/backups/django"
+BACKUP_DIR="${BACKUP_DIR:-/var/backups/django}"
+ARCHIVE_DIR="$BACKUP_DIR/archive"
 TIMESTAMP=$(date '+%Y%m%d_%H%M%S')
 LOG_FILE="logs/restore.log"
 
@@ -32,11 +34,17 @@ mkdir -p "$(dirname "$LOG_FILE")"
 if [[ -n "${1:-}" ]]; then
     BACKUP_FILE="$1"
 else
-    echo "No backup file specified — using most recent backup in $BACKUP_DIR ..."
-    BACKUP_FILE=$(ls -t "$BACKUP_DIR"/${ENVIRONMENT}_*.sql.gz 2>/dev/null | head -n 1 || true)
-    if [[ -z "$BACKUP_FILE" ]]; then
-        echo "ERROR: No backup files found in $BACKUP_DIR matching ${ENVIRONMENT}_*.sql.gz"
-        exit 1
+    if [[ -f "$BACKUP_DIR/production_backup.dump" ]]; then
+        echo "No backup file specified — using $BACKUP_DIR/production_backup.dump ..."
+        BACKUP_FILE="$BACKUP_DIR/production_backup.dump"
+    else
+        echo "No backup file specified and no production_backup.dump found —"
+        echo "falling back to most recent archive in $ARCHIVE_DIR ..."
+        BACKUP_FILE=$(ls -t "$ARCHIVE_DIR"/${ENVIRONMENT}_*.sql.gz 2>/dev/null | head -n 1 || true)
+        if [[ -z "$BACKUP_FILE" ]]; then
+            echo "ERROR: No backup files found (checked $BACKUP_DIR/production_backup.dump and $ARCHIVE_DIR)"
+            exit 1
+        fi
     fi
 fi
 
@@ -47,11 +55,36 @@ fi
 
 echo "Using backup file: $BACKUP_FILE"
 
-# ── Validate it looks like a gzip file ───────────────────────────────────────
-if ! file "$BACKUP_FILE" | grep -q "gzip"; then
-    echo "ERROR: $BACKUP_FILE does not appear to be a gzip-compressed file."
-    exit 1
-fi
+# ── Detect backup format ──────────────────────────────────────────────────────
+# .dump         -> pg_dump custom format -> restore with pg_restore
+# .sql.gz       -> gzip-compressed plain SQL -> gunzip | psql
+# .sql          -> plain SQL -> psql
+case "$BACKUP_FILE" in
+    *.dump)
+        FORMAT="custom"
+        ;;
+    *.sql.gz)
+        FORMAT="plain_gz"
+        if ! file "$BACKUP_FILE" | grep -q "gzip"; then
+            echo "ERROR: $BACKUP_FILE does not appear to be a gzip-compressed file."
+            exit 1
+        fi
+        ;;
+    *.sql)
+        FORMAT="plain"
+        ;;
+    *)
+        # Fall back to content sniffing
+        if file "$BACKUP_FILE" | grep -qi "PostgreSQL custom database dump"; then
+            FORMAT="custom"
+        elif file "$BACKUP_FILE" | grep -q "gzip"; then
+            FORMAT="plain_gz"
+        else
+            FORMAT="plain"
+        fi
+        ;;
+esac
+echo "Detected format: $FORMAT"
 
 # ── Parse DATABASE_URL (handles both postgres:// and postgresql://) ───────────
 eval "$(python3 -c "
@@ -94,6 +127,7 @@ echo "Connection OK."
 echo ""
 echo "⚠️  WARNING: This will DESTROY and recreate the database '$DB_NAME' on $DB_HOST."
 echo "   All existing data will be permanently lost."
+echo "   Restoring from: $BACKUP_FILE (format: $FORMAT)"
 echo ""
 read -r -p "Type 'yes' to continue, anything else to abort: " CONFIRM
 if [[ "$CONFIRM" != "yes" ]]; then
@@ -102,7 +136,6 @@ if [[ "$CONFIRM" != "yes" ]]; then
 fi
 
 # ── Drop & recreate database ──────────────────────────────────────────────────
-# Connect to the default 'postgres' maintenance DB to drop/recreate the target DB.
 echo "Dropping and recreating database '$DB_NAME'..."
 
 PGPASSWORD="$DB_PASS" psql \
@@ -122,13 +155,30 @@ echo "Database recreated."
 
 # ── Restore from backup ───────────────────────────────────────────────────────
 echo "Restoring $BACKUP_FILE → $DB_NAME ..."
-echo "[$TIMESTAMP] Restore started — $ENVIRONMENT — $DB_NAME — file: $BACKUP_FILE" >> "$LOG_FILE"
+echo "[$TIMESTAMP] Restore started — $ENVIRONMENT — $DB_NAME — file: $BACKUP_FILE (format: $FORMAT)" >> "$LOG_FILE"
 
-gunzip -c "$BACKUP_FILE" \
-    | PGPASSWORD="$DB_PASS" psql \
-        -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
-        --single-transaction \
-        -v ON_ERROR_STOP=1
+case "$FORMAT" in
+    custom)
+        PGPASSWORD="$DB_PASS" pg_restore \
+            -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+            --no-owner --no-acl \
+            "$BACKUP_FILE"
+        ;;
+    plain_gz)
+        gunzip -c "$BACKUP_FILE" \
+            | PGPASSWORD="$DB_PASS" psql \
+                -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+                --single-transaction \
+                -v ON_ERROR_STOP=1
+        ;;
+    plain)
+        PGPASSWORD="$DB_PASS" psql \
+            -h "$DB_HOST" -p "$DB_PORT" -U "$DB_USER" -d "$DB_NAME" \
+            --single-transaction \
+            -v ON_ERROR_STOP=1 \
+            -f "$BACKUP_FILE"
+        ;;
+esac
 
 echo "✅ Restore complete: $DB_NAME"
 echo "[$TIMESTAMP] Restore SUCCESS: $DB_NAME from $BACKUP_FILE" >> "$LOG_FILE"

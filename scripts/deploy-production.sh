@@ -4,10 +4,11 @@
 set -e
 echo "🚀 Deploying to PRODUCTION environment..."
 
+# Ensure on main branch
 CURRENT_BRANCH=$(git branch --show-current)
 if [ "$CURRENT_BRANCH" != "main" ]; then
-    echo "Switching to main branch..."
-    git checkout main
+    echo "ERROR: Must be on main branch. Currently on: $CURRENT_BRANCH"
+    exit 1
 fi
 
 # Final confirmation
@@ -17,16 +18,14 @@ if [ "$CONFIRM" != "yes" ]; then
     exit 0
 fi
 
-echo "Merging from staging..."
-git merge staging --no-edit
+# Run tests first
+echo "Running tests..."
+ENVIRONMENT=production DJANGO_SETTINGS_MODULE=config.settings.production \
+    pytest --tb=short -q || { echo "Tests failed. Aborting deploy."; exit 1; }
 
-echo "Tagging release..."
-VERSION="v$(date +%Y.%m.%d.%H%M)"
-git tag -a "$VERSION" -m "Production release $VERSION"
-
+# Push to trigger GitHub Actions
 echo "Pushing to origin/main..."
 git push origin main
-git push origin "$VERSION"
 
-echo "✅ Pushed. GitHub Actions will deploy to Railway production."
-echo "   Tag: $VERSION"
+echo "✅ Pushed. GitHub Actions will deploy to Railway production environment."
+echo "   Monitor: https://github.com/$(git remote get-url origin | sed 's|.*github.com/||' | sed 's|\.git||')/actions"

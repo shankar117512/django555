@@ -5,9 +5,8 @@ set -e
 
 TIMESTAMP=$(date '+%Y-%m-%d %H:%M:%S')
 ENDPOINTS=(
-    "https://yourapp.com/health/"
-    "https://staging.yourapp.up.railway.app/health/"
-    "https://dev.yourapp.up.railway.app/health/"
+    "https://gregarious-purpose-production-98d4.up.railway.app"
+    "https://gregarious-purpose-production-98d4.up.railway.app/health/"
 )
 FAILED=0
 
