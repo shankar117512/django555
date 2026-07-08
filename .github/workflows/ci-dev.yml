@@ -189,4 +189,4 @@ jobs:
           echo "Deployment verified: HTTP $STATUS_CODE"
 
       - name: Notify Success
-        run: echo "✅ Dev deployment successful — Commit ${{ github.s }}"
+        run: echo "✅ Dev deployment successful — Commit ${{ github.sha }}"
