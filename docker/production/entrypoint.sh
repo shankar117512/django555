@@ -5,7 +5,6 @@ set -e
 echo "==> [ENTRYPOINT] Environment: $ENVIRONMENT"
 echo "==> [ENTRYPOINT] Settings: $DJANGO_SETTINGS_MODULE"
 
-# Wait for PostgreSQL to be ready
 echo "==> [ENTRYPOINT] Waiting for PostgreSQL..."
 python << 'PYTHON'
 import time
@@ -35,25 +34,18 @@ else:
     exit(1)
 PYTHON
 
-# ─────────────────────────────────────────────────────────────────
-# FIX: django-tenants requires a two-step migration.
-#
-# Step 1 — migrate SHARED apps only (public schema).
-#           This creates the orders_client (tenant) table.
-# Step 2 — migrate ALL tenant schemas.
-#           Now orders_client exists and can be queried safely.
-# ─────────────────────────────────────────────────────────────────
 echo "==> [ENTRYPOINT] Running shared schema migrations..."
 python manage.py migrate_schemas --shared --noinput
+
+echo "==> [ENTRYPOINT] Ensuring public tenant + domain exist..."
+python manage.py create_public_tenant
 
 echo "==> [ENTRYPOINT] Running tenant schema migrations..."
 python manage.py migrate_schemas --noinput
 
-# Collect static files
 echo "==> [ENTRYPOINT] Collecting static files..."
 python manage.py collectstatic --noinput --clear
 
-# Create superuser if not exists (reads from env)
 echo "==> [ENTRYPOINT] Checking superuser..."
 python manage.py shell << 'PYEOF'
 from django.contrib.auth import get_user_model
