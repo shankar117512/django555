@@ -51,6 +51,7 @@ DJANGO_APPS = [
 THIRD_PARTY_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
+    "rest_framework_simplejwt.token_blacklist",
     "corsheaders",
     "django_prometheus",
     "django_celery_results",
@@ -63,6 +64,7 @@ SHARED_APPS = (
     [
         "django_tenants",
         "orders",
+        "accounts",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
@@ -80,6 +82,8 @@ TENANT_APPS = [
 INSTALLED_APPS = list(SHARED_APPS) + [
     app for app in TENANT_APPS if app not in SHARED_APPS
 ]
+
+AUTH_USER_MODEL = "accounts.User"
 
 TENANT_MODEL = "orders.Client"  # example
 TENANT_DOMAIN_MODEL = "orders.Domain"

@@ -31,6 +31,8 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("apps.core.urls", namespace="core")),
     path("api/", include("apps.api.urls", namespace="api")),
+    path("api/accounts/", include("accounts.urls", namespace="accounts")),
+    path("api/orders/", include("orders.urls", namespace="orders")),
     path("monitoring/", include("apps.monitoring.urls", namespace="monitoring")),
     path("metrics/", include("django_prometheus.urls")),
 ]
