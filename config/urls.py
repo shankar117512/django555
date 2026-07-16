@@ -34,7 +34,7 @@ urlpatterns = [
     path("api/accounts/", include("accounts.urls", namespace="accounts")),
     path("api/orders/", include("orders.urls", namespace="orders")),
     path("monitoring/", include("apps.monitoring.urls", namespace="monitoring")),
-    path("metrics/", include("django_prometheus.urls")),
+    path("", include("django_prometheus.urls")),
 ]
 
 if settings.DEBUG:
