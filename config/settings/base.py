@@ -65,6 +65,7 @@ SHARED_APPS = (
         "django_tenants",
         "orders",
         "accounts",
+        "apps.monitoring",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
@@ -75,7 +76,6 @@ TENANT_APPS = [
     "apps.core",
     "apps.api",
     "apps.tenants",
-    "apps.monitoring",
 ]
 
 # ✅ Final installed apps
