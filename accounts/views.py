@@ -12,6 +12,7 @@ from apps.monitoring.utils import (  # was: from apps.metrics.utils import log_a
 
 from .serializers import (
     CustomTokenObtainPairSerializer,
+    ProfileUpdateSerializer,
     RegisterSerializer,
     UserSerializer,
 )
@@ -67,10 +68,12 @@ class LogoutView(APIView):
 
 
 class MeView(generics.RetrieveUpdateAPIView):
-    """GET/PATCH /api/accounts/me/ — logged-in user profile"""
-
-    serializer_class = UserSerializer
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
         return self.request.user
+
+    def get_serializer_class(self):
+        if self.request.method in ["PUT", "PATCH"]:
+            return ProfileUpdateSerializer
+        return UserSerializer
