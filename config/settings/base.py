@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
 from pathlib import Path
 
 import dj_database_url
@@ -91,6 +92,15 @@ TENANT_DOMAIN_MODEL = "orders.Domain"
 # Use Django's cache to store tenant lookups
 TENANT_CACHE_BACKEND = "default"  # uses your DEFAULT cache backend
 TENANT_CACHE_SECONDS = 300  # cache each tenant lookup for 5 minutes (adjust as needed)
+
+
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": True,
+    "ALGORITHM": "HS256",
+}
 
 
 MIDDLEWARE = [
