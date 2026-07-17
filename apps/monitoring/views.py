@@ -21,7 +21,7 @@ CACHE_KEY = "health_check_probe"
 CACHE_VALUE = "ok"
 
 
-# ── Public infra health checks (existing, tested code —) ────────
+# ── Public infra health checks (existing, tested code) ────────
 
 
 def health_check(request):
@@ -85,7 +85,7 @@ class ServerMetricsView(APIView):
         return Response(None)
 
 
-# ── Business/dashboard metrics (add) ──────────────────────────
+# ── Business/dashboard metrics ──────────────────────────
 
 
 class DashboardMetricsView(APIView):
@@ -99,9 +99,20 @@ class DashboardMetricsView(APIView):
 
     def get(self, request):
         today = timezone.now().date()
+
+        # FIX: last_login is never set under JWT auth (UPDATE_LAST_LOGIN
+        # defaults to False in SIMPLE_JWT), so it always showed 0 users.
+        # Use ActivityLog, which we already write on every login instead.
+        active_today = (
+            ActivityLog.objects.filter(action="login", created_at__date=today)
+            .values("user_id")
+            .distinct()
+            .count()
+        )
+
         data = {
             "total_users": User.objects.count(),
-            "active_users_today": User.objects.filter(last_login__date=today).count(),
+            "active_users_today": active_today,
             "total_clients": Client.objects.count(),
             "recent_activity": ActivityLog.objects.select_related("user")[:10],
         }

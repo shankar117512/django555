@@ -3,12 +3,11 @@ from django.contrib.auth import get_user_model
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import TokenObtainPairView
 
-from apps.monitoring.utils import (  # was: from apps.metrics.utils import log_activity
-    log_activity,
-)
+from apps.monitoring.utils import log_activity
 
 from .serializers import (
     CustomTokenObtainPairSerializer,
@@ -42,13 +41,13 @@ class LoginView(TokenObtainPairView):
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
-        if response.status_code == 200:
-            username = request.data.get("username")
-            user = User.objects.filter(username=username).first()
-            if user:
-                log_activity(user, "login", request)
-        return response
+        # FIX: use the serializer's already-authenticated user directly
+        # instead of re-querying by request.data["username"], which breaks
+        # if USERNAME_FIELD changes or the client sends a different key.
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        log_activity(serializer.user, "login", request)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class LogoutView(APIView):
@@ -57,12 +56,21 @@ class LogoutView(APIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
+        # FIX: no more bare "except Exception: pass" — bad/missing tokens
+        # now return a real 400 instead of silently faking success.
+        refresh_token = request.data.get("refresh")
+        if not refresh_token:
+            return Response(
+                {"detail": "refresh token is required"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         try:
-            refresh_token = request.data["refresh"]
-            token = RefreshToken(refresh_token)
-            token.blacklist()
-        except Exception:
-            pass
+            RefreshToken(refresh_token).blacklist()
+        except TokenError:
+            return Response(
+                {"detail": "invalid or expired token"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         log_activity(request.user, "logout", request)
         return Response(status=status.HTTP_205_RESET_CONTENT)
 

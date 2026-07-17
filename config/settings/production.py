@@ -5,17 +5,22 @@ from .base import *
 
 DEBUG = False
 
+# FIX: leading dot allows any subdomain of this Railway domain
+# (needed because django-tenants routes tenants by subdomain).
 ALLOWED_HOSTS = [
-    "gregarious-purpose-production-98d4.up.railway.app",
+    ".gregarious-purpose-production-98d4.up.railway.app",
     "healthcheck.railway.app",
 ]
 
-CSRF_TRUSTED_ORIGINS = ["https://gregarious-purpose-production-98d4.up.railway.app"]
+# FIX: wildcard so tenant subdomains pass CSRF checks on
+# session/admin POSTs, not just the bare production host.
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.gregarious-purpose-production-98d4.up.railway.app",
+]
 
 # Security headers (strict)
 SECURE_SSL_REDIRECT = os.environ.get("SECURE_SSL_REDIRECT", "True") == "True"
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-# ✅ ADD THIS — exempt the health check from SSL redirect
 SECURE_REDIRECT_EXEMPT = [r"^health/$"]
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
@@ -27,7 +32,6 @@ SECURE_HSTS_PRELOAD = True
 X_FRAME_OPTIONS = "DENY"
 
 # Production DB with SSL
-# Only enforce SSL when NOT in CI (GitHub Actions sets CI=true automatically)
 if not os.environ.get("CI"):
     DATABASES["default"]["OPTIONS"] = {"sslmode": "require"}
 

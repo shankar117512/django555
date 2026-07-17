@@ -25,7 +25,12 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class RegisterSerializer(serializers.ModelSerializer):
-    password = serializers.CharField(write_only=True, validators=[validate_password])
+    # FIX: dropped validators=[validate_password] from the field —
+    # field-level validators run with no `user` arg, so
+    # UserAttributeSimilarityValidator never actually compared the
+    # password against username/email. Call validate_password()
+    # manually in validate() below, with the user context, instead.
+    password = serializers.CharField(write_only=True)
     password2 = serializers.CharField(write_only=True)
 
     class Meta:
@@ -43,6 +48,15 @@ class RegisterSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if attrs["password"] != attrs["password2"]:
             raise serializers.ValidationError({"password": "Passwords do not match."})
+
+        temp_user = User(
+            username=attrs.get("username", ""),
+            email=attrs.get("email", ""),
+            first_name=attrs.get("first_name", ""),
+            last_name=attrs.get("last_name", ""),
+        )
+        validate_password(attrs["password"], user=temp_user)
+
         return attrs
 
     def create(self, validated_data):

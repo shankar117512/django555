@@ -5,8 +5,10 @@ from django.db import models
 
 class User(AbstractUser):
     """
-    Custom User model. Tenant-aware — TENANT_APPS లో ఉంది కాబట్టి
-    ప్రతి tenant schema కి ప్రత్యేక users table వస్తుంది.
+    Custom User model. Lives in SHARED_APPS (config/settings/base.py),
+    so this table exists ONCE in the public schema and is shared
+    across all tenants. There is NOT a separate users table per
+    tenant schema.
     """
 
     phone_number = models.CharField(max_length=15, blank=True, null=True)
