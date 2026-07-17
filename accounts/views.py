@@ -94,5 +94,6 @@ class MeView(generics.RetrieveUpdateAPIView):
         return UserSerializer
 
     def perform_update(self, serializer):
-        serializer.save()
+        user = serializer.save()
         PROFILE_UPDATE_COUNTER.inc()
+        log_activity(user, "profile_update", self.request)
