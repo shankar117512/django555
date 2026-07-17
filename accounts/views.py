@@ -9,6 +9,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 
 from apps.monitoring.utils import log_activity
 
+from .metrics import (
+    PROFILE_UPDATE_COUNTER,
+    USER_LOGIN_COUNTER,
+    USER_REGISTER_COUNTER,
+)
 from .serializers import (
     CustomTokenObtainPairSerializer,
     ProfileUpdateSerializer,
@@ -30,6 +35,7 @@ class RegisterView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        USER_REGISTER_COUNTER.inc()
         log_activity(user, "register", request)
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
@@ -46,6 +52,7 @@ class LoginView(TokenObtainPairView):
         # if USERNAME_FIELD changes or the client sends a different key.
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        USER_LOGIN_COUNTER.inc()
         log_activity(serializer.user, "login", request)
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
@@ -85,3 +92,7 @@ class MeView(generics.RetrieveUpdateAPIView):
         if self.request.method in ["PUT", "PATCH"]:
             return ProfileUpdateSerializer
         return UserSerializer
+
+    def perform_update(self, serializer):
+        serializer.save()
+        PROFILE_UPDATE_COUNTER.inc()
