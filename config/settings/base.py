@@ -67,6 +67,7 @@ SHARED_APPS = (
         "orders",
         "accounts",
         "apps.monitoring",
+        "members",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS
