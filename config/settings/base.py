@@ -67,6 +67,7 @@ SHARED_APPS = (
         "orders",
         "accounts",
         "apps.monitoring",
+        "matchline",
     ]
     + DJANGO_APPS
     + THIRD_PARTY_APPS

@@ -1,0 +1,117 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Matchline — Resume vs Job Description</title>
+  <link rel="stylesheet" href="{% static 'matchline/css/style.css' %}">
+</head>
+<body>
+
+  <main class="wrap">
+    <p class="eyebrow">// MATCHLINE</p>
+    <h1 class="headline">
+      How well does your <span class="highlight">resume</span>
+      read against the job?
+    </h1>
+    <p class="subhead">
+      Drop in your resume and the job description. Matchline scans both and
+      shows the overlap, the gaps, and exactly which keywords are missing —
+      like a job's fine print, but marked up.
+    </p>
+
+    <form id="matchForm" class="panels">
+      <div class="panel" data-field="resume">
+        <div class="panel-head">
+          <span class="panel-label">01 — RESUME</span>
+          <span class="panel-pill">PDF · DOCX · TXT</span>
+        </div>
+        <div class="dropzone" data-target="resume_file">
+          <input type="file" id="resume_file" name="resume_file" accept=".pdf,.docx,.txt" hidden>
+          <div class="dropzone-icon">&uarr;</div>
+          <p class="dropzone-text">Drag a file here, or click to browse</p>
+          <p class="dropzone-filename" id="resume_filename"></p>
+          <p class="dropzone-or">— OR PASTE TEXT BELOW —</p>
+          <textarea class="paste-area" id="resume_text" name="resume_text" placeholder="Paste resume text here..."></textarea>
+        </div>
+      </div>
+
+      <div class="panel" data-field="jd">
+        <div class="panel-head">
+          <span class="panel-label">02 — JOB DESCRIPTION</span>
+          <span class="panel-pill">PDF · DOCX · TXT</span>
+        </div>
+        <div class="dropzone" data-target="jd_file">
+          <input type="file" id="jd_file" name="jd_file" accept=".pdf,.docx,.txt" hidden>
+          <div class="dropzone-icon">&uarr;</div>
+          <p class="dropzone-text">Drag a file here, or click to browse</p>
+          <p class="dropzone-filename" id="jd_filename"></p>
+          <p class="dropzone-or">— OR PASTE TEXT BELOW —</p>
+          <textarea class="paste-area" id="jd_text" name="jd_text" placeholder="Paste job description text here..."></textarea>
+        </div>
+      </div>
+    </form>
+
+    <div class="ai-toggle-row">
+      <label class="ai-toggle">
+        <input type="checkbox" id="use_ai">
+        <span>Also run AI-enhanced review</span>
+      </label>
+    </div>
+
+    <div class="run-row">
+      <button type="button" id="runBtn" class="run-btn">Run the match</button>
+    </div>
+
+    <section id="results" class="results" hidden>
+      <div class="score-row">
+        <div class="score-circle">
+          <span id="scoreValue">0</span><span class="score-pct">%</span>
+        </div>
+        <div class="score-copy">
+          <p class="score-label">KEYWORD MATCH</p>
+          <p class="score-desc" id="scoreDesc"></p>
+        </div>
+      </div>
+
+      <div class="kw-grid">
+        <div class="kw-col">
+          <p class="kw-heading matched">MATCHED KEYWORDS</p>
+          <div class="kw-list" id="matchedList"></div>
+        </div>
+        <div class="kw-col">
+          <p class="kw-heading missing">MISSING KEYWORDS</p>
+          <div class="kw-list" id="missingList"></div>
+        </div>
+      </div>
+
+      <div class="ai-block" id="aiBlock" hidden>
+        <p class="kw-heading">AI REVIEW</p>
+        <p class="ai-summary" id="aiSummary"></p>
+        <div class="ai-cols">
+          <div>
+            <p class="ai-subheading">Strengths</p>
+            <ul id="aiStrengths"></ul>
+          </div>
+          <div>
+            <p class="ai-subheading">Gaps</p>
+            <ul id="aiGaps"></ul>
+          </div>
+        </div>
+      </div>
+
+      <p class="error-text" id="errorText" hidden></p>
+    </section>
+
+    <hr class="divider">
+    <p class="footer-text">MATCHLINE — RUNS ENTIRELY ON YOUR SERVER, NOTHING IS STORED</p>
+  </main>
+
+  <script>
+    window.MATCHLINE_RUN_URL = "{% url 'matchline:run_match' %}";
+    window.MATCHLINE_CSRF = "{{ csrf_token }}";
+  </script>
+  <script src="{% static 'matchline/js/script.js' %}"></script>
+</body>
+</html>
