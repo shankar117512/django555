@@ -29,6 +29,11 @@ def health_check(request):
 urlpatterns = [
     path("health/", health_check, name="health_check"),
     path("admin/", admin.site.urls),
+
+    # ✅ ADDED: accounts app was missing from urls.py — this is why
+    # /accounts/login/ was returning 404 in production.
+    path("accounts/", include("accounts.urls", namespace="accounts")),
+
     path("matchline/", include("matchline.urls")),
     path("", include("apps.core.urls", namespace="core")),
     path("api/", include("apps.api.urls", namespace="api")),

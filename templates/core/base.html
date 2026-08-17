@@ -1,0 +1,188 @@
+<!-- templates/core/base.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Gregarious{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            background: #f4f6f9;
+            color: #222;
+        }
+        .topbar {
+            background: #14161a;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 24px;
+        }
+        .topbar .brand {
+            font-weight: 700;
+            font-size: 18px;
+            letter-spacing: .2px;
+        }
+        .topbar .brand .logo {
+            display: inline-block;
+            width: 22px; height: 22px;
+            background: #2f6fed;
+            border-radius: 5px;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        .topbar .right { display: flex; align-items: center; gap: 14px; font-size: 14px; }
+        .logout-btn {
+            background: #2f2f36;
+            color: #fff;
+            border: none;
+            padding: 6px 14px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 13px;
+        }
+        .logout-btn:hover { background: #3f3f47; }
+
+        .layout { display: flex; min-height: calc(100vh - 48px); }
+        .sidebar {
+            width: 200px;
+            background: #ffffff;
+            border-right: 1px solid #eaecef;
+            padding: 18px 0;
+        }
+        .sidebar a {
+            display: block;
+            padding: 10px 24px;
+            color: #333;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .sidebar a.active {
+            color: #2f6fed;
+            font-weight: 600;
+            background: #eef3ff;
+            border-right: 3px solid #2f6fed;
+        }
+        .sidebar a:hover { background: #f5f7fa; }
+
+        .content { flex: 1; padding: 24px 28px; }
+        .page-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .page-header h2 { margin: 0; font-size: 22px; }
+        .refresh-btn {
+            background: #fff;
+            border: 1px solid #dfe3e8;
+            padding: 7px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+        .refresh-btn:hover { background: #f5f7fa; }
+
+        .cards-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
+        .stat-card {
+            background: #fff;
+            border: 1px solid #eaecef;
+            border-radius: 8px;
+            padding: 16px 20px;
+            flex: 1;
+            min-width: 160px;
+        }
+        .stat-card .label { font-size: 13px; color: #777; margin-bottom: 6px; }
+        .stat-card .value { font-size: 22px; font-weight: 700; }
+
+        .panels-row { display: flex; gap: 16px; flex-wrap: wrap; }
+        .panel {
+            background: #fff;
+            border: 1px solid #eaecef;
+            border-radius: 8px;
+            padding: 18px 20px;
+            flex: 1;
+            min-width: 320px;
+        }
+        .panel h3 { margin-top: 0; font-size: 16px; }
+
+        table.data-table { width: 100%; border-collapse: collapse; }
+        table.data-table th, table.data-table td {
+            text-align: left;
+            padding: 10px 12px;
+            font-size: 14px;
+            border-bottom: 1px solid #eee;
+        }
+        table.data-table th { color: #777; font-weight: 600; font-size: 13px; }
+        .empty-row { text-align: center; color: #999; padding: 30px 0 !important; }
+
+        .funnel-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 14px 16px;
+            border: 1px solid #eaecef;
+            border-radius: 6px;
+            margin-bottom: 10px;
+            background: #fff;
+        }
+        .btn-primary {
+            background: #2f6fed;
+            color: #fff;
+            border: none;
+            padding: 9px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover { background: #2559c9; }
+
+        .badge {
+            background: #2f6fed;
+            color: #fff;
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .info-banner {
+            background: #eaf6ff;
+            color: #1a5276;
+            padding: 16px 18px;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <div class="topbar">
+        <div class="brand"><span class="logo"></span>Gregarious</div>
+        <div class="right">
+            <span>Welcome, {{ request.user.username }}</span>
+            <form method="post" action="{% url 'accounts:logout' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="logout-btn">Logout</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="layout">
+        <div class="sidebar">
+            <a href="{% url 'core:dashboard' %}" class="{% if active == 'dashboard' %}active{% endif %}">Dashboard</a>
+            <a href="{% url 'core:campaigns' %}" class="{% if active == 'campaigns' %}active{% endif %}">Campaigns</a>
+            <a href="{% url 'core:leads' %}" class="{% if active == 'leads' %}active{% endif %}">Leads</a>
+            <a href="{% url 'core:ai_insights' %}" class="{% if active == 'ai' %}active{% endif %}">AI Insights</a>
+        </div>
+        <div class="content">
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>
+

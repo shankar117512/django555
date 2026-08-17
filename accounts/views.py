@@ -1,5 +1,7 @@
 # accounts/views.py
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, logout
+from django.contrib.auth.views import LoginView
+from django.shortcuts import redirect
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -24,8 +26,31 @@ from .serializers import (
 User = get_user_model()
 
 
+# ─────────────────────────────────────────────
+# Session-based web login (dashboard కోసం)
+# ─────────────────────────────────────────────
+class CustomLoginView(LoginView):
+    """
+    Renders templates/accounts/login.html
+    Success అయితే -> /client/dashboard/ కి redirect
+    """
+    template_name = "accounts/login.html"
+    redirect_authenticated_user = True
+
+    def get_success_url(self):
+        return "/client/dashboard/"
+
+
+def custom_logout(request):
+    logout(request)
+    return redirect("accounts:login")
+
+
+# ─────────────────────────────────────────────
+# JWT API views (mobile / external clients కోసం)
+# ─────────────────────────────────────────────
 class RegisterView(generics.CreateAPIView):
-    """POST /api/accounts/register/"""
+    """POST /accounts/api/register/"""
 
     queryset = User.objects.all()
     serializer_class = RegisterSerializer
@@ -40,16 +65,13 @@ class RegisterView(generics.CreateAPIView):
         return Response(UserSerializer(user).data, status=status.HTTP_201_CREATED)
 
 
-class LoginView(TokenObtainPairView):
-    """POST /api/accounts/login/  -> {access, refresh, user: {...}}"""
+class APILoginView(TokenObtainPairView):
+    """POST /accounts/api/login/  -> {access, refresh, user: {...}}"""
 
     serializer_class = CustomTokenObtainPairSerializer
     permission_classes = [permissions.AllowAny]
 
     def post(self, request, *args, **kwargs):
-        # FIX: use the serializer's already-authenticated user directly
-        # instead of re-querying by request.data["username"], which breaks
-        # if USERNAME_FIELD changes or the client sends a different key.
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         USER_LOGIN_COUNTER.inc()
@@ -57,14 +79,12 @@ class LoginView(TokenObtainPairView):
         return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
-class LogoutView(APIView):
-    """POST /api/accounts/logout/  body: {"refresh": "<refresh_token>"}"""
+class APILogoutView(APIView):
+    """POST /accounts/api/logout/  body: {"refresh": "<refresh_token>"}"""
 
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        # FIX: no more bare "except Exception: pass" — bad/missing tokens
-        # now return a real 400 instead of silently faking success.
         refresh_token = request.data.get("refresh")
         if not refresh_token:
             return Response(

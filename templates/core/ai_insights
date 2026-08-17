@@ -1,0 +1,18 @@
+{% extends "core/base.html" %}
+{% block title %}AI Insights | Gregarious{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>🚀 AI Lead Insights</h2>
+    <span class="badge">Top 5 Recommendations</span>
+</div>
+
+{% if insights %}
+    {% for item in insights %}
+    <div class="info-banner" style="margin-bottom:10px;">{{ item }}</div>
+    {% endfor %}
+{% else %}
+    <div class="info-banner">No new leads available for AI analysis.</div>
+{% endif %}
+{% endblock %}
+

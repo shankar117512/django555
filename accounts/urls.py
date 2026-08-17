@@ -7,9 +7,14 @@ from . import views
 app_name = "accounts"
 
 urlpatterns = [
-    path("register/", views.RegisterView.as_view(), name="register"),
-    path("login/", views.LoginView.as_view(), name="login"),
-    path("logout/", views.LogoutView.as_view(), name="logout"),
-    path("me/", views.MeView.as_view(), name="me"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # ── Web login (session, dashboard కోసం) ──
+    path("login/", views.CustomLoginView.as_view(), name="login"),
+    path("logout/", views.custom_logout, name="logout"),
+
+    # ── JWT API (mobile/external clients కోసం) ──
+    path("api/register/", views.RegisterView.as_view(), name="api_register"),
+    path("api/login/", views.APILoginView.as_view(), name="api_login"),
+    path("api/logout/", views.APILogoutView.as_view(), name="api_logout"),
+    path("api/me/", views.MeView.as_view(), name="api_me"),
+    path("api/token/refresh/", TokenRefreshView.as_view(), name="api_token_refresh"),
 ]

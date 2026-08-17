@@ -1,0 +1,67 @@
+{% extends "core/base.html" %}
+{% block title %}Dashboard | Gregarious{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2>Revenue Overview</h2>
+    <button class="refresh-btn" onclick="location.reload()">Refresh</button>
+</div>
+
+<div class="cards-row">
+    <div class="stat-card">
+        <div class="label">Spend</div>
+        <div class="value">₹{{ spend }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Leads</div>
+        <div class="value">{{ leads_count }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">Conversions</div>
+        <div class="value">{{ conversions }}</div>
+    </div>
+    <div class="stat-card">
+        <div class="label">ROI</div>
+        <div class="value">{{ roi }}%</div>
+    </div>
+</div>
+
+<div class="panels-row">
+    <div class="panel">
+        <h3>Lead Funnel</h3>
+        <canvas id="funnelChart" height="180"></canvas>
+    </div>
+    <div class="panel">
+        <h3>Revenue by Campaign</h3>
+        <p style="color:#999; text-align:center; padding: 50px 0;">No campaign revenue data yet.</p>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var ctx = document.getElementById("funnelChart").getContext("2d");
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: {{ funnel_labels|safe }},
+            datasets: [{
+                label: "Leads at Stage",
+                data: {{ funnel_values|safe }},
+                backgroundColor: "#2f6fed"
+            }]
+        },
+        options: {
+            scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+            plugins: { legend: { display: true } }
+        }
+    });
+});
+</script>
+{% endblock %}
+

@@ -1,0 +1,22 @@
+{% extends "core/base.html" %}
+{% block title %}Leads | Gregarious{% endblock %}
+
+{% block content %}
+<h2>Lead Funnel</h2>
+
+<div class="funnel-row">
+    <span>New:</span>
+    <span>{{ new_count }}</span>
+</div>
+<div class="funnel-row">
+    <span>Qualified:</span>
+    <span>{{ qualified_count }}</span>
+</div>
+<div class="funnel-row">
+    <span>Converted:</span>
+    <span>{{ converted_count }}</span>
+</div>
+
+<a href="{% url 'core:ai_insights' %}" class="btn-primary">AI Predict</a>
+{% endblock %}
+

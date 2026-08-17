@@ -87,6 +87,13 @@ INSTALLED_APPS = list(SHARED_APPS) + [
 
 AUTH_USER_MODEL = "accounts.User"
 
+# ─────────────────────────────────────────────────
+# AUTH REDIRECTS
+# ─────────────────────────────────────────────────
+LOGIN_URL = "accounts:login"
+LOGIN_REDIRECT_URL = "/client/dashboard/"
+LOGOUT_REDIRECT_URL = "accounts:login"
+
 TENANT_MODEL = "orders.Client"  # example
 TENANT_DOMAIN_MODEL = "orders.Domain"
 
