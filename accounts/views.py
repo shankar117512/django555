@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.shortcuts import redirect, render
-from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
