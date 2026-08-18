@@ -1,0 +1,328 @@
+{% load static %}
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>School Management System - Login</title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            width: 100%;
+            height: 100%;
+
+            margin: 0;
+            padding: 0;
+        }
+
+
+        body {
+
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
+            background: #eef1f4;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            min-height: 100vh;
+        }
+
+
+        .login-container {
+
+            width: 100%;
+
+            max-width: 400px;
+
+            padding: 20px;
+        }
+
+
+        .login-card {
+
+            background: #ffffff;
+
+            border: 1px solid #dddddd;
+
+            border-radius: 4px;
+
+            padding: 32px;
+
+            box-shadow:
+                0 2px 10px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        .title {
+
+            text-align: center;
+
+            margin-bottom: 28px;
+        }
+
+
+        .title h1 {
+
+            margin: 0;
+
+            color: #5bc0de;
+
+            font-size: 24px;
+
+            font-weight: 600;
+        }
+
+
+        .title p {
+
+            margin: 8px 0 0;
+
+            color: #777777;
+
+            font-size: 13px;
+        }
+
+
+        .error {
+
+            margin-bottom: 18px;
+
+            padding: 10px 12px;
+
+            border:
+                1px solid #f5b5b5;
+
+            border-radius: 4px;
+
+            background: #fff0f0;
+
+            color: #a94442;
+
+            font-size: 13px;
+        }
+
+
+        .field {
+
+            margin-bottom: 18px;
+        }
+
+
+        .field label {
+
+            display: block;
+
+            margin-bottom: 7px;
+
+            color: #555555;
+
+            font-size: 13px;
+        }
+
+
+        .field input {
+
+            width: 100%;
+
+            height: 42px;
+
+            padding:
+                8px 11px;
+
+            border:
+                1px solid #cccccc;
+
+            border-radius: 3px;
+
+            background: #ffffff;
+
+            font-size: 14px;
+
+            outline: none;
+        }
+
+
+        .field input:focus {
+
+            border-color: #5bc0de;
+
+            box-shadow:
+                0 0 0 2px
+                rgba(91, 192, 222, 0.15);
+        }
+
+
+        .login-button {
+
+            width: 100%;
+
+            height: 42px;
+
+            border: none;
+
+            border-radius: 3px;
+
+            background: #5bc0de;
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            cursor: pointer;
+        }
+
+
+        .login-button:hover {
+
+            background: #46b8da;
+        }
+
+
+        .footer-text {
+
+            margin-top: 20px;
+
+            text-align: center;
+
+            color: #999999;
+
+            font-size: 11px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="login-container">
+
+
+    <div class="login-card">
+
+
+        <div class="title">
+
+            <h1>
+                School Management System
+            </h1>
+
+            <p>
+                School Administration Login
+            </p>
+
+        </div>
+
+
+        {% if error_message %}
+
+            <div class="error">
+
+                {{ error_message }}
+
+            </div>
+
+        {% endif %}
+
+
+        <form
+            method="post"
+            action="{% url 'accounts:school_login' %}"
+        >
+
+            {% csrf_token %}
+
+
+            <div class="field">
+
+                <label for="school_username">
+                    Username
+                </label>
+
+                <input
+                    type="text"
+                    id="school_username"
+                    name="username"
+                    value="{{ username }}"
+                    autocomplete="username"
+                    autofocus
+                    required
+                >
+
+            </div>
+
+
+            <div class="field">
+
+                <label for="school_password">
+                    Password
+                </label>
+
+                <input
+                    type="password"
+                    id="school_password"
+                    name="password"
+                    autocomplete="current-password"
+                    required
+                >
+
+            </div>
+
+
+            <button
+                type="submit"
+                class="login-button"
+            >
+                Login
+            </button>
+
+        </form>
+
+
+        <div class="footer-text">
+
+            School Management System
+
+        </div>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

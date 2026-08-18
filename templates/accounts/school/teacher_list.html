@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>
+        School Management System
+    </title>
+
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+
+            width: 100%;
+            min-height: 100%;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #e9ecef;
+        }
+
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+
+        .sidebar {
+
+            position: fixed;
+
+            top: 0;
+            left: 0;
+            bottom: 0;
+
+            width: 148px;
+
+            background: #202c35;
+
+            color: #ffffff;
+        }
+
+
+        .sidebar-title {
+
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding-left: 12px;
+
+            background: #1b252d;
+
+            color: #ffffff;
+
+            font-size: 13px;
+
+            font-weight: 600;
+        }
+
+
+        .menu-item {
+
+            display: flex;
+
+            align-items: center;
+
+            height: 35px;
+
+            padding-left: 14px;
+
+            color: #d5dadd;
+
+            text-decoration: none;
+
+            font-size: 12px;
+
+            border-left:
+                3px solid transparent;
+        }
+
+
+        .menu-item:hover {
+
+            background: #293740;
+        }
+
+
+        .menu-item.active {
+
+            background: #293740;
+
+            border-left-color:
+                #5bc0de;
+
+            color: #ffffff;
+        }
+
+
+        .menu-icon {
+
+            width: 22px;
+
+            margin-right: 2px;
+
+            color: #8d9aa3;
+
+            font-size: 12px;
+        }
+
+
+        .submenu {
+
+            background: #1a242c;
+        }
+
+
+        .submenu a {
+
+            display: block;
+
+            padding:
+                9px 8px 9px 35px;
+
+            color: #c9cfd3;
+
+            text-decoration: none;
+
+            font-size: 11px;
+        }
+
+
+        .submenu a:hover {
+
+            background: #26333c;
+        }
+
+
+        .submenu a.active {
+
+            background: #26333c;
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+
+        .main {
+
+            margin-left: 148px;
+
+            min-height: 100vh;
+
+            background: #e9ecef;
+        }
+
+
+        /* =====================================================
+           TOP BAR
+        ===================================================== */
+
+
+        .topbar {
+
+            height: 42px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding:
+                0 12px;
+
+            background: #5bc0de;
+
+            color: #ffffff;
+        }
+
+
+        .brand {
+
+            font-size: 19px;
+
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+
+
+        .top-hamburger {
+
+            margin-left: 8px;
+
+            color: #377f91;
+
+            font-size: 18px;
+        }
+
+
+        .settings {
+
+            margin-left: 25px;
+
+            color: #4f8998;
+
+            font-size: 10px;
+        }
+
+
+        .account {
+
+            margin-left: auto;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            color: #4f8998;
+
+            font-size: 10px;
+        }
+
+
+        .account a {
+
+            color: #4f8998;
+
+            text-decoration: none;
+        }
+
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+
+        .content {
+
+            padding:
+                10px 22px 60px;
+        }
+
+
+        .breadcrumb {
+
+            height: 32px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #777777;
+
+            font-size: 11px;
+        }
+
+
+        .breadcrumb .home {
+
+            color: #555555;
+        }
+
+
+        .breadcrumb .admin {
+
+            color: #5bc0de;
+        }
+
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+
+        .card {
+
+            width: 100%;
+
+            background: #ffffff;
+
+            border:
+                1px solid #dddddd;
+        }
+
+
+        .card-header {
+
+            height: 40px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding:
+                0 15px;
+
+            border-bottom:
+                1px solid #dddddd;
+
+            color: #555555;
+
+            font-size: 11px;
+        }
+
+
+        .card-header-icon {
+
+            margin-right: 9px;
+
+            color: #555555;
+        }
+
+
+        .table-container {
+
+            padding:
+                10px 14px 12px;
+        }
+
+
+        table {
+
+            width: 100%;
+
+            border-collapse:
+                collapse;
+
+            table-layout:
+                fixed;
+
+            font-size: 10px;
+        }
+
+
+        th {
+
+            height: 24px;
+
+            padding:
+                4px 8px;
+
+            border:
+                1px solid #d7d7d7;
+
+            background: #fafafa;
+
+            text-align: left;
+
+            color: #444444;
+
+            font-weight: 600;
+        }
+
+
+        td {
+
+            height: 28px;
+
+            padding:
+                5px 8px;
+
+            border:
+                1px solid #e0e0e0;
+
+            color: #666666;
+
+            background: #ffffff;
+        }
+
+
+        .empty-row {
+
+            text-align: left;
+
+            color: #888888;
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+
+        .footer {
+
+            position: fixed;
+
+            left: 148px;
+            right: 0;
+            bottom: 0;
+
+            height: 38px;
+
+            display: flex;
+
+            align-items: center;
+
+            padding-left: 12px;
+
+            background: #5bc0de;
+
+            color: #ffffff;
+
+            font-size: 10px;
+        }
+
+
+        .footer-brand {
+
+            color: #287c91;
+
+            font-weight: 600;
+
+            margin-right: 3px;
+        }
+
+
+        .logout {
+
+            margin-left: auto;
+
+            margin-right: 18px;
+
+            color: #287c91;
+
+            text-decoration: none;
+
+            font-size: 10px;
+        }
+
+
+        .logout:hover {
+
+            color: #ffffff;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+
+        @media (max-width: 700px) {
+
+            .sidebar {
+
+                width: 0;
+
+                overflow: hidden;
+            }
+
+
+            .main {
+
+                margin-left: 0;
+            }
+
+
+            .footer {
+
+                left: 0;
+            }
+
+
+            .brand {
+
+                font-size: 14px;
+            }
+
+
+            .content {
+
+                padding:
+                    10px;
+            }
+
+
+            .table-container {
+
+                overflow-x: auto;
+            }
+
+
+            table {
+
+                min-width: 700px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     SIDEBAR
+========================================================= -->
+
+
+<aside class="sidebar">
+
+
+    <div class="sidebar-title">
+
+        School Management System
+
+    </div>
+
+
+    <a
+        href="{% url 'accounts:school_home' %}"
+        class="menu-item"
+    >
+
+        <span class="menu-icon">
+            ▣
+        </span>
+
+        Dashboard
+
+    </a>
+
+
+    <a
+        href="#"
+        class="menu-item"
+    >
+
+        <span class="menu-icon">
+            ♙
+        </span>
+
+        Student
+
+    </a>
+
+
+    <a
+        href="{% url 'accounts:school_teacher_list' %}"
+        class="menu-item active"
+    >
+
+        <span class="menu-icon">
+            ♙
+        </span>
+
+        Teachers
+
+    </a>
+
+
+    <div class="submenu">
+
+        <a
+            href="{% url 'accounts:school_teacher_list' %}"
+            class="active"
+        >
+            Teacher List
+        </a>
+
+
+        <a href="#">
+            Create New Teacher
+        </a>
+
+    </div>
+
+
+</aside>
+
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+
+<main class="main">
+
+
+    <!-- =====================================================
+         TOP BAR
+    ====================================================== -->
+
+
+    <header class="topbar">
+
+
+        <div class="brand">
+
+            School Management System
+
+        </div>
+
+
+        <div class="top-hamburger">
+
+            ☰
+
+        </div>
+
+
+        <div class="settings">
+
+            Settings
+
+        </div>
+
+
+        <div class="account">
+
+            <span>
+                Account
+            </span>
+
+            <span>
+                ▾
+            </span>
+
+            <span>
+                |
+            </span>
+
+            <span>
+                {{ school_user.username }}
+            </span>
+
+        </div>
+
+
+    </header>
+
+
+
+    <!-- =====================================================
+         CONTENT
+    ====================================================== -->
+
+
+    <section class="content">
+
+
+        <div class="breadcrumb">
+
+            <span class="home">
+                Home
+            </span>
+
+            <span>
+                /
+            </span>
+
+            <span class="admin">
+                Admin
+            </span>
+
+            <span>
+                /
+            </span>
+
+            <span>
+                Dashboard
+            </span>
+
+        </div>
+
+
+
+        <!-- =================================================
+             TEACHERS CARD
+        ================================================== -->
+
+
+        <div class="card">
+
+
+            <div class="card-header">
+
+                <span class="card-header-icon">
+                    ▤
+                </span>
+
+                <span>
+                    Teachers List
+                </span>
+
+            </div>
+
+
+
+            <div class="table-container">
+
+
+                <table>
+
+
+                    <thead>
+
+                        <tr>
+
+                            <th style="width: 48px;">
+                                Sl.
+                            </th>
+
+                            <th>
+                                Name
+                            </th>
+
+                            <th>
+                                Email
+                            </th>
+
+                            <th>
+                                Department
+                            </th>
+
+                            <th>
+                                Subject
+                            </th>
+
+                            <th>
+                                Joining Date
+                            </th>
+
+                            <th>
+                                Action
+                            </th>
+
+                        </tr>
+
+                    </thead>
+
+
+                    <tbody>
+
+
+                        <tr>
+
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+                            <td>
+                            </td>
+
+                        </tr>
+
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+
+</main>
+
+
+
+<!-- =========================================================
+     FOOTER
+========================================================= -->
+
+
+<footer class="footer">
+
+
+    <span class="footer-brand">
+        IT SOURCECODE
+    </span>
+
+
+    <span>
+        © 2020
+    </span>
+
+
+    <a
+        href="{% url 'accounts:school_logout' %}"
+        class="logout"
+    >
+        Logout
+    </a>
+
+
+</footer>
+
+
+</body>
+
+</html>

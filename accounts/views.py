@@ -284,3 +284,154 @@ def web_logout_view(request):
             django_logout(request)
 
     return redirect("accounts:login")
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM
+# ============================================================
+# GET/POST /accounts/school/login/
+# ============================================================
+
+
+def school_login_view(request):
+    """
+    Separate login page for the School Management System.
+
+    IMPORTANT:
+    This does NOT modify the existing /accounts/login/ flow.
+
+    Only active staff users are allowed to enter the
+    School Management System.
+    """
+
+    if request.user.is_authenticated:
+        if request.user.is_staff:
+            return redirect("accounts:school_teacher_list")
+
+        django_logout(request)
+
+    username = ""
+    error_message = ""
+
+    if request.method == "POST":
+
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
+
+        if not username or not password:
+
+            error_message = "Username and password are required."
+
+        else:
+
+            user = authenticate(
+                request,
+                username=username,
+                password=password,
+            )
+
+            if user is not None:
+
+                if not user.is_active:
+
+                    error_message = "This account is inactive."
+
+                elif not user.is_staff:
+
+                    error_message = (
+                        "You do not have permission to access "
+                        "the School Management System."
+                    )
+
+                else:
+
+                    django_login(
+                        request,
+                        user,
+                    )
+
+                    USER_LOGIN_COUNTER.inc()
+
+                    log_activity(
+                        user,
+                        "login",
+                        request,
+                    )
+
+                    return redirect(
+                        "accounts:school_teacher_list"
+                    )
+
+            else:
+
+                error_message = "Invalid username or password."
+
+    return render(
+        request,
+        "accounts/school/login.html",
+        {
+            "username": username,
+            "error_message": error_message,
+        },
+    )
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - TEACHER LIST
+# ============================================================
+# GET /accounts/school/teacher-list/
+# ============================================================
+
+
+def school_teacher_list_view(request):
+    """
+    School Management System frontend.
+
+    This page is protected and can only be accessed after
+    School Management login.
+    """
+
+    if not request.user.is_authenticated:
+
+        return redirect(
+            "accounts:school_login"
+        )
+
+    if not request.user.is_staff:
+
+        django_logout(request)
+
+        return redirect(
+            "accounts:school_login"
+        )
+
+    return render(
+        request,
+        "accounts/school/teacher_list.html",
+        {
+            "school_user": request.user,
+        },
+    )
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - LOGOUT
+# ============================================================
+# GET /accounts/school/logout/
+# ============================================================
+
+
+def school_logout_view(request):
+
+    if request.user.is_authenticated:
+
+        log_activity(
+            request.user,
+            "logout",
+            request,
+        )
+
+        django_logout(request)
+
+    return redirect(
+        "accounts:school_login"
+    )
