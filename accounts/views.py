@@ -291,9 +291,7 @@ def school_login_view(request):
                 error_message = "This account is inactive."
 
             elif not (user.is_staff or user.is_superuser):
-                error_message = (
-                    "This account does not have " "School Management access."
-                )
+                error_message = "This account does not have School Management access."
 
             else:
                 django_login(

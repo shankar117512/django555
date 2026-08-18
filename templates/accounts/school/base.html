@@ -1,83 +1,392 @@
-from django.urls import path
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
 
-from . import views
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-app_name = "accounts"
+    <title>
+        {% block title %}
+            School Management System
+        {% endblock %}
+    </title>
 
-urlpatterns = [
-    # ========================================================
-    # NORMAL WEBSITE LOGIN
-    # ========================================================
+    <style>
+        * {
+            box-sizing: border-box;
+        }
 
-    path(
-        "login/",
-        views.web_login_view,
-        name="login",
-    ),
+        body {
+            margin: 0;
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+            background: #f5f7fb;
+            color: #1f2937;
+        }
 
-    path(
-        "logout/",
-        views.web_logout_view,
-        name="logout",
-    ),
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
 
-    # ========================================================
-    # SCHOOL MANAGEMENT SYSTEM
-    # ========================================================
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: #ffffff;
+            padding: 24px 16px;
+            flex-shrink: 0;
+        }
 
-    path(
-        "school/login/",
-        views.school_login_view,
-        name="school_login",
-    ),
+        .brand {
+            font-size: 21px;
+            font-weight: 700;
+            margin-bottom: 30px;
+            padding: 0 12px;
+        }
 
-    path(
-        "school/logout/",
-        views.school_logout_view,
-        name="school_logout",
-    ),
+        .brand-subtitle {
+            font-size: 12px;
+            font-weight: 400;
+            color: #9ca3af;
+            margin-top: 5px;
+        }
 
-    path(
-        "school/dashboard/",
-        views.school_dashboard_view,
-        name="school_dashboard",
-    ),
+        .nav-section {
+            margin-bottom: 25px;
+        }
 
-    # ========================================================
-    # STUDENTS
-    # ========================================================
+        .nav-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9ca3af;
+            padding: 0 12px;
+            margin-bottom: 8px;
+        }
 
-    path(
-        "school/student-list/",
-        views.school_student_list_view,
-        name="school_student_list",
-    ),
+        .nav-link {
+            display: block;
+            text-decoration: none;
+            color: #d1d5db;
+            padding: 11px 12px;
+            border-radius: 7px;
+            margin-bottom: 4px;
+            font-size: 14px;
+        }
 
-    path(
-        "school/student/<int:student_id>/",
-        views.school_student_detail_view,
-        name="school_student_detail",
-    ),
+        .nav-link:hover {
+            background: #1f2937;
+            color: #ffffff;
+        }
 
-    # ========================================================
-    # TEACHERS
-    # ========================================================
+        .nav-link.active {
+            background: #2563eb;
+            color: #ffffff;
+        }
 
-    path(
-        "school/teacher-list/",
-        views.school_teacher_list_view,
-        name="school_teacher_list",
-    ),
+        .logout-form {
+            margin: 0;
+        }
 
-    path(
-        "school/teacher/<int:teacher_id>/",
-        views.school_teacher_detail_view,
-        name="school_teacher_detail",
-    ),
+        .logout-button {
+            width: 100%;
+            border: 0;
+            background: transparent;
+            color: #d1d5db;
+            text-align: left;
+            padding: 11px 12px;
+            border-radius: 7px;
+            font-size: 14px;
+            cursor: pointer;
+        }
 
-    path(
-        "school/teacher/create/",
-        views.school_teacher_create_view,
-        name="school_teacher_create",
-    ),
-]
+        .logout-button:hover {
+            background: #1f2937;
+            color: #ffffff;
+        }
+
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .topbar {
+            height: 70px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+        }
+
+        .topbar-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .user-info {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .breadcrumb {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 20px;
+        }
+
+        .page-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+        }
+
+        .page-title {
+            margin: 0 0 25px;
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(
+                    auto-fit,
+                    minmax(220px, 1fr)
+                );
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            border: 1px solid #e5e7eb;
+            border-radius: 9px;
+            padding: 20px;
+            background: #ffffff;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #6b7280;
+            margin-bottom: 10px;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+        }
+
+        th,
+        td {
+            padding: 12px 14px;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            background: #f9fafb;
+            font-weight: 600;
+        }
+
+        .button {
+            display: inline-block;
+            text-decoration: none;
+            border: 0;
+            border-radius: 7px;
+            padding: 10px 15px;
+            background: #2563eb;
+            color: #ffffff;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .button:hover {
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                display: block;
+            }
+
+            .sidebar {
+                width: 100%;
+            }
+
+            .topbar {
+                padding: 0 18px;
+            }
+
+            .content {
+                padding: 18px;
+            }
+        }
+    </style>
+
+    {% block extra_css %}
+    {% endblock %}
+</head>
+
+<body>
+
+<div class="layout">
+
+    <!-- ======================================================
+         SIDEBAR
+         ====================================================== -->
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            School Management
+            <div class="brand-subtitle">
+                Administration Panel
+            </div>
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Main
+            </div>
+
+            <a
+                href="{% url 'accounts:school_dashboard' %}"
+                class="nav-link"
+            >
+                Dashboard
+            </a>
+
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Students
+            </div>
+
+            <a
+                href="{% url 'accounts:school_student_list' %}"
+                class="nav-link"
+            >
+                All Students
+            </a>
+
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Teachers
+            </div>
+
+            <a
+                href="{% url 'accounts:school_teacher_list' %}"
+                class="nav-link"
+            >
+                All Teachers
+            </a>
+
+            <a
+                href="{% url 'accounts:school_teacher_create' %}"
+                class="nav-link"
+            >
+                Add Teacher
+            </a>
+
+        </div>
+
+        <div class="nav-section">
+
+            <div class="nav-title">
+                Account
+            </div>
+
+            <form
+                method="post"
+                action="{% url 'accounts:school_logout' %}"
+                class="logout-form"
+            >
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="logout-button"
+                >
+                    Logout
+                </button>
+            </form>
+
+        </div>
+
+    </aside>
+
+
+    <!-- ======================================================
+         MAIN CONTENT
+         ====================================================== -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="topbar-title">
+                {% block header_title %}
+                    School Management System
+                {% endblock %}
+            </div>
+
+            <div class="user-info">
+
+                {% if request.user.is_authenticated %}
+                    {{ request.user.username }}
+                {% endif %}
+
+            </div>
+
+        </header>
+
+
+        <section class="content">
+
+            {% block content %}
+            {% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+
+{% block extra_js %}
+{% endblock %}
+
+</body>
+</html>

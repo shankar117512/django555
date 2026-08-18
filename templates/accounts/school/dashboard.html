@@ -4,6 +4,10 @@
     School Dashboard
 {% endblock %}
 
+{% block header_title %}
+    Dashboard
+{% endblock %}
+
 {% block content %}
 
 <div class="breadcrumb">
@@ -13,12 +17,13 @@
 <div class="page-card">
 
     <h2 class="page-title">
-        ▤ &nbsp; Dashboard
+        Dashboard
     </h2>
 
     <div class="stats-grid">
 
         <div class="stat-card">
+
             <div class="stat-label">
                 Total Students
             </div>
@@ -26,9 +31,12 @@
             <div class="stat-number">
                 {{ student_count|default:"0" }}
             </div>
+
         </div>
 
+
         <div class="stat-card">
+
             <div class="stat-label">
                 Total Teachers
             </div>
@@ -36,6 +44,7 @@
             <div class="stat-number">
                 {{ teacher_count|default:"0" }}
             </div>
+
         </div>
 
     </div>
