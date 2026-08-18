@@ -1,7 +1,6 @@
 {% load static %}
 
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -25,10 +24,8 @@
 
         html,
         body {
-
             width: 100%;
             height: 100%;
-
             margin: 0;
             padding: 0;
         }
@@ -44,7 +41,242 @@
                 Arial,
                 sans-serif;
 
-            background: #eef1f4;
+            background: #ffffff;
+
+            overflow: hidden;
+        }
+
+
+        /* =====================================================
+           MAIN LOGIN PAGE
+        ===================================================== */
+
+        .school-login-page {
+
+            width: 100%;
+            min-height: 100vh;
+
+            display: flex;
+
+            background: #ffffff;
+        }
+
+
+        /* =====================================================
+           LEFT SIDE
+        ===================================================== */
+
+        .school-left {
+
+            width: 50%;
+            min-height: 100vh;
+
+            position: relative;
+
+            overflow: hidden;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #edf7ff 0%,
+                    #e2f1ff 100%
+                );
+
+            padding:
+                55px 8% 35px;
+        }
+
+
+        .school-left-content {
+
+            position: relative;
+
+            z-index: 5;
+
+            width: 100%;
+            height: 100%;
+
+            display: flex;
+
+            flex-direction: column;
+
+            justify-content: flex-start;
+        }
+
+
+        /* =====================================================
+           LEFT HEADING
+        ===================================================== */
+
+        .school-heading {
+
+            margin: 0;
+
+            max-width: 430px;
+
+            color: #0756a8;
+
+            font-size: clamp(
+                34px,
+                4vw,
+                56px
+            );
+
+            line-height: 1.08;
+
+            font-weight: 700;
+
+            letter-spacing: -1.5px;
+        }
+
+
+        .school-description {
+
+            margin:
+
+                18px 0 0;
+
+            max-width: 420px;
+
+            color: #48627d;
+
+            font-size: 16px;
+
+            line-height: 1.55;
+        }
+
+
+        /* =====================================================
+           DECORATIVE BACKGROUND
+        ===================================================== */
+
+        .cloud {
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            background: rgba(
+                255,
+                255,
+                255,
+                0.55
+            );
+
+            z-index: 1;
+        }
+
+
+        .cloud-one {
+
+            width: 120px;
+            height: 35px;
+
+            left: 4%;
+            top: 38%;
+
+            border-radius: 50px;
+        }
+
+
+        .cloud-two {
+
+            width: 95px;
+            height: 28px;
+
+            right: 12%;
+            top: 35%;
+
+            border-radius: 50px;
+        }
+
+
+        .cloud-three {
+
+            width: 150px;
+            height: 40px;
+
+            right: 8%;
+            bottom: 20%;
+
+            border-radius: 50px;
+
+            opacity: 0.45;
+        }
+
+
+        .cloud::before,
+        .cloud::after {
+
+            content: "";
+
+            position: absolute;
+
+            border-radius: 50%;
+
+            background: inherit;
+        }
+
+
+        .cloud::before {
+
+            width: 42px;
+            height: 42px;
+
+            left: 20px;
+            bottom: 3px;
+        }
+
+
+        .cloud::after {
+
+            width: 55px;
+            height: 55px;
+
+            right: 20px;
+            bottom: 0;
+        }
+
+
+        /* =====================================================
+           ILLUSTRATION AREA
+        ===================================================== */
+
+        .illustration {
+
+            position: absolute;
+
+            left: 3%;
+
+            right: 3%;
+
+            bottom: 20px;
+
+            height: 58%;
+
+            z-index: 3;
+        }
+
+
+        .illustration svg {
+
+            width: 100%;
+            height: 100%;
+
+            display: block;
+        }
+
+
+        /* =====================================================
+           RIGHT SIDE
+        ===================================================== */
+
+        .school-right {
+
+            width: 50%;
+            min-height: 100vh;
+
+            background: #ffffff;
 
             display: flex;
 
@@ -52,170 +284,439 @@
 
             justify-content: center;
 
-            min-height: 100vh;
+            padding: 40px;
         }
 
 
-        .login-container {
-
-            width: 100%;
-
-            max-width: 400px;
-
-            padding: 20px;
-        }
-
+        /* =====================================================
+           LOGIN CARD
+        ===================================================== */
 
         .login-card {
 
+            width: 100%;
+
+            max-width: 430px;
+
+            padding:
+                34px 40px 30px;
+
             background: #ffffff;
 
-            border: 1px solid #dddddd;
+            border:
+                1px solid #eeeeee;
 
-            border-radius: 4px;
-
-            padding: 32px;
+            border-radius: 7px;
 
             box-shadow:
-                0 2px 10px
-                rgba(0, 0, 0, 0.08);
+                0 4px 18px
+                rgba(
+                    0,
+                    0,
+                    0,
+                    0.09
+                );
         }
 
 
-        .title {
+        /* =====================================================
+           LOGIN TITLE
+        ===================================================== */
 
-            text-align: center;
-
-            margin-bottom: 28px;
-        }
-
-
-        .title h1 {
+        .login-title {
 
             margin: 0;
 
-            color: #5bc0de;
+            text-align: center;
 
-            font-size: 24px;
+            color: #0567d8;
+
+            font-size: 27px;
+
+            line-height: 1.35;
 
             font-weight: 600;
         }
 
 
-        .title p {
+        .login-subtitle {
 
-            margin: 8px 0 0;
+            margin:
 
-            color: #777777;
+                9px 0 30px;
+
+            text-align: center;
+
+            color: #707070;
 
             font-size: 13px;
         }
 
 
-        .error {
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
+        .login-error {
 
             margin-bottom: 18px;
 
-            padding: 10px 12px;
+            padding:
+                10px 12px;
 
             border:
-                1px solid #f5b5b5;
+                1px solid #f2b8b5;
 
             border-radius: 4px;
 
-            background: #fff0f0;
+            background: #fff4f3;
 
             color: #a94442;
 
             font-size: 13px;
+
+            line-height: 1.4;
         }
 
 
-        .field {
+        /* =====================================================
+           FORM FIELD
+        ===================================================== */
 
-            margin-bottom: 18px;
+        .form-field {
+
+            margin-bottom: 19px;
         }
 
 
-        .field label {
+        .form-field label {
 
             display: block;
 
-            margin-bottom: 7px;
+            margin-bottom: 8px;
 
-            color: #555555;
+            color: #303030;
 
             font-size: 13px;
+
+            font-weight: 500;
         }
 
 
-        .field input {
+        .input-wrapper {
+
+            position: relative;
+
+            width: 100%;
+        }
+
+
+        .input-icon {
+
+            position: absolute;
+
+            left: 13px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            width: 18px;
+            height: 18px;
+
+            color: #707b87;
+
+            pointer-events: none;
+        }
+
+
+        .input-wrapper input {
 
             width: 100%;
 
-            height: 42px;
+            height: 44px;
 
             padding:
-                8px 11px;
+                8px 42px;
 
             border:
-                1px solid #cccccc;
+                1px solid #cfd4da;
 
-            border-radius: 3px;
+            border-radius: 4px;
+
+            outline: none;
 
             background: #ffffff;
 
-            font-size: 14px;
+            color: #303030;
 
-            outline: none;
+            font-size: 13px;
+
+            transition:
+                border-color .2s,
+                box-shadow .2s;
         }
 
 
-        .field input:focus {
+        .input-wrapper input::placeholder {
 
-            border-color: #5bc0de;
+            color: #8a9097;
+        }
+
+
+        .input-wrapper input:focus {
+
+            border-color: #0878d1;
 
             box-shadow:
                 0 0 0 2px
-                rgba(91, 192, 222, 0.15);
+                rgba(
+                    8,
+                    120,
+                    209,
+                    0.10
+                );
         }
 
 
-        .login-button {
+        /* =====================================================
+           PASSWORD EYE
+        ===================================================== */
 
-            width: 100%;
+        .password-toggle {
 
-            height: 42px;
+            position: absolute;
+
+            right: 12px;
+
+            top: 50%;
+
+            transform:
+                translateY(-50%);
+
+            width: 20px;
+            height: 20px;
 
             border: none;
 
-            border-radius: 3px;
+            padding: 0;
 
-            background: #5bc0de;
+            background: transparent;
 
-            color: #ffffff;
-
-            font-size: 14px;
+            color: #65717d;
 
             cursor: pointer;
         }
 
 
-        .login-button:hover {
+        .password-toggle svg {
 
-            background: #46b8da;
+            width: 17px;
+            height: 17px;
         }
 
 
-        .footer-text {
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
 
-            margin-top: 20px;
+        .login-button {
+
+            width: 100%;
+
+            height: 44px;
+
+            margin-top: 4px;
+
+            border: none;
+
+            border-radius: 4px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #0875c9,
+                    #0568bb
+                );
+
+            color: #ffffff;
+
+            font-size: 14px;
+
+            font-weight: 500;
+
+            cursor: pointer;
+
+            transition:
+                background .2s,
+                transform .1s;
+        }
+
+
+        .login-button:hover {
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #0768b4,
+                    #055da8
+                );
+        }
+
+
+        .login-button:active {
+
+            transform:
+                translateY(1px);
+        }
+
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
+        .login-footer {
+
+            margin-top: 28px;
 
             text-align: center;
 
-            color: #999999;
+            color: #737b84;
 
             font-size: 11px;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 900px) {
+
+            body {
+
+                overflow: auto;
+            }
+
+
+            .school-login-page {
+
+                min-height: 100vh;
+
+                display: block;
+            }
+
+
+            .school-left {
+
+                width: 100%;
+
+                min-height: 430px;
+
+                padding:
+                    40px 35px 0;
+            }
+
+
+            .school-heading {
+
+                font-size: 38px;
+
+                max-width: 450px;
+            }
+
+
+            .school-description {
+
+                font-size: 14px;
+
+                max-width: 400px;
+            }
+
+
+            .illustration {
+
+                height: 55%;
+
+                bottom: 0;
+            }
+
+
+            .school-right {
+
+                width: 100%;
+
+                min-height: 520px;
+
+                padding:
+                    35px 20px;
+            }
+
+
+            .login-card {
+
+                max-width: 430px;
+            }
+
+        }
+
+
+        @media (max-width: 500px) {
+
+            .school-left {
+
+                min-height: 360px;
+
+                padding:
+                    30px 25px 0;
+            }
+
+
+            .school-heading {
+
+                font-size: 31px;
+
+                letter-spacing: -0.8px;
+            }
+
+
+            .school-description {
+
+                font-size: 12px;
+
+                margin-top: 12px;
+            }
+
+
+            .illustration {
+
+                left: 0;
+                right: 0;
+
+                height: 53%;
+            }
+
+
+            .school-right {
+
+                padding:
+                    25px 15px;
+            }
+
+
+            .login-card {
+
+                padding:
+                    28px 24px;
+            }
+
+
+            .login-title {
+
+                font-size: 23px;
+            }
+
         }
 
     </style>
@@ -226,101 +727,1078 @@
 <body>
 
 
-<div class="login-container">
+<div class="school-login-page">
 
 
-    <div class="login-card">
+    <!-- =====================================================
+         LEFT SCHOOL ILLUSTRATION
+    ====================================================== -->
+
+    <section class="school-left">
 
 
-        <div class="title">
+        <div class="school-left-content">
 
-            <h1>
-                School Management System
+
+            <h1 class="school-heading">
+
+                School<br>
+                Management<br>
+                System
+
             </h1>
 
-            <p>
-                School Administration Login
+
+            <p class="school-description">
+
+                Easily manage students, teachers,<br>
+                classes, and academic activities
+
             </p>
 
+
         </div>
 
 
-        {% if error_message %}
+        <!-- Decorative clouds -->
 
-            <div class="error">
+        <div class="cloud cloud-one"></div>
 
-                {{ error_message }}
+        <div class="cloud cloud-two"></div>
 
-            </div>
-
-        {% endif %}
+        <div class="cloud cloud-three"></div>
 
 
-        <form
-            method="post"
-            action="{% url 'accounts:school_login' %}"
-        >
+        <!-- =================================================
+             SCHOOL SVG ILLUSTRATION
+        ================================================== -->
 
-            {% csrf_token %}
+        <div class="illustration">
 
-
-            <div class="field">
-
-                <label for="school_username">
-                    Username
-                </label>
-
-                <input
-                    type="text"
-                    id="school_username"
-                    name="username"
-                    value="{{ username }}"
-                    autocomplete="username"
-                    autofocus
-                    required
-                >
-
-            </div>
-
-
-            <div class="field">
-
-                <label for="school_password">
-                    Password
-                </label>
-
-                <input
-                    type="password"
-                    id="school_password"
-                    name="password"
-                    autocomplete="current-password"
-                    required
-                >
-
-            </div>
-
-
-            <button
-                type="submit"
-                class="login-button"
+            <svg
+                viewBox="0 0 700 430"
+                xmlns="http://www.w3.org/2000/svg"
+                aria-label="School Management System illustration"
+                role="img"
             >
-                Login
-            </button>
 
-        </form>
+                <!-- Background soft shapes -->
+
+                <ellipse
+                    cx="350"
+                    cy="375"
+                    rx="310"
+                    ry="28"
+                    fill="#b7d8f8"
+                    opacity="0.55"
+                />
 
 
-        <div class="footer-text">
+                <!-- Curved connection line -->
 
-            School Management System
+                <path
+                    d="
+                        M150 150
+                        C230 85 305 125 350 105
+                        C410 78 460 120 515 145
+                    "
+                    fill="none"
+                    stroke="#75aef2"
+                    stroke-width="3"
+                    stroke-dasharray="7 7"
+                    opacity="0.8"
+                />
+
+
+                <!-- =================================================
+                     TOP ICON - CAP
+                ================================================== -->
+
+                <circle
+                    cx="150"
+                    cy="145"
+                    r="38"
+                    fill="#ffffff"
+                    opacity="0.95"
+                />
+
+
+                <polygon
+                    points="124,143 150,128 176,143 150,158"
+                    fill="#1269c4"
+                />
+
+
+                <polygon
+                    points="135,148 135,160 150,168 165,160 165,148 150,157"
+                    fill="#2d82df"
+                />
+
+
+                <line
+                    x1="174"
+                    y1="143"
+                    x2="184"
+                    y2="139"
+                    stroke="#1269c4"
+                    stroke-width="3"
+                />
+
+
+                <!-- =================================================
+                     DOCUMENT ICON
+                ================================================== -->
+
+                <circle
+                    cx="335"
+                    cy="102"
+                    r="38"
+                    fill="#ffffff"
+                    opacity="0.95"
+                />
+
+
+                <rect
+                    x="318"
+                    y="82"
+                    width="34"
+                    height="42"
+                    rx="3"
+                    fill="#f8fbff"
+                    stroke="#2d82df"
+                    stroke-width="2"
+                />
+
+
+                <polyline
+                    points="343,82 352,91 343,91"
+                    fill="none"
+                    stroke="#2d82df"
+                    stroke-width="2"
+                />
+
+
+                <line
+                    x1="324"
+                    y1="101"
+                    x2="346"
+                    y2="101"
+                    stroke="#6ea9e9"
+                    stroke-width="2"
+                />
+
+
+                <line
+                    x1="324"
+                    y1="108"
+                    x2="346"
+                    y2="108"
+                    stroke="#6ea9e9"
+                    stroke-width="2"
+                />
+
+
+                <line
+                    x1="324"
+                    y1="115"
+                    x2="341"
+                    y2="115"
+                    stroke="#6ea9e9"
+                    stroke-width="2"
+                />
+
+
+                <!-- =================================================
+                     USERS ICON
+                ================================================== -->
+
+                <circle
+                    cx="520"
+                    cy="150"
+                    r="40"
+                    fill="#ffffff"
+                    opacity="0.95"
+                />
+
+
+                <circle
+                    cx="507"
+                    cy="142"
+                    r="9"
+                    fill="#2277d0"
+                />
+
+
+                <circle
+                    cx="527"
+                    cy="145"
+                    r="8"
+                    fill="#4a91df"
+                />
+
+
+                <path
+                    d="
+                        M491 168
+                        C492 151 522 151 523 168
+                    "
+                    fill="#2277d0"
+                />
+
+
+                <path
+                    d="
+                        M519 168
+                        C520 155 541 155 542 168
+                    "
+                    fill="#4a91df"
+                />
+
+
+                <!-- =================================================
+                     BAR CHART ICON
+                ================================================== -->
+
+                <circle
+                    cx="95"
+                    cy="205"
+                    r="38"
+                    fill="#ffffff"
+                    opacity="0.95"
+                />
+
+
+                <rect
+                    x="76"
+                    y="205"
+                    width="8"
+                    height="16"
+                    rx="1"
+                    fill="#7bb3ef"
+                />
+
+
+                <rect
+                    x="89"
+                    y="195"
+                    width="8"
+                    height="26"
+                    rx="1"
+                    fill="#4f94df"
+                />
+
+
+                <rect
+                    x="102"
+                    y="185"
+                    width="8"
+                    height="36"
+                    rx="1"
+                    fill="#2375cc"
+                />
+
+
+                <!-- =================================================
+                     SCHOOL BUILDING
+                ================================================== -->
+
+                <!-- Main building -->
+
+                <rect
+                    x="145"
+                    y="235"
+                    width="350"
+                    height="125"
+                    rx="2"
+                    fill="#ffffff"
+                    stroke="#9fc7ec"
+                    stroke-width="2"
+                />
+
+
+                <!-- Roof -->
+
+                <polygon
+                    points="
+                        115,238
+                        175,190
+                        465,190
+                        525,238
+                    "
+                    fill="#075baa"
+                />
+
+
+                <polygon
+                    points="
+                        138,231
+                        177,200
+                        462,200
+                        500,231
+                    "
+                    fill="#126dc5"
+                />
+
+
+                <!-- Roof line -->
+
+                <rect
+                    x="122"
+                    y="231"
+                    width="395"
+                    height="12"
+                    rx="2"
+                    fill="#0a5da9"
+                />
+
+
+                <!-- Left wing -->
+
+                <rect
+                    x="82"
+                    y="260"
+                    width="63"
+                    height="100"
+                    fill="#f9fcff"
+                    stroke="#9fc7ec"
+                    stroke-width="2"
+                />
+
+
+                <polygon
+                    points="
+                        72,262
+                        115,232
+                        155,262
+                    "
+                    fill="#176fc7"
+                />
+
+
+                <!-- Right wing -->
+
+                <rect
+                    x="495"
+                    y="260"
+                    width="70"
+                    height="100"
+                    fill="#f9fcff"
+                    stroke="#9fc7ec"
+                    stroke-width="2"
+                />
+
+
+                <polygon
+                    points="
+                        485,262
+                        530,232
+                        575,262
+                    "
+                    fill="#176fc7"
+                />
+
+
+                <!-- Main windows -->
+
+                <g
+                    fill="#72afe8"
+                    stroke="#d5eafa"
+                    stroke-width="4"
+                >
+
+                    <rect
+                        x="178"
+                        y="258"
+                        width="42"
+                        height="40"
+                    />
+
+                    <rect
+                        x="243"
+                        y="258"
+                        width="42"
+                        height="40"
+                    />
+
+                    <rect
+                        x="310"
+                        y="258"
+                        width="42"
+                        height="40"
+                    />
+
+                    <rect
+                        x="377"
+                        y="258"
+                        width="42"
+                        height="40"
+                    />
+
+                </g>
+
+
+                <!-- Second row windows -->
+
+                <g
+                    fill="#72afe8"
+                    stroke="#d5eafa"
+                    stroke-width="4"
+                >
+
+                    <rect
+                        x="178"
+                        y="315"
+                        width="42"
+                        height="40"
+                    />
+
+                    <rect
+                        x="243"
+                        y="315"
+                        width="42"
+                        height="40"
+                    />
+
+                    <rect
+                        x="377"
+                        y="315"
+                        width="42"
+                        height="40"
+                    />
+
+                </g>
+
+
+                <!-- Door -->
+
+                <rect
+                    x="302"
+                    y="300"
+                    width="60"
+                    height="60"
+                    rx="2"
+                    fill="#2374c8"
+                />
+
+
+                <rect
+                    x="310"
+                    y="308"
+                    width="44"
+                    height="52"
+                    fill="#4f99e1"
+                />
+
+
+                <circle
+                    cx="348"
+                    cy="335"
+                    r="3"
+                    fill="#eaf5ff"
+                />
+
+
+                <!-- SCHOOL sign -->
+
+                <rect
+                    x="267"
+                    y="276"
+                    width="130"
+                    height="42"
+                    rx="3"
+                    fill="#0d72cc"
+                />
+
+
+                <text
+                    x="332"
+                    y="303"
+                    text-anchor="middle"
+                    font-family="Arial, sans-serif"
+                    font-size="20"
+                    font-weight="700"
+                    fill="#ffffff"
+                >
+                    SCHOOL
+                </text>
+
+
+                <!-- =================================================
+                     BOOKS
+                ================================================== -->
+
+                <g>
+
+                    <rect
+                        x="35"
+                        y="340"
+                        width="105"
+                        height="15"
+                        rx="5"
+                        fill="#1767b7"
+                    />
+
+                    <rect
+                        x="27"
+                        y="355"
+                        width="122"
+                        height="15"
+                        rx="5"
+                        fill="#f4a61f"
+                    />
+
+                    <rect
+                        x="35"
+                        y="370"
+                        width="112"
+                        height="15"
+                        rx="5"
+                        fill="#ffffff"
+                        stroke="#8ab6df"
+                        stroke-width="2"
+                    />
+
+                    <rect
+                        x="24"
+                        y="385"
+                        width="126"
+                        height="15"
+                        rx="5"
+                        fill="#236fbd"
+                    />
+
+                </g>
+
+
+                <!-- =================================================
+                     TABLET / DASHBOARD
+                ================================================== -->
+
+                <g transform="translate(410 320) rotate(-5)">
+
+                    <rect
+                        x="0"
+                        y="0"
+                        width="150"
+                        height="92"
+                        rx="7"
+                        fill="#075aa9"
+                    />
+
+
+                    <rect
+                        x="8"
+                        y="8"
+                        width="134"
+                        height="74"
+                        rx="4"
+                        fill="#ffffff"
+                    />
+
+
+                    <!-- Pie chart -->
+
+                    <circle
+                        cx="40"
+                        cy="38"
+                        r="18"
+                        fill="#d9eaff"
+                    />
+
+
+                    <path
+                        d="
+                            M40 38
+                            L40 20
+                            A18 18 0 0 1 56 47
+                            Z
+                        "
+                        fill="#2f82dc"
+                    />
+
+
+                    <!-- dashboard lines -->
+
+                    <rect
+                        x="70"
+                        y="24"
+                        width="48"
+                        height="7"
+                        rx="2"
+                        fill="#b8d8f5"
+                    />
+
+
+                    <rect
+                        x="70"
+                        y="37"
+                        width="37"
+                        height="7"
+                        rx="2"
+                        fill="#d3e7f9"
+                    />
+
+
+                    <rect
+                        x="70"
+                        y="50"
+                        width="44"
+                        height="7"
+                        rx="2"
+                        fill="#b8d8f5"
+                    />
+
+
+                    <!-- small graph -->
+
+                    <polyline
+                        points="
+                            20,67
+                            42,58
+                            62,63
+                            82,52
+                            105,57
+                            125,43
+                        "
+                        fill="none"
+                        stroke="#2379d1"
+                        stroke-width="3"
+                    />
+
+                </g>
+
+
+                <!-- =================================================
+                     PLANT LEFT
+                ================================================== -->
+
+                <g>
+
+                    <path
+                        d="
+                            M125 355
+                            C105 325 105 295 120 275
+                        "
+                        fill="none"
+                        stroke="#16875e"
+                        stroke-width="7"
+                    />
+
+
+                    <ellipse
+                        cx="108"
+                        cy="307"
+                        rx="17"
+                        ry="9"
+                        fill="#31a875"
+                        transform="rotate(-35 108 307)"
+                    />
+
+
+                    <ellipse
+                        cx="123"
+                        cy="287"
+                        rx="17"
+                        ry="9"
+                        fill="#31a875"
+                        transform="rotate(35 123 287)"
+                    />
+
+
+                    <path
+                        d="
+                            M104 353
+                            L141 353
+                            L134 375
+                            L111 375
+                            Z
+                        "
+                        fill="#176ebc"
+                    />
+
+                </g>
+
+
+                <!-- =================================================
+                     PLANT RIGHT
+                ================================================== -->
+
+                <g>
+
+                    <path
+                        d="
+                            M575 355
+                            C600 320 600 285 585 260
+                        "
+                        fill="none"
+                        stroke="#16875e"
+                        stroke-width="7"
+                    />
+
+
+                    <ellipse
+                        cx="594"
+                        cy="306"
+                        rx="18"
+                        ry="9"
+                        fill="#31a875"
+                        transform="rotate(40 594 306)"
+                    />
+
+
+                    <ellipse
+                        cx="585"
+                        cy="281"
+                        rx="18"
+                        ry="9"
+                        fill="#31a875"
+                        transform="rotate(-30 585 281)"
+                    />
+
+
+                    <ellipse
+                        cx="602"
+                        cy="328"
+                        rx="18"
+                        ry="9"
+                        fill="#31a875"
+                        transform="rotate(35 602 328)"
+                    />
+
+                </g>
+
+
+                <!-- File folders -->
+
+                <rect
+                    x="560"
+                    y="338"
+                    width="27"
+                    height="38"
+                    rx="3"
+                    fill="#125ca9"
+                />
+
+
+                <rect
+                    x="590"
+                    y="333"
+                    width="27"
+                    height="43"
+                    rx="3"
+                    fill="#2d7fd0"
+                />
+
+
+            </svg>
 
         </div>
 
 
-    </div>
+    </section>
+
+
+
+    <!-- =====================================================
+         RIGHT LOGIN SECTION
+    ====================================================== -->
+
+    <section class="school-right">
+
+
+        <div class="login-card">
+
+
+            <h2 class="login-title">
+
+                School Management<br>
+                System
+
+            </h2>
+
+
+            <p class="login-subtitle">
+
+                School Administration Login
+
+            </p>
+
+
+            {% if error_message %}
+
+                <div class="login-error">
+
+                    {{ error_message }}
+
+                </div>
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+                 LOGIN FORM
+            ================================================== -->
+
+            <form
+                method="post"
+                action="{% url 'accounts:school_login' %}"
+            >
+
+                {% csrf_token %}
+
+
+                <!-- Username -->
+
+                <div class="form-field">
+
+                    <label for="school_username">
+
+                        Username
+
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+
+                        <!-- User icon -->
+
+                        <svg
+                            class="input-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+
+                            <circle
+                                cx="12"
+                                cy="8"
+                                r="3.5"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+
+                            <path
+                                d="
+                                    M5 20
+                                    C5.8 15.7
+                                    8.1 13.5
+                                    12 13.5
+                                    C15.9 13.5
+                                    18.2 15.7
+                                    19 20
+                                "
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+
+                        </svg>
+
+
+                        <input
+                            type="text"
+                            id="school_username"
+                            name="username"
+                            value="{{ username }}"
+                            placeholder="Enter username"
+                            autocomplete="username"
+                            autofocus
+                            required
+                        >
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Password -->
+
+                <div class="form-field">
+
+                    <label for="school_password">
+
+                        Password
+
+                    </label>
+
+
+                    <div class="input-wrapper">
+
+
+                        <!-- Lock icon -->
+
+                        <svg
+                            class="input-icon"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+
+                            <rect
+                                x="5"
+                                y="10"
+                                width="14"
+                                height="10"
+                                rx="2"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+
+                            <path
+                                d="
+                                    M8 10
+                                    V7
+                                    C8 4.8 9.8 3 12 3
+                                    C14.2 3 16 4.8 16 7
+                                    V10
+                                "
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+
+                            <circle
+                                cx="12"
+                                cy="15"
+                                r="1.3"
+                                fill="currentColor"
+                            />
+
+                        </svg>
+
+
+                        <input
+                            type="password"
+                            id="school_password"
+                            name="password"
+                            placeholder="Enter password"
+                            autocomplete="current-password"
+                            required
+                        >
+
+
+                        <!-- Show password -->
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            id="passwordToggle"
+                            aria-label="Show password"
+                        >
+
+                            <svg
+                                id="eyeIcon"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+
+                                <path
+                                    d="
+                                        M2.5 12
+                                        C5 7.8 8.3 5.5
+                                        12 5.5
+                                        C15.7 5.5 19 7.8
+                                        21.5 12
+                                        C19 16.2 15.7 18.5
+                                        12 18.5
+                                        C8.3 18.5 5 16.2 2.5 12Z
+                                    "
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                />
+
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="3"
+                                    stroke="currentColor"
+                                    stroke-width="1.6"
+                                />
+
+                            </svg>
+
+                        </button>
+
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Login button -->
+
+                <button
+                    type="submit"
+                    class="login-button"
+                >
+
+                    Login
+
+                </button>
+
+
+            </form>
+
+
+            <div class="login-footer">
+
+                School Management System
+
+            </div>
+
+
+        </div>
+
+
+    </section>
 
 
 </div>
+
+
+
+<script>
+
+    /*
+     * Show / Hide Password
+     */
+
+    const passwordInput =
+        document.getElementById(
+            "school_password"
+        );
+
+    const passwordToggle =
+        document.getElementById(
+            "passwordToggle"
+        );
+
+
+    passwordToggle.addEventListener(
+        "click",
+        function () {
+
+            if (
+                passwordInput.type === "password"
+            ) {
+
+                passwordInput.type =
+                    "text";
+
+            } else {
+
+                passwordInput.type =
+                    "password";
+            }
+
+        }
+    );
+
+</script>
 
 
 </body>
