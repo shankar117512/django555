@@ -34,6 +34,7 @@ class CustomLoginView(LoginView):
     Renders templates/accounts/login.html
     Success అయితే -> /client/dashboard/ కి redirect
     """
+
     template_name = "accounts/login.html"
     redirect_authenticated_user = True
 

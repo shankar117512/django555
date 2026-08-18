@@ -1,10 +1,11 @@
 # apps/core/tests.py
+
 from unittest.mock import patch
 
 from django.test import RequestFactory, SimpleTestCase, TestCase
 from django.urls import reverse
 
-# ─── home view ───────────────────────────────────────────────────────────────
+# ─── Home view ───────────────────────────────────────────────────────────────
 
 
 class HomeViewTests(TestCase):
@@ -30,11 +31,13 @@ class HomeViewTests(TestCase):
 class TenantMiddlewareTests(SimpleTestCase):
     """
     Tests the custom middleware without a real tenant DB.
+
     The parent's process_request is mocked so no tenant schema is required.
     """
 
     def setUp(self):
         self.factory = RequestFactory()
+
         from apps.core.middleware import TenantMiddlewareWithHealthCheck
 
         self.middleware = TenantMiddlewareWithHealthCheck.__new__(
@@ -43,7 +46,7 @@ class TenantMiddlewareTests(SimpleTestCase):
 
     def test_health_path_bypasses_tenant_and_returns_none(self):
         request = self.factory.get("/health/")
-        self.middleware.process_request(request)  # ← removed unused `result =`
+        self.middleware.process_request(request)
         self.assertIsNone(request.tenant)
 
     def test_monitoring_ping_path_bypasses_tenant(self):

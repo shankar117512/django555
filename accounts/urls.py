@@ -10,7 +10,6 @@ urlpatterns = [
     # ── Web login (session, dashboard కోసం) ──
     path("login/", views.CustomLoginView.as_view(), name="login"),
     path("logout/", views.custom_logout, name="logout"),
-
     # ── JWT API (mobile/external clients కోసం) ──
     path("api/register/", views.RegisterView.as_view(), name="api_register"),
     path("api/login/", views.APILoginView.as_view(), name="api_login"),

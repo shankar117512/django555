@@ -3,186 +3,904 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <meta name="description"
+          content="Gregarious CRM Dashboard">
+
     <title>{% block title %}Gregarious{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <style>
-        * { box-sizing: border-box; }
+        /* =========================================================
+           RESET
+        ========================================================= */
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html,
         body {
             margin: 0;
-            font-family: -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+            padding: 0;
+            min-height: 100%;
+        }
+
+        body {
+            font-family:
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                Roboto,
+                Arial,
+                sans-serif;
+
             background: #f4f6f9;
             color: #222;
+            line-height: 1.5;
         }
+
+        a {
+            color: inherit;
+        }
+
+        button,
+        input,
+        select,
+        textarea {
+            font: inherit;
+        }
+
+
+        /* =========================================================
+           TOP BAR
+        ========================================================= */
+
         .topbar {
+            width: 100%;
+            min-height: 60px;
+
             background: #14161a;
-            color: #fff;
+            color: #ffffff;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 24px;
-        }
-        .topbar .brand {
-            font-weight: 700;
-            font-size: 18px;
-            letter-spacing: .2px;
-        }
-        .topbar .brand .logo {
-            display: inline-block;
-            width: 22px; height: 22px;
-            background: #2f6fed;
-            border-radius: 5px;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        .topbar .right { display: flex; align-items: center; gap: 14px; font-size: 14px; }
-        .logout-btn {
-            background: #2f2f36;
-            color: #fff;
-            border: none;
-            padding: 6px 14px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 13px;
-        }
-        .logout-btn:hover { background: #3f3f47; }
 
-        .layout { display: flex; min-height: calc(100vh - 48px); }
-        .sidebar {
-            width: 200px;
-            background: #ffffff;
-            border-right: 1px solid #eaecef;
-            padding: 18px 0;
+            padding: 12px 24px;
+
+            border-bottom: 1px solid #24272d;
         }
-        .sidebar a {
-            display: block;
-            padding: 10px 24px;
-            color: #333;
+
+        .topbar .brand {
+            display: flex;
+            align-items: center;
+
+            font-size: 18px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+
             text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .topbar .brand .logo {
+            display: inline-flex;
+
+            width: 24px;
+            height: 24px;
+
+            margin-right: 9px;
+
+            background: #2f6fed;
+            border-radius: 6px;
+
+            align-items: center;
+            justify-content: center;
+        }
+
+        .topbar .brand .logo::after {
+            content: "";
+            width: 9px;
+            height: 9px;
+
+            background: #ffffff;
+            border-radius: 50%;
+        }
+
+        .topbar .right {
+            display: flex;
+            align-items: center;
+
+            gap: 14px;
+
             font-size: 14px;
         }
+
+        .welcome-user {
+            color: #e5e7eb;
+        }
+
+
+        /* =========================================================
+           LOGOUT BUTTON
+        ========================================================= */
+
+        .logout-form {
+            margin: 0;
+            padding: 0;
+        }
+
+        .logout-btn {
+            background: #2f2f36;
+            color: #ffffff;
+
+            border: 1px solid #3a3a43;
+            border-radius: 6px;
+
+            padding: 7px 14px;
+
+            cursor: pointer;
+
+            font-size: 13px;
+            font-weight: 500;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .logout-btn:hover {
+            background: #3f3f47;
+            border-color: #4b4b55;
+        }
+
+        .logout-btn:focus {
+            outline: 2px solid #2f6fed;
+            outline-offset: 2px;
+        }
+
+
+        /* =========================================================
+           MAIN LAYOUT
+        ========================================================= */
+
+        .layout {
+            display: flex;
+
+            width: 100%;
+            min-height: calc(100vh - 60px);
+        }
+
+
+        /* =========================================================
+           SIDEBAR
+        ========================================================= */
+
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+
+            background: #ffffff;
+
+            border-right: 1px solid #eaecef;
+
+            padding: 18px 0;
+        }
+
+        .sidebar-title {
+            padding: 0 24px 12px;
+
+            color: #999;
+
+            font-size: 11px;
+            font-weight: 700;
+
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .sidebar a {
+            display: flex;
+            align-items: center;
+
+            width: 100%;
+
+            padding: 11px 24px;
+
+            color: #333333;
+
+            text-decoration: none;
+
+            font-size: 14px;
+            font-weight: 400;
+
+            border-right: 3px solid transparent;
+
+            transition:
+                background 0.2s ease,
+                color 0.2s ease;
+        }
+
+        .sidebar a:hover {
+            background: #f5f7fa;
+            color: #2f6fed;
+        }
+
         .sidebar a.active {
             color: #2f6fed;
+
             font-weight: 600;
+
             background: #eef3ff;
+
             border-right: 3px solid #2f6fed;
         }
-        .sidebar a:hover { background: #f5f7fa; }
 
-        .content { flex: 1; padding: 24px 28px; }
+
+        /* =========================================================
+           CONTENT
+        ========================================================= */
+
+        .content {
+            flex: 1;
+            min-width: 0;
+
+            padding: 28px 32px;
+
+            overflow-x: auto;
+        }
+
+
+        /* =========================================================
+           PAGE HEADER
+        ========================================================= */
+
         .page-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
+
+            gap: 16px;
+
             margin-bottom: 20px;
         }
-        .page-header h2 { margin: 0; font-size: 22px; }
-        .refresh-btn {
-            background: #fff;
-            border: 1px solid #dfe3e8;
-            padding: 7px 16px;
-            border-radius: 6px;
-            font-size: 13px;
-            cursor: pointer;
-        }
-        .refresh-btn:hover { background: #f5f7fa; }
 
-        .cards-row { display: flex; gap: 16px; margin-bottom: 20px; flex-wrap: wrap; }
-        .stat-card {
-            background: #fff;
-            border: 1px solid #eaecef;
-            border-radius: 8px;
-            padding: 16px 20px;
-            flex: 1;
-            min-width: 160px;
-        }
-        .stat-card .label { font-size: 13px; color: #777; margin-bottom: 6px; }
-        .stat-card .value { font-size: 22px; font-weight: 700; }
+        .page-header h1,
+        .page-header h2 {
+            margin: 0;
 
-        .panels-row { display: flex; gap: 16px; flex-wrap: wrap; }
-        .panel {
-            background: #fff;
-            border: 1px solid #eaecef;
-            border-radius: 8px;
-            padding: 18px 20px;
-            flex: 1;
-            min-width: 320px;
-        }
-        .panel h3 { margin-top: 0; font-size: 16px; }
+            color: #1f2937;
 
-        table.data-table { width: 100%; border-collapse: collapse; }
-        table.data-table th, table.data-table td {
-            text-align: left;
-            padding: 10px 12px;
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .page-header p {
+            margin: 4px 0 0;
+
+            color: #777;
+
             font-size: 14px;
-            border-bottom: 1px solid #eee;
         }
-        table.data-table th { color: #777; font-weight: 600; font-size: 13px; }
-        .empty-row { text-align: center; color: #999; padding: 30px 0 !important; }
+
+
+        /* =========================================================
+           BUTTONS
+        ========================================================= */
+
+        .btn-primary {
+            display: inline-block;
+
+            background: #2f6fed;
+            color: #ffffff;
+
+            border: none;
+            border-radius: 6px;
+
+            padding: 9px 18px;
+
+            font-size: 14px;
+            font-weight: 500;
+
+            cursor: pointer;
+
+            text-decoration: none;
+
+            transition:
+                background 0.2s ease,
+                transform 0.1s ease;
+        }
+
+        .btn-primary:hover {
+            background: #2559c9;
+        }
+
+        .btn-primary:active {
+            transform: translateY(1px);
+        }
+
+        .btn-primary:focus {
+            outline: 2px solid #2f6fed;
+            outline-offset: 2px;
+        }
+
+
+        /* =========================================================
+           REFRESH BUTTON
+        ========================================================= */
+
+        .refresh-btn {
+            background: #ffffff;
+
+            color: #333333;
+
+            border: 1px solid #dfe3e8;
+            border-radius: 6px;
+
+            padding: 7px 16px;
+
+            font-size: 13px;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease;
+        }
+
+        .refresh-btn:hover {
+            background: #f5f7fa;
+            border-color: #cfd5dc;
+        }
+
+
+        /* =========================================================
+           STAT CARDS
+        ========================================================= */
+
+        .cards-row {
+            display: flex;
+
+            gap: 16px;
+
+            margin-bottom: 20px;
+
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            flex: 1;
+
+            min-width: 160px;
+
+            background: #ffffff;
+
+            border: 1px solid #eaecef;
+            border-radius: 8px;
+
+            padding: 16px 20px;
+
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .stat-card .label {
+            margin-bottom: 6px;
+
+            color: #777777;
+
+            font-size: 13px;
+        }
+
+        .stat-card .value {
+            color: #1f2937;
+
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+
+        /* =========================================================
+           PANELS
+        ========================================================= */
+
+        .panels-row {
+            display: flex;
+
+            gap: 16px;
+
+            flex-wrap: wrap;
+        }
+
+        .panel {
+            flex: 1;
+
+            min-width: 320px;
+
+            background: #ffffff;
+
+            border: 1px solid #eaecef;
+            border-radius: 8px;
+
+            padding: 18px 20px;
+
+            box-shadow:
+                0 1px 2px rgba(0, 0, 0, 0.02);
+        }
+
+        .panel h3 {
+            margin: 0 0 14px;
+
+            color: #1f2937;
+
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+
+        /* =========================================================
+           TABLE
+        ========================================================= */
+
+        table.data-table {
+            width: 100%;
+
+            border-collapse: collapse;
+
+            background: #ffffff;
+        }
+
+        table.data-table th,
+        table.data-table td {
+            padding: 10px 12px;
+
+            text-align: left;
+
+            font-size: 14px;
+
+            border-bottom: 1px solid #eeeeee;
+        }
+
+        table.data-table th {
+            color: #777777;
+
+            font-size: 13px;
+            font-weight: 600;
+
+            background: #fafafa;
+        }
+
+        table.data-table tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .empty-row {
+            padding: 30px 0 !important;
+
+            color: #999999;
+
+            text-align: center !important;
+        }
+
+
+        /* =========================================================
+           FUNNEL
+        ========================================================= */
 
         .funnel-row {
             display: flex;
+            align-items: center;
             justify-content: space-between;
+
+            gap: 16px;
+
             padding: 14px 16px;
+
+            margin-bottom: 10px;
+
+            background: #ffffff;
+
             border: 1px solid #eaecef;
             border-radius: 6px;
-            margin-bottom: 10px;
-            background: #fff;
         }
-        .btn-primary {
-            background: #2f6fed;
-            color: #fff;
-            border: none;
-            padding: 9px 18px;
-            border-radius: 6px;
-            font-size: 14px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-primary:hover { background: #2559c9; }
+
+
+        /* =========================================================
+           BADGE
+        ========================================================= */
 
         .badge {
+            display: inline-block;
+
             background: #2f6fed;
-            color: #fff;
-            font-size: 12px;
+            color: #ffffff;
+
             padding: 4px 10px;
+
             border-radius: 12px;
+
+            font-size: 12px;
             font-weight: 600;
         }
+
+
+        /* =========================================================
+           INFO BANNER
+        ========================================================= */
+
         .info-banner {
+            padding: 16px 18px;
+
             background: #eaf6ff;
             color: #1a5276;
-            padding: 16px 18px;
+
             border-radius: 6px;
+
             font-size: 14px;
         }
+
+
+        /* =========================================================
+           ALERTS / MESSAGES
+        ========================================================= */
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            padding: 12px 16px;
+
+            margin-bottom: 10px;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+        }
+
+        .message.success {
+            background: #ecfdf3;
+            color: #166534;
+            border: 1px solid #bbf7d0;
+        }
+
+        .message.error {
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fecaca;
+        }
+
+        .message.warning {
+            background: #fffbeb;
+            color: #92400e;
+            border: 1px solid #fde68a;
+        }
+
+        .message.info {
+            background: #eff6ff;
+            color: #1e40af;
+            border: 1px solid #bfdbfe;
+        }
+
+
+        /* =========================================================
+           FORMS
+        ========================================================= */
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            color: #374151;
+
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+
+            padding: 9px 11px;
+
+            background: #ffffff;
+
+            border: 1px solid #dfe3e8;
+            border-radius: 6px;
+
+            color: #222222;
+
+            font-size: 14px;
+
+            outline: none;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #2f6fed;
+
+            box-shadow:
+                0 0 0 3px rgba(47, 111, 237, 0.12);
+        }
+
+
+        /* =========================================================
+           RESPONSIVE DESIGN
+        ========================================================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                width: 190px;
+            }
+
+            .content {
+                padding: 22px;
+            }
+
+        }
+
+
+        @media (max-width: 700px) {
+
+            .topbar {
+                padding: 10px 16px;
+            }
+
+            .topbar .right {
+                gap: 8px;
+            }
+
+            .welcome-user {
+                display: none;
+            }
+
+            .layout {
+                flex-direction: column;
+            }
+
+            .sidebar {
+                width: 100%;
+
+                border-right: none;
+                border-bottom: 1px solid #eaecef;
+
+                padding: 8px 0;
+
+                display: flex;
+                overflow-x: auto;
+            }
+
+            .sidebar-title {
+                display: none;
+            }
+
+            .sidebar a {
+                flex: 0 0 auto;
+
+                padding: 9px 16px;
+
+                border-right: none;
+                border-bottom: 3px solid transparent;
+            }
+
+            .sidebar a.active {
+                border-right: none;
+                border-bottom: 3px solid #2f6fed;
+            }
+
+            .content {
+                padding: 18px 16px;
+            }
+
+            .page-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .panel {
+                min-width: 100%;
+            }
+
+            .stat-card {
+                min-width: calc(50% - 8px);
+            }
+
+        }
+
+
+        @media (max-width: 480px) {
+
+            .topbar .brand {
+                font-size: 16px;
+            }
+
+            .logout-btn {
+                padding: 6px 10px;
+            }
+
+            .content {
+                padding: 16px 12px;
+            }
+
+            .stat-card {
+                min-width: 100%;
+            }
+
+            .cards-row,
+            .panels-row {
+                gap: 12px;
+            }
+
+        }
     </style>
+
     {% block extra_head %}{% endblock %}
 </head>
-<body>
-    <div class="topbar">
-        <div class="brand"><span class="logo"></span>Gregarious</div>
-        <div class="right">
-            <span>Welcome, {{ request.user.username }}</span>
-            <form method="post" action="{% url 'accounts:logout' %}" style="margin:0;">
-                {% csrf_token %}
-                <button type="submit" class="logout-btn">Logout</button>
-            </form>
-        </div>
-    </div>
 
-    <div class="layout">
-        <div class="sidebar">
-            <a href="{% url 'core:dashboard' %}" class="{% if active == 'dashboard' %}active{% endif %}">Dashboard</a>
-            <a href="{% url 'core:campaigns' %}" class="{% if active == 'campaigns' %}active{% endif %}">Campaigns</a>
-            <a href="{% url 'core:leads' %}" class="{% if active == 'leads' %}active{% endif %}">Leads</a>
-            <a href="{% url 'core:ai_insights' %}" class="{% if active == 'ai' %}active{% endif %}">AI Insights</a>
+
+<body>
+
+    {% if request.user.is_authenticated %}
+
+        <!-- =====================================================
+             TOP BAR
+        ====================================================== -->
+
+        <header class="topbar">
+
+            <a href="{% url 'core:dashboard' %}"
+               class="brand">
+
+                <span class="logo"></span>
+
+                Gregarious
+
+            </a>
+
+
+            <div class="right">
+
+                <span class="welcome-user">
+                    Welcome,
+                    {{ request.user.username }}
+                </span>
+
+
+                <form method="post"
+                      action="{% url 'accounts:logout' %}"
+                      class="logout-form">
+
+                    {% csrf_token %}
+
+                    <button type="submit"
+                            class="logout-btn">
+
+                        Logout
+
+                    </button>
+
+                </form>
+
+            </div>
+
+        </header>
+
+
+        <!-- =====================================================
+             MAIN LAYOUT
+        ====================================================== -->
+
+        <div class="layout">
+
+
+            <!-- =================================================
+                 SIDEBAR
+            ================================================== -->
+
+            <aside class="sidebar">
+
+                <div class="sidebar-title">
+                    Navigation
+                </div>
+
+
+                <a href="{% url 'core:dashboard' %}"
+                   class="{% if active == 'dashboard' %}active{% endif %}">
+
+                    Dashboard
+
+                </a>
+
+
+                <a href="{% url 'core:campaigns' %}"
+                   class="{% if active == 'campaigns' %}active{% endif %}">
+
+                    Campaigns
+
+                </a>
+
+
+                <a href="{% url 'core:leads' %}"
+                   class="{% if active == 'leads' %}active{% endif %}">
+
+                    Leads
+
+                </a>
+
+
+                <a href="{% url 'core:ai_insights' %}"
+                   class="{% if active == 'ai' %}active{% endif %}">
+
+                    AI Insights
+
+                </a>
+
+            </aside>
+
+
+            <!-- =================================================
+                 CONTENT
+            ================================================== -->
+
+            <main class="content">
+
+                {% if messages %}
+
+                    <div class="messages">
+
+                        {% for message in messages %}
+
+                            <div class="message {{ message.tags }}">
+
+                                {{ message }}
+
+                            </div>
+
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+
+                {% block content %}{% endblock %}
+
+            </main>
+
         </div>
-        <div class="content">
-            {% block content %}{% endblock %}
-        </div>
-    </div>
+
+    {% else %}
+
+        <!-- =====================================================
+             PUBLIC / LOGIN PAGE
+             Do NOT display dashboard navigation for anonymous users.
+        ====================================================== -->
+
+        <main>
+
+            {% block public_content %}{% endblock %}
+
+        </main>
+
+    {% endif %}
+
+
     {% block extra_scripts %}{% endblock %}
+
 </body>
 </html>
-
