@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
 from django.contrib.auth.decorators import login_required
-from django.shortcuts import redirect, render
+from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
@@ -27,6 +27,7 @@ from .serializers import (
     UserSerializer,
 )
 
+
 User = get_user_model()
 
 
@@ -37,22 +38,12 @@ User = get_user_model()
 
 
 class RegisterView(generics.CreateAPIView):
-
     queryset = User.objects.all()
-
     serializer_class = RegisterSerializer
-
     permission_classes = [permissions.AllowAny]
 
-    def create(
-        self,
-        request,
-        *args,
-        **kwargs,
-    ):
-
+    def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         serializer.is_valid(raise_exception=True)
 
         user = serializer.save()
@@ -78,20 +69,11 @@ class RegisterView(generics.CreateAPIView):
 
 
 class LoginView(TokenObtainPairView):
-
     serializer_class = CustomTokenObtainPairSerializer
-
     permission_classes = [permissions.AllowAny]
 
-    def post(
-        self,
-        request,
-        *args,
-        **kwargs,
-    ):
-
+    def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
-
         serializer.is_valid(raise_exception=True)
 
         USER_LOGIN_COUNTER.inc()
@@ -115,26 +97,20 @@ class LoginView(TokenObtainPairView):
 
 
 class LogoutView(APIView):
-
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-
         refresh_token = request.data.get("refresh")
 
         if not refresh_token:
-
             return Response(
                 {"detail": "refresh token is required"},
                 status=status.HTTP_400_BAD_REQUEST,
             )
 
         try:
-
             RefreshToken(refresh_token).blacklist()
-
         except TokenError:
-
             return Response(
                 {"detail": "invalid or expired token"},
                 status=status.HTTP_400_BAD_REQUEST,
@@ -156,29 +132,18 @@ class LogoutView(APIView):
 
 
 class MeView(generics.RetrieveUpdateAPIView):
-
     permission_classes = [permissions.IsAuthenticated]
 
     def get_object(self):
-
         return self.request.user
 
     def get_serializer_class(self):
-
-        if self.request.method in [
-            "PUT",
-            "PATCH",
-        ]:
-
+        if self.request.method in ["PUT", "PATCH"]:
             return ProfileUpdateSerializer
 
         return UserSerializer
 
-    def perform_update(
-        self,
-        serializer,
-    ):
-
+    def perform_update(self, serializer):
         user = serializer.save()
 
         PROFILE_UPDATE_COUNTER.inc()
@@ -197,29 +162,20 @@ class MeView(generics.RetrieveUpdateAPIView):
 
 
 def web_login_view(request):
-
     if request.user.is_authenticated:
-
         return redirect("core:dashboard")
 
     username = ""
-
     next_url = request.POST.get("next") or request.GET.get("next") or ""
-
     error_message = ""
 
     if request.method == "POST":
-
         username = request.POST.get("username", "").strip()
-
         password = request.POST.get("password", "")
 
         if not username or not password:
-
             error_message = "Username and password are required."
-
         else:
-
             user = authenticate(
                 request,
                 username=username,
@@ -227,7 +183,6 @@ def web_login_view(request):
             )
 
             if user is not None:
-
                 django_login(
                     request,
                     user,
@@ -246,7 +201,6 @@ def web_login_view(request):
                     allowed_hosts={request.get_host()},
                     require_https=request.is_secure(),
                 ):
-
                     return redirect(next_url)
 
                 return redirect("core:dashboard")
@@ -271,11 +225,8 @@ def web_login_view(request):
 
 
 def web_logout_view(request):
-
     if request.method == "POST":
-
         if request.user.is_authenticated:
-
             log_activity(
                 request.user,
                 "logout",
@@ -288,164 +239,26 @@ def web_logout_view(request):
 
 
 # ============================================================
-# SCHOOL MANAGEMENT SYSTEM
-# ============================================================
-# GET/POST /accounts/school/login/
-# ============================================================
-
-
-def school_login_view(request):
-    """
-    Separate login page for the School Management System.
-
-    IMPORTANT:
-    This does NOT modify the existing /accounts/login/ flow.
-
-    Only active staff users are allowed to enter the
-    School Management System.
-    """
-
-    if request.user.is_authenticated:
-        if request.user.is_staff:
-            return redirect("accounts:school_teacher_list")
-
-        django_logout(request)
-
-    username = ""
-    error_message = ""
-
-    if request.method == "POST":
-
-        username = request.POST.get("username", "").strip()
-        password = request.POST.get("password", "")
-
-        if not username or not password:
-
-            error_message = "Username and password are required."
-
-        else:
-
-            user = authenticate(
-                request,
-                username=username,
-                password=password,
-            )
-
-            if user is not None:
-
-                if not user.is_active:
-
-                    error_message = "This account is inactive."
-
-                elif not user.is_staff:
-
-                    error_message = (
-                        "You do not have permission to access "
-                        "the School Management System."
-                    )
-
-                else:
-
-                    django_login(
-                        request,
-                        user,
-                    )
-
-                    USER_LOGIN_COUNTER.inc()
-
-                    log_activity(
-                        user,
-                        "login",
-                        request,
-                    )
-
-                    return redirect("accounts:school_teacher_list")
-
-            else:
-
-                error_message = "Invalid username or password."
-
-    return render(
-        request,
-        "accounts/school/login.html",
-        {
-            "username": username,
-            "error_message": error_message,
-        },
-    )
-
-
-# ============================================================
-# SCHOOL MANAGEMENT SYSTEM - TEACHER LIST
-# ============================================================
-# GET /accounts/school/teacher-list/
-# ============================================================
-
-
-def school_teacher_list_view(request):
-    """
-    School Management System frontend.
-
-    This page is protected and can only be accessed after
-    School Management login.
-    """
-
-    if not request.user.is_authenticated:
-
-        return redirect("accounts:school_login")
-
-    if not request.user.is_staff:
-
-        django_logout(request)
-
-        return redirect("accounts:school_login")
-
-    return render(
-        request,
-        "accounts/school/teacher_list.html",
-        {
-            "school_user": request.user,
-        },
-    )
-
-
-# ============================================================
-# SCHOOL MANAGEMENT SYSTEM - LOGOUT
-# ============================================================
-# GET /accounts/school/logout/
-# ============================================================
-
-
-def school_logout_view(request):
-
-    if request.user.is_authenticated:
-
-        log_activity(
-            request.user,
-            "logout",
-            request,
-        )
-
-        django_logout(request)
-
-    return redirect("accounts:school_login")
-
-
-# ============================================================
-# SCHOOL MANAGEMENT SYSTEM
+# SCHOOL MANAGEMENT SYSTEM - ACCESS HELPER
 # ============================================================
 
 
 def _school_staff_required(request):
     """
     School Management System requires an authenticated
-    staff user.
+    staff user or superuser.
     """
 
     if not request.user.is_authenticated:
         return False
 
     return request.user.is_staff or request.user.is_superuser
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - LOGIN
+# GET/POST /accounts/school/login/
+# ============================================================
 
 
 def school_login_view(request):
@@ -460,19 +273,11 @@ def school_login_view(request):
     error_message = ""
 
     if request.method == "POST":
-        username = request.POST.get(
-            "username",
-            "",
-        ).strip()
-
-        password = request.POST.get(
-            "password",
-            "",
-        )
+        username = request.POST.get("username", "").strip()
+        password = request.POST.get("password", "")
 
         if not username or not password:
             error_message = "Username and password are required."
-
         else:
             user = authenticate(
                 request,
@@ -488,7 +293,8 @@ def school_login_view(request):
 
             elif not (user.is_staff or user.is_superuser):
                 error_message = (
-                    "This account does not have School " "Management access."
+                    "This account does not have "
+                    "School Management access."
                 )
 
             else:
@@ -517,6 +323,12 @@ def school_login_view(request):
     )
 
 
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - DASHBOARD
+# GET /accounts/school/dashboard/
+# ============================================================
+
+
 @login_required(login_url="/accounts/school/login/")
 def school_dashboard_view(request):
     """
@@ -538,6 +350,12 @@ def school_dashboard_view(request):
         "accounts/school/dashboard.html",
         context,
     )
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - STUDENT LIST
+# GET /accounts/school/student-list/
+# ============================================================
 
 
 @login_required(login_url="/accounts/school/login/")
@@ -562,6 +380,12 @@ def school_student_list_view(request):
     )
 
 
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - STUDENT DETAIL
+# GET /accounts/school/student/<id>/
+# ============================================================
+
+
 @login_required(login_url="/accounts/school/login/")
 def school_student_detail_view(request, student_id):
     """
@@ -570,8 +394,6 @@ def school_student_detail_view(request, student_id):
 
     if not _school_staff_required(request):
         return redirect("accounts:school_login")
-
-    from django.shortcuts import get_object_or_404
 
     from .models import SchoolStudent
 
@@ -587,6 +409,12 @@ def school_student_detail_view(request, student_id):
             "student": student,
         },
     )
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - TEACHER LIST
+# GET /accounts/school/teacher-list/
+# ============================================================
 
 
 @login_required(login_url="/accounts/school/login/")
@@ -611,6 +439,12 @@ def school_teacher_list_view(request):
     )
 
 
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - TEACHER DETAIL
+# GET /accounts/school/teacher/<id>/
+# ============================================================
+
+
 @login_required(login_url="/accounts/school/login/")
 def school_teacher_detail_view(request, teacher_id):
     """
@@ -619,8 +453,6 @@ def school_teacher_detail_view(request, teacher_id):
 
     if not _school_staff_required(request):
         return redirect("accounts:school_login")
-
-    from django.shortcuts import get_object_or_404
 
     from .models import SchoolTeacher
 
@@ -636,6 +468,12 @@ def school_teacher_detail_view(request, teacher_id):
             "teacher": teacher,
         },
     )
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - CREATE TEACHER
+# GET/POST /accounts/school/teacher/create/
+# ============================================================
 
 
 @login_required(login_url="/accounts/school/login/")
@@ -671,9 +509,7 @@ def school_teacher_create_view(request):
                 "subject",
                 "",
             ).strip(),
-            joining_date=request.POST.get(
-                "joining_date",
-            ),
+            joining_date=request.POST.get("joining_date"),
             phone=request.POST.get(
                 "phone",
                 "",
@@ -694,6 +530,12 @@ def school_teacher_create_view(request):
         request,
         "accounts/school/teacher_create.html",
     )
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM - LOGOUT
+# POST /accounts/school/logout/
+# ============================================================
 
 
 @login_required(login_url="/accounts/school/login/")
