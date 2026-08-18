@@ -1,0 +1,54 @@
+{% extends "accounts/school/base.html" %}
+
+{% block title %}
+    School Dashboard
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb">
+    Home / Admin / Dashboard
+</div>
+
+<div class="page-card">
+
+    <h2 class="page-title">
+        ▤ &nbsp; Dashboard
+    </h2>
+
+    <div class="stats-grid">
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Total Students
+            </div>
+
+            <div class="stat-number">
+                {{ student_count }}
+            </div>
+
+        </div>
+
+
+        <div class="stat-card">
+
+            <div class="stat-label">
+                Total Teachers
+            </div>
+
+            <div class="stat-number">
+                {{ teacher_count }}
+            </div>
+
+        </div>
+
+    </div>
+
+    <p style="font-size: 12px; color: #777;">
+        Welcome to the School Management System.
+    </p>
+
+</div>
+
+{% endblock %}

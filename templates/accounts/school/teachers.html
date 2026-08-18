@@ -1,0 +1,134 @@
+{% extends "accounts/school/base.html" %}
+
+{% block title %}
+    Teachers List
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb">
+    Home / Admin / Dashboard
+</div>
+
+<div class="page-card">
+
+    <h2 class="page-title">
+        ▤ &nbsp; Teachers List
+    </h2>
+
+    <div class="table-wrapper">
+
+        <table class="school-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Sl.
+                    </th>
+
+                    <th>
+                        Name
+                    </th>
+
+                    <th>
+                        Email
+                    </th>
+
+                    <th>
+                        Department
+                    </th>
+
+                    <th>
+                        Subject
+                    </th>
+
+                    <th>
+                        Joining Date
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for teacher in teachers %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'accounts:school_teacher_detail' teacher.id %}"
+                            >
+                                {{ teacher.name }}
+                            </a>
+
+                        </td>
+
+                        <td>
+                            {{ teacher.email }}
+                        </td>
+
+                        <td>
+                            {{ teacher.department }}
+                        </td>
+
+                        <td>
+                            {{ teacher.subject }}
+                        </td>
+
+                        <td>
+                            {{ teacher.joining_date|date:"d-m-Y" }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'accounts:school_teacher_detail' teacher.id %}"
+                            >
+                                View Details
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="7"
+                            style="
+                                text-align: center;
+                                color: #999;
+                            "
+                        >
+                            No teachers found.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

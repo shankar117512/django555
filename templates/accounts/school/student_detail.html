@@ -1,0 +1,139 @@
+{% extends "accounts/school/base.html" %}
+
+{% block title %}
+    Student Details
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb">
+
+    <a
+        href="{% url 'accounts:school_student_list' %}"
+    >
+        Students
+    </a>
+
+    / Student Details
+
+</div>
+
+
+<div class="page-card">
+
+    <h2 class="page-title">
+        ▤ &nbsp; Student Details
+    </h2>
+
+
+    <div class="detail-grid">
+
+        <div class="detail-label">
+            Student ID
+        </div>
+
+        <div class="detail-value">
+            {{ student.student_id }}
+        </div>
+
+
+        <div class="detail-label">
+            Student Name
+        </div>
+
+        <div class="detail-value">
+            {{ student.name }}
+        </div>
+
+
+        <div class="detail-label">
+            Class
+        </div>
+
+        <div class="detail-value">
+            {{ student.student_class }}
+        </div>
+
+
+        <div class="detail-label">
+            Joining Date
+        </div>
+
+        <div class="detail-value">
+            {{ student.joining_date|date:"d-m-Y" }}
+        </div>
+
+
+        <div class="detail-label">
+            Email
+        </div>
+
+        <div class="detail-value">
+            {{ student.email|default:"-" }}
+        </div>
+
+
+        <div class="detail-label">
+            Phone
+        </div>
+
+        <div class="detail-value">
+            {{ student.phone|default:"-" }}
+        </div>
+
+
+        <div class="detail-label">
+            Father Name
+        </div>
+
+        <div class="detail-value">
+            {{ student.father_name|default:"-" }}
+        </div>
+
+
+        <div class="detail-label">
+            Mother Name
+        </div>
+
+        <div class="detail-value">
+            {{ student.mother_name|default:"-" }}
+        </div>
+
+
+        <div class="detail-label">
+            Date of Birth
+        </div>
+
+        <div class="detail-value">
+
+            {% if student.date_of_birth %}
+                {{ student.date_of_birth|date:"d-m-Y" }}
+            {% else %}
+                -
+            {% endif %}
+
+        </div>
+
+
+        <div class="detail-label">
+            Address
+        </div>
+
+        <div class="detail-value">
+            {{ student.address|default:"-"|linebreaksbr }}
+        </div>
+
+    </div>
+
+    <br>
+
+    <a
+        class="button"
+        href="{% url 'accounts:school_student_list' %}"
+    >
+        Back to Students
+    </a>
+
+</div>
+
+{% endblock %}

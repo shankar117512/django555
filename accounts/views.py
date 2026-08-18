@@ -3,6 +3,7 @@
 from django.contrib.auth import authenticate, get_user_model
 from django.contrib.auth import login as django_login
 from django.contrib.auth import logout as django_logout
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 from django.utils.http import url_has_allowed_host_and_scheme
 from rest_framework import generics, permissions, status
@@ -426,5 +427,289 @@ def school_logout_view(request):
         )
 
         django_logout(request)
+
+    return redirect("accounts:school_login")
+
+
+# ============================================================
+# SCHOOL MANAGEMENT SYSTEM
+# ============================================================
+
+
+def _school_staff_required(request):
+    """
+    School Management System requires an authenticated
+    staff user.
+    """
+
+    if not request.user.is_authenticated:
+        return False
+
+    return request.user.is_staff or request.user.is_superuser
+
+
+def school_login_view(request):
+    """
+    GET/POST /accounts/school/login/
+    """
+
+    if request.user.is_authenticated and _school_staff_required(request):
+        return redirect("accounts:school_dashboard")
+
+    username = ""
+    error_message = ""
+
+    if request.method == "POST":
+        username = request.POST.get(
+            "username",
+            "",
+        ).strip()
+
+        password = request.POST.get(
+            "password",
+            "",
+        )
+
+        if not username or not password:
+            error_message = "Username and password are required."
+
+        else:
+            user = authenticate(
+                request,
+                username=username,
+                password=password,
+            )
+
+            if user is None:
+                error_message = "Invalid username or password."
+
+            elif not user.is_active:
+                error_message = "This account is inactive."
+
+            elif not (user.is_staff or user.is_superuser):
+                error_message = (
+                    "This account does not have School " "Management access."
+                )
+
+            else:
+                django_login(
+                    request,
+                    user,
+                )
+
+                USER_LOGIN_COUNTER.inc()
+
+                log_activity(
+                    user,
+                    "school_login",
+                    request,
+                )
+
+                return redirect("accounts:school_dashboard")
+
+    return render(
+        request,
+        "accounts/school/login.html",
+        {
+            "username": username,
+            "error_message": error_message,
+        },
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_dashboard_view(request):
+    """
+    GET /accounts/school/dashboard/
+    """
+
+    if not _school_staff_required(request):
+        return redirect("accounts:school_login")
+
+    from .models import SchoolStudent, SchoolTeacher
+
+    context = {
+        "student_count": SchoolStudent.objects.count(),
+        "teacher_count": SchoolTeacher.objects.count(),
+    }
+
+    return render(
+        request,
+        "accounts/school/dashboard.html",
+        context,
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_student_list_view(request):
+    """
+    GET /accounts/school/student-list/
+    """
+
+    if not _school_staff_required(request):
+        return redirect("accounts:school_login")
+
+    from .models import SchoolStudent
+
+    students = SchoolStudent.objects.all()
+
+    return render(
+        request,
+        "accounts/school/students.html",
+        {
+            "students": students,
+        },
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_student_detail_view(request, student_id):
+    """
+    GET /accounts/school/student/<id>/
+    """
+
+    if not _school_staff_required(request):
+        return redirect("accounts:school_login")
+
+    from django.shortcuts import get_object_or_404
+
+    from .models import SchoolStudent
+
+    student = get_object_or_404(
+        SchoolStudent,
+        pk=student_id,
+    )
+
+    return render(
+        request,
+        "accounts/school/student_detail.html",
+        {
+            "student": student,
+        },
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_teacher_list_view(request):
+    """
+    GET /accounts/school/teacher-list/
+    """
+
+    if not _school_staff_required(request):
+        return redirect("accounts:school_login")
+
+    from .models import SchoolTeacher
+
+    teachers = SchoolTeacher.objects.all()
+
+    return render(
+        request,
+        "accounts/school/teachers.html",
+        {
+            "teachers": teachers,
+        },
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_teacher_detail_view(request, teacher_id):
+    """
+    GET /accounts/school/teacher/<id>/
+    """
+
+    if not _school_staff_required(request):
+        return redirect("accounts:school_login")
+
+    from django.shortcuts import get_object_or_404
+
+    from .models import SchoolTeacher
+
+    teacher = get_object_or_404(
+        SchoolTeacher,
+        pk=teacher_id,
+    )
+
+    return render(
+        request,
+        "accounts/school/teacher_detail.html",
+        {
+            "teacher": teacher,
+        },
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_teacher_create_view(request):
+    """
+    GET/POST /accounts/school/teacher/create/
+    """
+
+    if not _school_staff_required(request):
+        return redirect("accounts:school_login")
+
+    from .models import SchoolTeacher
+
+    if request.method == "POST":
+        SchoolTeacher.objects.create(
+            teacher_id=request.POST.get(
+                "teacher_id",
+                "",
+            ).strip(),
+            name=request.POST.get(
+                "name",
+                "",
+            ).strip(),
+            email=request.POST.get(
+                "email",
+                "",
+            ).strip(),
+            department=request.POST.get(
+                "department",
+                "",
+            ).strip(),
+            subject=request.POST.get(
+                "subject",
+                "",
+            ).strip(),
+            joining_date=request.POST.get(
+                "joining_date",
+            ),
+            phone=request.POST.get(
+                "phone",
+                "",
+            ).strip(),
+            qualification=request.POST.get(
+                "qualification",
+                "",
+            ).strip(),
+            address=request.POST.get(
+                "address",
+                "",
+            ).strip(),
+        )
+
+        return redirect("accounts:school_teacher_list")
+
+    return render(
+        request,
+        "accounts/school/teacher_create.html",
+    )
+
+
+@login_required(login_url="/accounts/school/login/")
+def school_logout_view(request):
+    """
+    POST /accounts/school/logout/
+    """
+
+    if request.method == "POST":
+        if request.user.is_authenticated:
+            log_activity(
+                request.user,
+                "school_logout",
+                request,
+            )
+
+            django_logout(request)
 
     return redirect("accounts:school_login")

@@ -1,0 +1,124 @@
+{% extends "accounts/school/base.html" %}
+
+{% block title %}
+    Teacher Details
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb">
+
+    <a
+        href="{% url 'accounts:school_teacher_list' %}"
+    >
+        Teachers
+    </a>
+
+    / Teacher Details
+
+</div>
+
+
+<div class="page-card">
+
+    <h2 class="page-title">
+        ▤ &nbsp; Teacher Details
+    </h2>
+
+
+    <div class="detail-grid">
+
+        <div class="detail-label">
+            Teacher ID
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.teacher_id }}
+        </div>
+
+
+        <div class="detail-label">
+            Name
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.name }}
+        </div>
+
+
+        <div class="detail-label">
+            Email
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.email }}
+        </div>
+
+
+        <div class="detail-label">
+            Department
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.department }}
+        </div>
+
+
+        <div class="detail-label">
+            Subject
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.subject }}
+        </div>
+
+
+        <div class="detail-label">
+            Joining Date
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.joining_date|date:"d-m-Y" }}
+        </div>
+
+
+        <div class="detail-label">
+            Phone
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.phone|default:"-" }}
+        </div>
+
+
+        <div class="detail-label">
+            Qualification
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.qualification|default:"-" }}
+        </div>
+
+
+        <div class="detail-label">
+            Address
+        </div>
+
+        <div class="detail-value">
+            {{ teacher.address|default:"-"|linebreaksbr }}
+        </div>
+
+    </div>
+
+    <br>
+
+    <a
+        class="button"
+        href="{% url 'accounts:school_teacher_list' %}"
+    >
+        Back to Teachers
+    </a>
+
+</div>
+
+{% endblock %}

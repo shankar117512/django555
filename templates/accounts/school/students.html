@@ -1,0 +1,126 @@
+{% extends "accounts/school/base.html" %}
+
+{% block title %}
+    Students List
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb">
+    Home / Admin / Students
+</div>
+
+<div class="page-card">
+
+    <h2 class="page-title">
+        ▤ &nbsp; Students List
+    </h2>
+
+    <div class="table-wrapper">
+
+        <table class="school-table">
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Sl.
+                    </th>
+
+                    <th>
+                        Student ID
+                    </th>
+
+                    <th>
+                        Student Name
+                    </th>
+
+                    <th>
+                        Class
+                    </th>
+
+                    <th>
+                        Joining Date
+                    </th>
+
+                    <th>
+                        Action
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for student in students %}
+
+                    <tr>
+
+                        <td>
+                            {{ forloop.counter }}
+                        </td>
+
+                        <td>
+                            {{ student.student_id }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'accounts:school_student_detail' student.id %}"
+                            >
+                                {{ student.name }}
+                            </a>
+
+                        </td>
+
+                        <td>
+                            {{ student.student_class }}
+                        </td>
+
+                        <td>
+                            {{ student.joining_date|date:"d-m-Y" }}
+                        </td>
+
+                        <td>
+
+                            <a
+                                href="{% url 'accounts:school_student_detail' student.id %}"
+                            >
+                                View Details
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            style="
+                                text-align: center;
+                                color: #999;
+                            "
+                        >
+                            No students found.
+                        </td>
+
+                    </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

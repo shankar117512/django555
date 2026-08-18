@@ -1,0 +1,199 @@
+{% extends "accounts/school/base.html" %}
+
+{% block title %}
+    Create New Teacher
+{% endblock %}
+
+{% block content %}
+
+<div class="breadcrumb">
+    Home / Teachers / Create New Teacher
+</div>
+
+<div class="page-card">
+
+    <h2 class="page-title">
+        ▤ &nbsp; Create New Teacher
+    </h2>
+
+
+    <form
+        method="post"
+    >
+
+        {% csrf_token %}
+
+
+        <div class="form-grid">
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Teacher ID
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="teacher_id"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Name
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="name"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Email
+                </label>
+
+                <input
+                    class="form-input"
+                    type="email"
+                    name="email"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Department
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="department"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Subject
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="subject"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Joining Date
+                </label>
+
+                <input
+                    class="form-input"
+                    type="date"
+                    name="joining_date"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Phone
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="phone"
+                >
+
+            </div>
+
+
+            <div class="form-group">
+
+                <label class="form-label">
+                    Qualification
+                </label>
+
+                <input
+                    class="form-input"
+                    type="text"
+                    name="qualification"
+                >
+
+            </div>
+
+
+            <div class="form-group full">
+
+                <label class="form-label">
+                    Address
+                </label>
+
+                <textarea
+                    class="form-textarea"
+                    name="address"
+                ></textarea>
+
+            </div>
+
+
+        </div>
+
+
+        <br>
+
+
+        <button
+            type="submit"
+            class="button"
+        >
+            Save Teacher
+        </button>
+
+
+        <a
+            href="{% url 'accounts:school_teacher_list' %}"
+            class="button"
+            style="
+                background: #777777;
+                margin-left: 5px;
+            "
+        >
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}
