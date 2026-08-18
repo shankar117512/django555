@@ -285,6 +285,7 @@ def web_logout_view(request):
 
     return redirect("accounts:login")
 
+
 # ============================================================
 # SCHOOL MANAGEMENT SYSTEM
 # ============================================================
@@ -357,9 +358,7 @@ def school_login_view(request):
                         request,
                     )
 
-                    return redirect(
-                        "accounts:school_teacher_list"
-                    )
+                    return redirect("accounts:school_teacher_list")
 
             else:
 
@@ -392,17 +391,13 @@ def school_teacher_list_view(request):
 
     if not request.user.is_authenticated:
 
-        return redirect(
-            "accounts:school_login"
-        )
+        return redirect("accounts:school_login")
 
     if not request.user.is_staff:
 
         django_logout(request)
 
-        return redirect(
-            "accounts:school_login"
-        )
+        return redirect("accounts:school_login")
 
     return render(
         request,
@@ -432,6 +427,4 @@ def school_logout_view(request):
 
         django_logout(request)
 
-    return redirect(
-        "accounts:school_login"
-    )
+    return redirect("accounts:school_login")
