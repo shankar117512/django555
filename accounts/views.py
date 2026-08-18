@@ -27,7 +27,6 @@ from .serializers import (
     UserSerializer,
 )
 
-
 User = get_user_model()
 
 
@@ -293,8 +292,7 @@ def school_login_view(request):
 
             elif not (user.is_staff or user.is_superuser):
                 error_message = (
-                    "This account does not have "
-                    "School Management access."
+                    "This account does not have " "School Management access."
                 )
 
             else:

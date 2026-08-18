@@ -19,28 +19,23 @@
     <div class="stats-grid">
 
         <div class="stat-card">
-
             <div class="stat-label">
                 Total Students
             </div>
 
             <div class="stat-number">
-                {{ student_count }}
+                {{ student_count|default:"0" }}
             </div>
-
         </div>
 
-
         <div class="stat-card">
-
             <div class="stat-label">
                 Total Teachers
             </div>
 
             <div class="stat-number">
-                {{ teacher_count }}
+                {{ teacher_count|default:"0" }}
             </div>
-
         </div>
 
     </div>
