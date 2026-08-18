@@ -23,15 +23,14 @@
 
         html,
         body {
+            width: 100%;
+            height: 100%;
             margin: 0;
-            min-height: 100%;
         }
 
         body {
 
             min-height: 100vh;
-
-            display: flex;
 
             font-family:
                 -apple-system,
@@ -45,6 +44,10 @@
         }
 
 
+        /* =====================================================
+           MAIN PAGE
+        ===================================================== */
+
         .login-page {
 
             width: 100%;
@@ -52,28 +55,28 @@
             min-height: 100vh;
 
             display: flex;
+
+            overflow: hidden;
         }
 
 
         /* =====================================================
-           LEFT ILLUSTRATION
+           LEFT SIDE
         ===================================================== */
 
         .illustration-panel {
 
-            flex: 1.08;
-
-            min-width: 0;
+            width: 50%;
 
             min-height: 100vh;
 
-            overflow: hidden;
-
             background: #f7f8fb;
+
+            overflow: hidden;
 
             display: flex;
 
-            align-items: stretch;
+            align-items: center;
 
             justify-content: center;
         }
@@ -94,14 +97,12 @@
 
 
         /* =====================================================
-           RIGHT LOGIN PANEL
+           RIGHT SIDE
         ===================================================== */
 
         .form-panel {
 
-            flex: 1;
-
-            min-width: 0;
+            width: 50%;
 
             min-height: 100vh;
 
@@ -113,33 +114,53 @@
 
             justify-content: center;
 
-            padding: 40px;
+            padding: 30px;
         }
 
 
+        /* =====================================================
+           LOGIN CARD
+        ===================================================== */
+
         .login-box {
 
-            width: min(100%, 320px);
+            width: 320px;
+
+            max-width: 100%;
+
+            padding: 22px;
+
+            background: #ffffff;
+
+            border: 1px solid #eeeeee;
+
+            border-radius: 6px;
+
+            box-shadow:
+                0 2px 8px
+                rgba(0, 0, 0, 0.08);
         }
 
 
         .login-box h1 {
 
-            margin: 0 0 24px;
+            margin: 0 0 22px;
 
             color: #171717;
 
-            font-size: 26px;
-
-            line-height: 1.2;
+            font-size: 24px;
 
             font-weight: 700;
         }
 
 
+        /* =====================================================
+           FORM
+        ===================================================== */
+
         .field {
 
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
 
@@ -147,13 +168,11 @@
 
             display: block;
 
-            margin: 0 0 6px;
+            margin-bottom: 6px;
 
-            color: #555;
+            color: #555555;
 
-            font-size: 13px;
-
-            line-height: 1.2;
+            font-size: 12px;
         }
 
 
@@ -163,24 +182,19 @@
 
             height: 38px;
 
-            padding: 9px 12px;
+            padding: 8px 10px;
 
-            border: 1px solid #dfe3e8;
+            border: 1px solid #d9dee5;
 
-            border-radius: 6px;
+            border-radius: 5px;
 
             background: #f5f7fa;
 
-            color: #222;
+            color: #222222;
 
-            font-size: 14px;
+            font-size: 13px;
 
             outline: none;
-
-            transition:
-                border-color .2s ease,
-                background .2s ease,
-                box-shadow .2s ease;
         }
 
 
@@ -192,9 +206,13 @@
 
             box-shadow:
                 0 0 0 2px
-                rgba(47, 111, 237, .10);
+                rgba(47, 111, 237, 0.10);
         }
 
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
 
         .login-btn {
 
@@ -202,7 +220,9 @@
 
             height: 38px;
 
-            border: 0;
+            margin-top: 2px;
+
+            border: none;
 
             border-radius: 5px;
 
@@ -210,7 +230,7 @@
 
             color: #ffffff;
 
-            font-size: 14px;
+            font-size: 13px;
 
             font-weight: 500;
 
@@ -224,35 +244,23 @@
         }
 
 
-        .login-btn:focus {
+        /* =====================================================
+           ERROR
+        ===================================================== */
 
-            outline:
-                2px solid
-                rgba(25, 118, 237, .25);
+        .login-error {
 
-            outline-offset: 2px;
-        }
+            margin-bottom: 16px;
 
+            padding: 9px 11px;
 
-        .errorlist {
+            border: 1px solid #fecaca;
 
-            list-style: none;
+            border-radius: 5px;
 
-            padding: 0;
+            background: #fef2f2;
 
-            margin: 0 0 14px;
-
-            color: #c0392b;
-
-            font-size: 13px;
-        }
-
-
-        .field-error {
-
-            margin: 5px 0 0;
-
-            color: #c0392b;
+            color: #991b1b;
 
             font-size: 12px;
         }
@@ -264,16 +272,26 @@
 
         @media (max-width: 760px) {
 
+            .login-page {
+                display: block;
+            }
+
             .illustration-panel {
                 display: none;
             }
 
             .form-panel {
-                padding: 24px;
+
+                width: 100%;
+
+                min-height: 100vh;
+
+                padding: 20px;
             }
 
             .login-box {
-                width: min(100%, 360px);
+                width: 100%;
+                max-width: 360px;
             }
 
         }
@@ -285,151 +303,116 @@
 
 <body>
 
-    <div class="login-page">
+
+<div class="login-page">
 
 
-        <!-- =================================================
-             LEFT IMAGE
-        ================================================== -->
+    <!-- =====================================================
+         LEFT ILLUSTRATION
+    ====================================================== -->
 
-        <section
-            class="illustration-panel"
-            aria-hidden="true"
+    <div class="illustration-panel">
+
+        <img
+            src="{% static 'accounts/login_illustration.png' %}"
+            alt="Gregarious business analytics"
         >
 
-            <img
-                src="{% static 'accounts/login_illustration.png' %}"
-                alt=""
+    </div>
+
+
+    <!-- =====================================================
+         RIGHT LOGIN
+    ====================================================== -->
+
+    <div class="form-panel">
+
+        <div class="login-box">
+
+
+            <h1>
+                Login
+            </h1>
+
+
+            {% if error_message %}
+
+                <div class="login-error">
+                    {{ error_message }}
+                </div>
+
+            {% endif %}
+
+
+            <form
+                method="post"
+                action="{% url 'accounts:login' %}"
             >
 
-        </section>
+                {% csrf_token %}
 
 
-        <!-- =================================================
-             LOGIN FORM
-        ================================================== -->
+                <div class="field">
 
-        <section class="form-panel">
-
-            <div class="login-box">
-
-
-                <h1>
-                    Login
-                </h1>
-
-
-                {% if form.non_field_errors %}
-
-                    <ul class="errorlist">
-
-                        {% for error in form.non_field_errors %}
-
-                            <li>
-                                {{ error }}
-                            </li>
-
-                        {% endfor %}
-
-                    </ul>
-
-                {% endif %}
-
-
-                <form
-                    method="post"
-                    action="{% url 'accounts:login' %}"
-                >
-
-                    {% csrf_token %}
-
-
-                    <div class="field">
-
-                        <label for="id_username">
-                            Username
-                        </label>
-
-
-                        <input
-                            type="text"
-                            name="username"
-                            id="id_username"
-                            value="{{ form.username.value|default:'' }}"
-                            autocomplete="username"
-                            autofocus
-                            required
-                        >
-
-
-                        {% if form.username.errors %}
-
-                            {% for error in form.username.errors %}
-
-                                <p class="field-error">
-                                    {{ error }}
-                                </p>
-
-                            {% endfor %}
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <div class="field">
-
-                        <label for="id_password">
-                            Password
-                        </label>
-
-
-                        <input
-                            type="password"
-                            name="password"
-                            id="id_password"
-                            autocomplete="current-password"
-                            required
-                        >
-
-
-                        {% if form.password.errors %}
-
-                            {% for error in form.password.errors %}
-
-                                <p class="field-error">
-                                    {{ error }}
-                                </p>
-
-                            {% endfor %}
-
-                        {% endif %}
-
-                    </div>
-
+                    <label for="id_username">
+                        Username
+                    </label>
 
                     <input
-                        type="hidden"
-                        name="next"
-                        value="{{ next }}"
+                        type="text"
+                        id="id_username"
+                        name="username"
+                        value="{{ username }}"
+                        autocomplete="username"
+                        autofocus
+                        required
                     >
 
+                </div>
 
-                    <button
-                        type="submit"
-                        class="login-btn"
+
+                <div class="field">
+
+                    <label for="id_password">
+                        Password
+                    </label>
+
+                    <input
+                        type="password"
+                        id="id_password"
+                        name="password"
+                        autocomplete="current-password"
+                        required
                     >
-                        Login
-                    </button>
 
-                </form>
+                </div>
 
 
-            </div>
+                <input
+                    type="hidden"
+                    name="next"
+                    value="{{ next }}"
+                >
 
-        </section>
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    Login
+                </button>
+
+
+            </form>
+
+
+        </div>
 
     </div>
+
+
+</div>
+
 
 </body>
 

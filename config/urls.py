@@ -25,38 +25,30 @@ from django.urls import include, path
 
 def health_check(request):
     return JsonResponse(
-        {
-            "status": "ok"
-        },
+        {"status": "ok"},
         status=200,
     )
 
 
 urlpatterns = [
-
     # ========================================================
     # HEALTH
     # ========================================================
-
     path(
         "health/",
         health_check,
         name="health_check",
     ),
-
     # ========================================================
     # ADMIN
     # ========================================================
-
     path(
         "admin/",
         admin.site.urls,
     ),
-
     # ========================================================
     # CORE / WEB APPLICATION
     # ========================================================
-
     path(
         "",
         include(
@@ -64,14 +56,12 @@ urlpatterns = [
             namespace="core",
         ),
     ),
-
     # ========================================================
     # BROWSER ACCOUNT LOGIN
     #
     # /accounts/login/
     # /accounts/logout/
     # ========================================================
-
     path(
         "accounts/",
         include(
@@ -79,13 +69,11 @@ urlpatterns = [
             namespace="accounts",
         ),
     ),
-
     # ========================================================
     # REST API
     #
     # /api/accounts/...
     # ========================================================
-
     path(
         "api/",
         include(
@@ -93,11 +81,9 @@ urlpatterns = [
             namespace="api",
         ),
     ),
-
     # ========================================================
     # MONITORING
     # ========================================================
-
     path(
         "monitoring/",
         include(
@@ -105,18 +91,13 @@ urlpatterns = [
             namespace="monitoring",
         ),
     ),
-
     # ========================================================
     # PROMETHEUS
     # ========================================================
-
     path(
         "metrics/",
-        include(
-            "django_prometheus.urls"
-        ),
+        include("django_prometheus.urls"),
     ),
-
 ]
 
 
@@ -127,8 +108,6 @@ if settings.DEBUG:
     urlpatterns = [
         path(
             "__debug__/",
-            include(
-                debug_toolbar.urls
-            ),
+            include(debug_toolbar.urls),
         ),
     ] + urlpatterns
