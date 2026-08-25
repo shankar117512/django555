@@ -8,14 +8,14 @@ DEBUG = False
 # FIX: leading dot allows any subdomain of this Railway domain
 # (needed because django-tenants routes tenants by subdomain).
 ALLOWED_HOSTS = [
-    ".gregarious-purpose-production-98d4.up.railway.app",
+    "gregarious-purpose-production-98d4.up.railway.app",
     "healthcheck.railway.app",
 ]
 
 # FIX: wildcard so tenant subdomains pass CSRF checks on
 # session/admin POSTs, not just the bare production host.
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.gregarious-purpose-production-98d4.up.railway.app",
+    "https://gregarious-purpose-production-98d4.up.railway.app",
 ]
 
 # Security headers (strict)
