@@ -1,0 +1,51 @@
+{% extends "accounts/ecommerce/base.html" %}
+
+{% block title %}{{ title }} | E-Commerce{% endblock %}
+{% block page_title %}{{ title }}{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <form method="post">
+
+        {% csrf_token %}
+
+        {% for field in form %}
+
+            <div class="form-group">
+
+                {{ field.label_tag }}
+
+                {{ field }}
+
+                {% if field.help_text %}
+                    <small>{{ field.help_text }}</small>
+                {% endif %}
+
+                {% for error in field.errors %}
+                    <div style="color:#dc2626;">
+                        {{ error }}
+                    </div>
+                {% endfor %}
+
+            </div>
+
+        {% endfor %}
+
+        <button class="btn btn-primary">
+            {{ button_text }}
+        </button>
+
+        <a
+            class="btn btn-secondary"
+            href="{% url 'accounts:ecommerce_customers' %}"
+        >
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+{% endblock %}

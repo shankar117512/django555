@@ -66,6 +66,7 @@ SHARED_APPS = (
         "django_tenants",
         "orders",
         "accounts",
+        "accounts.ecommerce",
         "apps.monitoring",
         "matchline",
     ]

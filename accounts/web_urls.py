@@ -1,11 +1,11 @@
-from django.urls import path
+from django.urls import include, path
 
 from . import views
 
 app_name = "accounts"
 
 
-urlpatterns = [
+urlpatterns = [    
     # ============================================================
     # NORMAL WEBSITE LOGIN
     # ============================================================
@@ -67,5 +67,11 @@ urlpatterns = [
         "school/teacher/create/",
         views.school_teacher_create_view,
         name="school_teacher_create",
+    ),
+
+
+     path(
+        "ecommerce/",
+        include("accounts.ecommerce.urls"),
     ),
 ]

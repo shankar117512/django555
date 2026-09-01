@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>{% block title %}E-Commerce Dashboard{% endblock %}</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Inter, Arial, sans-serif;
+            background: #f4f7fb;
+            color: #172033;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            padding: 24px 16px;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+        }
+
+        .brand {
+            font-size: 22px;
+            font-weight: 800;
+            padding: 0 12px 28px;
+        }
+
+        .brand span {
+            color: #60a5fa;
+        }
+
+        .menu-title {
+            color: #9ca3af;
+            font-size: 11px;
+            text-transform: uppercase;
+            margin: 20px 12px 8px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: 12px;
+            border-radius: 9px;
+            margin-bottom: 5px;
+            color: #d1d5db;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: #1f2937;
+            color: white;
+        }
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+        }
+
+        .topbar {
+            height: 72px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 30px;
+        }
+
+        .page-title {
+            font-size: 22px;
+            font-weight: 700;
+        }
+
+        .user {
+            color: #4b5563;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.05);
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .stat-number {
+            font-size: 30px;
+            font-weight: 800;
+            margin-top: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .section {
+            background: white;
+            border-radius: 14px;
+            padding: 22px;
+            margin-bottom: 20px;
+            box-shadow: 0 3px 15px rgba(0,0,0,.04);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+        .section-header h2 {
+            margin: 0;
+            font-size: 18px;
+        }
+
+        .btn {
+            display: inline-block;
+            border: none;
+            border-radius: 8px;
+            padding: 10px 15px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e5e7eb;
+            color: #111827;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 13px 10px;
+            border-bottom: 1px solid #edf0f4;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th {
+            color: #6b7280;
+            font-size: 12px;
+            text-transform: uppercase;
+        }
+
+        .badge {
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #e5e7eb;
+            font-size: 12px;
+        }
+
+        .badge-success {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-warning {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-danger {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 11px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .messages {
+            margin-bottom: 20px;
+        }
+
+        .message {
+            background: #dcfce7;
+            color: #166534;
+            padding: 12px 15px;
+            border-radius: 8px;
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+            align-items: center;
+        }
+
+        .search {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        @media (max-width: 1000px) {
+            .cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .sidebar {
+                width: 70px;
+                padding: 20px 8px;
+            }
+
+            .brand {
+                font-size: 0;
+            }
+
+            .brand span {
+                font-size: 20px;
+            }
+
+            .nav-link {
+                font-size: 0;
+                text-align: center;
+            }
+
+            .nav-link::first-letter {
+                font-size: 20px;
+            }
+
+            .main {
+                margin-left: 70px;
+                width: calc(100% - 70px);
+            }
+
+            .content {
+                padding: 15px;
+            }
+
+            .cards {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="layout">
+
+    <aside class="sidebar">
+
+        <div class="brand">
+            Shop<span>Admin</span>
+        </div>
+
+        <div class="menu-title">Main</div>
+
+        <a
+            class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}"
+            href="{% url 'accounts:ecommerce_dashboard' %}"
+        >
+            📊 Dashboard
+        </a>
+
+        <a
+            class="nav-link"
+            href="{% url 'accounts:ecommerce_products' %}"
+        >
+            📦 Products
+        </a>
+
+        <a
+            class="nav-link"
+            href="{% url 'accounts:ecommerce_categories' %}"
+        >
+            🗂 Categories
+        </a>
+
+        <a
+            class="nav-link"
+            href="{% url 'accounts:ecommerce_orders' %}"
+        >
+            🛒 Orders
+        </a>
+
+        <div class="menu-title">Users</div>
+
+        <a
+            class="nav-link"
+            href="{% url 'accounts:ecommerce_customers' %}"
+        >
+            👥 Users
+        </a>
+
+        <div class="menu-title">System</div>
+
+        <a
+            class="nav-link"
+            href="/admin/"
+        >
+            ⚙ Django Admin
+        </a>
+
+        <a
+            class="nav-link"
+            href="{% url 'accounts:ecommerce_logout' %}"
+        >
+            🚪 Logout
+        </a>
+
+    </aside>
+
+    <main class="main">
+
+        <header class="topbar">
+            <div class="page-title">
+                {% block page_title %}E-Commerce{% endblock %}
+            </div>
+
+            <div class="user">
+                👤 {{ request.user.username }}
+            </div>
+        </header>
+
+        <section class="content">
+
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                        <div class="message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+
+        </section>
+
+    </main>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,72 @@
+{% extends "accounts/ecommerce/base.html" %}
+
+{% block title %}Categories | E-Commerce{% endblock %}
+{% block page_title %}Categories{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>Categories</h2>
+
+        <a
+            class="btn btn-primary"
+            href="{% url 'accounts:ecommerce_category_create' %}"
+        >
+            + Add Category
+        </a>
+
+    </div>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Slug</th>
+                <th>Products</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for category in categories %}
+
+            <tr>
+                <td>{{ category.name }}</td>
+                <td>{{ category.slug }}</td>
+                <td>{{ category.product_count }}</td>
+
+                <td>
+                    {% if category.is_active %}
+                        <span class="badge badge-success">
+                            Active
+                        </span>
+                    {% else %}
+                        <span class="badge badge-danger">
+                            Inactive
+                        </span>
+                    {% endif %}
+                </td>
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="4">
+                    No categories yet.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

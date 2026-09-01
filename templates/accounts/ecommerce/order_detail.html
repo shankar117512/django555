@@ -1,0 +1,106 @@
+{% extends "accounts/ecommerce/base.html" %}
+
+{% block title %}{{ order.order_number }} | E-Commerce{% endblock %}
+{% block page_title %}Order Details{% endblock %}
+
+{% block content %}
+
+<div class="grid-2">
+
+    <div class="section">
+
+        <h2>{{ order.order_number }}</h2>
+
+        <p>
+            <strong>Customer:</strong>
+            {{ order.customer.username }}
+        </p>
+
+        <p>
+            <strong>Email:</strong>
+            {{ order.customer.email|default:"-" }}
+        </p>
+
+        <p>
+            <strong>Status:</strong>
+            {{ order.get_status_display }}
+        </p>
+
+        <p>
+            <strong>Total:</strong>
+            ₹{{ order.total_amount }}
+        </p>
+
+        <p>
+            <strong>Created:</strong>
+            {{ order.created_at|date:"d M Y H:i" }}
+        </p>
+
+    </div>
+
+    <div class="section">
+
+        <h2>Shipping Address</h2>
+
+        <p>
+            {{ order.shipping_address|default:"No address provided."|linebreaksbr }}
+        </p>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>Order Items</h2>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Product</th>
+                <th>SKU</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Subtotal</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for item in items %}
+
+            <tr>
+
+                <td>
+                    {{ item.product.name }}
+                </td>
+
+                <td>
+                    {{ item.product.sku }}
+                </td>
+
+                <td>
+                    {{ item.quantity }}
+                </td>
+
+                <td>
+                    ₹{{ item.unit_price }}
+                </td>
+
+                <td>
+                    ₹{{ item.subtotal }}
+                </td>
+
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

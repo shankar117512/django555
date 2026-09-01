@@ -1,0 +1,78 @@
+{% extends "accounts/ecommerce/base.html" %}
+
+{% block title %}Orders | E-Commerce{% endblock %}
+{% block page_title %}Orders{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <div class="section-header">
+        <h2>Order Management</h2>
+    </div>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Order</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Total</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for order in orders %}
+
+            <tr>
+
+                <td>
+                    <a
+                        href="{% url 'accounts:ecommerce_order_detail' order.id %}"
+                    >
+                        <strong>
+                            {{ order.order_number }}
+                        </strong>
+                    </a>
+                </td>
+
+                <td>
+                    {{ order.customer.username }}
+                </td>
+
+                <td>
+                    <span class="badge">
+                        {{ order.get_status_display }}
+                    </span>
+                </td>
+
+                <td>
+                    ₹{{ order.total_amount }}
+                </td>
+
+                <td>
+                    {{ order.created_at|date:"d M Y H:i" }}
+                </td>
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="5">
+                    No orders found.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

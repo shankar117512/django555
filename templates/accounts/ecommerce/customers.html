@@ -1,0 +1,89 @@
+{% extends "accounts/ecommerce/base.html" %}
+
+{% block title %}Users | E-Commerce{% endblock %}
+{% block page_title %}Users{% endblock %}
+
+{% block content %}
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>Customers / Users</h2>
+
+        <a
+            class="btn btn-primary"
+            href="{% url 'accounts:ecommerce_customer_create' %}"
+        >
+            + Create User
+        </a>
+
+    </div>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Joined</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for customer in customers %}
+
+            <tr>
+
+                <td>
+                    <strong>{{ customer.username }}</strong>
+                </td>
+
+                <td>
+                    {{ customer.email|default:"-" }}
+                </td>
+
+                <td>
+                    {{ customer.phone_number|default:"-" }}
+                </td>
+
+                <td>
+                    {{ customer.date_joined|date:"d M Y" }}
+                </td>
+
+                <td>
+
+                    {% if customer.is_active %}
+                        <span class="badge badge-success">
+                            Active
+                        </span>
+                    {% else %}
+                        <span class="badge badge-danger">
+                            Inactive
+                        </span>
+                    {% endif %}
+
+                </td>
+
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="5">
+                    No users found.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

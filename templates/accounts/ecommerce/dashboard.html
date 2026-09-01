@@ -1,0 +1,229 @@
+{% extends "accounts/ecommerce/base.html" %}
+
+{% block title %}Dashboard | E-Commerce{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="cards">
+
+    <div class="card">
+        <div class="stat-label">Total Products</div>
+        <div class="stat-number">{{ total_products }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Categories</div>
+        <div class="stat-number">{{ total_categories }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Customers</div>
+        <div class="stat-number">{{ total_customers }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Orders</div>
+        <div class="stat-number">{{ total_orders }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Pending Orders</div>
+        <div class="stat-number">{{ pending_orders }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Completed Orders</div>
+        <div class="stat-number">{{ completed_orders }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Active Products</div>
+        <div class="stat-number">{{ active_products }}</div>
+    </div>
+
+    <div class="card">
+        <div class="stat-label">Revenue</div>
+        <div class="stat-number">
+            ₹{{ total_revenue|floatformat:2 }}
+        </div>
+    </div>
+
+</div>
+
+
+<div class="grid-2">
+
+    <div class="section">
+
+        <div class="section-header">
+            <h2>Recent Orders</h2>
+
+            <a
+                class="btn btn-primary"
+                href="{% url 'accounts:ecommerce_orders' %}"
+            >
+                View All
+            </a>
+        </div>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Order</th>
+                    <th>Customer</th>
+                    <th>Status</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for order in recent_orders %}
+
+                <tr>
+                    <td>
+                        <a
+                            href="{% url 'accounts:ecommerce_order_detail' order.id %}"
+                        >
+                            {{ order.order_number }}
+                        </a>
+                    </td>
+
+                    <td>
+                        {{ order.customer.username }}
+                    </td>
+
+                    <td>
+                        <span class="badge">
+                            {{ order.get_status_display }}
+                        </span>
+                    </td>
+
+                    <td>
+                        ₹{{ order.total_amount }}
+                    </td>
+                </tr>
+
+            {% empty %}
+
+                <tr>
+                    <td colspan="4">
+                        No orders yet.
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    <div class="section">
+
+        <div class="section-header">
+            <h2>Low Stock Products</h2>
+        </div>
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Stock</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+            {% for product in low_stock_products %}
+
+                <tr>
+                    <td>{{ product.name }}</td>
+
+                    <td>
+                        <span class="badge badge-warning">
+                            {{ product.stock }}
+                        </span>
+                    </td>
+                </tr>
+
+            {% empty %}
+
+                <tr>
+                    <td colspan="2">
+                        No low-stock products.
+                    </td>
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <div class="section-header">
+
+        <h2>Recent Products</h2>
+
+        <a
+            class="btn btn-primary"
+            href="{% url 'accounts:ecommerce_product_create' %}"
+        >
+            + Add Product
+        </a>
+
+    </div>
+
+    <table>
+
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>SKU</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Stock</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for product in recent_products %}
+
+            <tr>
+                <td>{{ product.name }}</td>
+                <td>{{ product.sku }}</td>
+                <td>{{ product.category.name }}</td>
+                <td>₹{{ product.selling_price }}</td>
+                <td>{{ product.stock }}</td>
+            </tr>
+
+        {% empty %}
+
+            <tr>
+                <td colspan="5">
+                    No products yet.
+                </td>
+            </tr>
+
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}
