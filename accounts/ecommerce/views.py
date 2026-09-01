@@ -15,7 +15,6 @@ from .forms import (
 )
 from .models import Category, Order, Product
 
-
 User = get_user_model()
 
 
@@ -55,10 +54,7 @@ def ecommerce_login_view(request):
         elif not user.is_active:
             error_message = "This account is inactive."
         elif not (user.is_staff or user.is_superuser):
-            error_message = (
-                "This account does not have "
-                "E-commerce dashboard access."
-            )
+            error_message = "This account does not have " "E-commerce dashboard access."
         else:
             login(request, user)
             return redirect("accounts:ecommerce_dashboard")
@@ -87,9 +83,7 @@ def ecommerce_dashboard_view(request):
         return redirect_response
 
     total_products = Product.objects.count()
-    active_products = Product.objects.filter(
-        is_active=True
-    ).count()
+    active_products = Product.objects.filter(is_active=True).count()
 
     total_categories = Category.objects.count()
 
@@ -100,37 +94,26 @@ def ecommerce_dashboard_view(request):
 
     total_orders = Order.objects.count()
 
-    pending_orders = Order.objects.filter(
-        status=Order.STATUS_PENDING
-    ).count()
+    pending_orders = Order.objects.filter(status=Order.STATUS_PENDING).count()
 
-    completed_orders = Order.objects.filter(
-        status=Order.STATUS_DELIVERED
-    ).count()
+    completed_orders = Order.objects.filter(status=Order.STATUS_DELIVERED).count()
 
-    total_revenue = (
-        Order.objects.filter(
-            status=Order.STATUS_DELIVERED
-        ).aggregate(
-            total=Sum("total_amount")
-        )["total"]
-        or Decimal("0.00")
-    )
+    total_revenue = Order.objects.filter(status=Order.STATUS_DELIVERED).aggregate(
+        total=Sum("total_amount")
+    )["total"] or Decimal("0.00")
 
     low_stock_products = Product.objects.filter(
         stock__lte=5,
         is_active=True,
-    ).order_by("stock", "name")[:8]
+    ).order_by(
+        "stock", "name"
+    )[:8]
 
-    recent_orders = (
-        Order.objects.select_related("customer")
-        .order_by("-created_at")[:8]
-    )
+    recent_orders = Order.objects.select_related("customer").order_by("-created_at")[:8]
 
-    recent_products = (
-        Product.objects.select_related("category")
-        .order_by("-created_at")[:8]
-    )
+    recent_products = Product.objects.select_related("category").order_by(
+        "-created_at"
+    )[:8]
 
     context = {
         "total_products": total_products,
@@ -162,9 +145,7 @@ def product_list_view(request):
 
     search = request.GET.get("q", "").strip()
 
-    products = Product.objects.select_related(
-        "category"
-    )
+    products = Product.objects.select_related("category")
 
     if search:
         products = products.filter(
@@ -288,9 +269,7 @@ def category_list_view(request):
     if redirect_response:
         return redirect_response
 
-    categories = Category.objects.annotate(
-        product_count=Count("products")
-    )
+    categories = Category.objects.annotate(product_count=Count("products"))
 
     return render(
         request,
@@ -387,9 +366,7 @@ def order_list_view(request):
     if redirect_response:
         return redirect_response
 
-    orders = Order.objects.select_related(
-        "customer"
-    ).order_by("-created_at")
+    orders = Order.objects.select_related("customer").order_by("-created_at")
 
     return render(
         request,

@@ -2,7 +2,6 @@ from django.urls import path
 
 from . import views
 
-
 urlpatterns = [
     path("login/", views.ecommerce_login_view, name="ecommerce_login"),
     path("logout/", views.ecommerce_logout_view, name="ecommerce_logout"),
@@ -11,7 +10,6 @@ urlpatterns = [
         views.ecommerce_dashboard_view,
         name="ecommerce_dashboard",
     ),
-
     path(
         "products/",
         views.product_list_view,
@@ -32,7 +30,6 @@ urlpatterns = [
         views.product_delete_view,
         name="ecommerce_product_delete",
     ),
-
     path(
         "categories/",
         views.category_list_view,
@@ -43,7 +40,6 @@ urlpatterns = [
         views.category_create_view,
         name="ecommerce_category_create",
     ),
-
     path(
         "customers/",
         views.customer_list_view,
@@ -54,7 +50,6 @@ urlpatterns = [
         views.customer_create_view,
         name="ecommerce_customer_create",
     ),
-
     path(
         "orders/",
         views.order_list_view,

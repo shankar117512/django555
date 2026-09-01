@@ -85,10 +85,7 @@ class Product(models.Model):
             and self.price > 0
             and self.discount_price < self.price
         ):
-            percentage = (
-                (self.price - self.discount_price)
-                / self.price
-            ) * 100
+            percentage = ((self.price - self.discount_price) / self.price) * 100
             return round(percentage)
 
         return 0

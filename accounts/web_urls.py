@@ -5,7 +5,7 @@ from . import views
 app_name = "accounts"
 
 
-urlpatterns = [    
+urlpatterns = [
     # ============================================================
     # NORMAL WEBSITE LOGIN
     # ============================================================
@@ -68,9 +68,7 @@ urlpatterns = [
         views.school_teacher_create_view,
         name="school_teacher_create",
     ),
-
-
-     path(
+    path(
         "ecommerce/",
         include("accounts.ecommerce.urls"),
     ),

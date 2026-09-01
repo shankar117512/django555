@@ -1,9 +1,8 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from .models import SchoolStudent, SchoolTeacher, User
-
 from .ecommerce.models import Category, Order, OrderItem, Product
+from .models import SchoolStudent, SchoolTeacher, User
 
 
 @admin.register(User)
@@ -89,6 +88,7 @@ class SchoolTeacherAdmin(admin.ModelAdmin):
     )
 
     ordering = ("name",)
+
 
 @admin.register(Category)
 class EcommerceCategoryAdmin(admin.ModelAdmin):
