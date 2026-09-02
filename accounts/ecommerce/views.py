@@ -33,15 +33,20 @@ def _redirect_if_not_staff(request):
 
 
 def ecommerce_login_view(request):
-    if request.user.is_authenticated and _ecommerce_staff_required(request):
+    if (
+        request.user.is_authenticated
+        and _ecommerce_staff_required(request)
+    ):
         return redirect("accounts:ecommerce_dashboard")
 
     form = EcommerceLoginForm(request.POST or None)
     error_message = ""
 
     if request.method == "POST" and form.is_valid():
+
         username = form.cleaned_data["username"]
         password = form.cleaned_data["password"]
+        remember_me = form.cleaned_data["remember_me"]
 
         user = authenticate(
             request,
@@ -51,13 +56,32 @@ def ecommerce_login_view(request):
 
         if user is None:
             error_message = "Invalid username or password."
+
         elif not user.is_active:
             error_message = "This account is inactive."
-        elif not (user.is_staff or user.is_superuser):
-            error_message = "This account does not have " "E-commerce dashboard access."
+
+        elif not (
+            user.is_staff or user.is_superuser
+        ):
+            error_message = (
+                "This account does not have "
+                "E-commerce dashboard access."
+            )
+
         else:
             login(request, user)
-            return redirect("accounts:ecommerce_dashboard")
+
+            # Remember me
+            if remember_me:
+                request.session.set_expiry(
+                    60 * 60 * 24 * 14
+                )
+            else:
+                request.session.set_expiry(0)
+
+            return redirect(
+                "accounts:ecommerce_dashboard"
+            )
 
     return render(
         request,

@@ -68,6 +68,10 @@ urlpatterns = [
         views.school_teacher_create_view,
         name="school_teacher_create",
     ),
+    # ============================================================
+    # E-COMMERCE MANAGEMENT SYSTEM
+    # ============================================================
+
     path(
         "ecommerce/",
         include("accounts.ecommerce.urls"),

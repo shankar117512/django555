@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
+
     <meta
         name="viewport"
         content="width=device-width, initial-scale=1.0"
@@ -10,117 +12,970 @@
     <title>E-Commerce Login</title>
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
+        html,
         body {
             margin: 0;
+            padding: 0;
+            width: 100%;
+            min-height: 100%;
+            font-family:
+                Inter,
+                Arial,
+                Helvetica,
+                sans-serif;
+        }
+
+        body {
             min-height: 100vh;
+            background: #f4f8ff;
+        }
+
+        .page {
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* =====================================================
+           LEFT SIDE
+        ===================================================== */
+
+        .left-panel {
+            width: 57%;
+            min-height: 100vh;
+            padding: 65px 70px;
+            position: relative;
+            overflow: hidden;
+
+            background:
+                radial-gradient(
+                    circle at 80% 20%,
+                    rgba(67, 150, 255, .65),
+                    transparent 25%
+                ),
+                linear-gradient(
+                    135deg,
+                    #082b9f 0%,
+                    #064fdc 50%,
+                    #2384ff 100%
+                );
+
+            color: white;
+        }
+
+        .left-panel::before {
+            content: "";
+            position: absolute;
+            width: 450px;
+            height: 450px;
+            border: 1px solid rgba(255,255,255,.12);
+            border-radius: 50%;
+            right: -160px;
+            bottom: -100px;
+        }
+
+        .left-panel::after {
+            content: "";
+            position: absolute;
+            width: 250px;
+            height: 250px;
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 50%;
+            right: -80px;
+            bottom: -20px;
+        }
+
+        .brand {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            align-items: center;
+            gap: 18px;
+
+            margin-bottom: 65px;
+        }
+
+        .brand-icon {
+            width: 72px;
+            height: 72px;
+
             display: flex;
             align-items: center;
             justify-content: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #111827, #2563eb);
-        }
 
-        .login-box {
-            width: 410px;
-            max-width: 92%;
-            background: white;
             border-radius: 18px;
-            padding: 35px;
-            box-shadow: 0 20px 60px rgba(0,0,0,.25);
+
+            background: rgba(255,255,255,.15);
+
+            font-size: 42px;
+
+            box-shadow:
+                0 15px 35px rgba(0,0,0,.15);
         }
 
-        h1 {
+        .brand h1 {
             margin: 0;
+
+            font-size: 54px;
+            line-height: 1;
+
+            font-weight: 800;
+            letter-spacing: -2px;
+        }
+
+        .brand p {
+            margin: 10px 0 0;
+
             font-size: 28px;
+            color: rgba(255,255,255,.78);
         }
 
-        .subtitle {
-            color: #6b7280;
-            margin: 8px 0 28px;
+        .line {
+            width: 70px;
+            height: 5px;
+
+            border-radius: 20px;
+
+            background: white;
+
+            margin-bottom: 35px;
         }
 
-        label {
-            font-weight: 600;
-            display: block;
-            margin-bottom: 6px;
+        .hero {
+            position: relative;
+            z-index: 2;
         }
 
-        input {
+        .hero h2 {
+            margin: 0 0 15px;
+
+            max-width: 530px;
+
+            font-size: 39px;
+            line-height: 1.15;
+        }
+
+        .hero-description {
+            max-width: 520px;
+
+            color: rgba(255,255,255,.78);
+
+            font-size: 18px;
+            line-height: 1.7;
+
+            margin-bottom: 40px;
+        }
+
+        .features {
+            position: relative;
+            z-index: 2;
+
+            display: flex;
+            flex-direction: column;
+            gap: 22px;
+        }
+
+        .feature {
+            display: flex;
+            align-items: center;
+
+            gap: 20px;
+        }
+
+        .feature-icon {
+            width: 64px;
+            height: 64px;
+
+            flex-shrink: 0;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 16px;
+
+            background: rgba(255,255,255,.15);
+
+            font-size: 28px;
+
+            box-shadow:
+                0 10px 25px rgba(0,0,0,.12);
+        }
+
+        .feature h3 {
+            margin: 0 0 4px;
+
+            font-size: 17px;
+        }
+
+        .feature p {
+            margin: 0;
+
+            color: rgba(255,255,255,.68);
+
+            font-size: 14px;
+        }
+
+        /* =====================================================
+           ILLUSTRATION
+        ===================================================== */
+
+        .illustration {
+            position: absolute;
+
+            right: 40px;
+            bottom: 55px;
+
+            width: 370px;
+            height: 280px;
+
+            z-index: 1;
+        }
+
+        .laptop {
+            position: absolute;
+
+            width: 300px;
+            height: 190px;
+
+            right: 20px;
+            top: 30px;
+
+            border-radius: 18px;
+
+            background: #162b62;
+
+            border: 8px solid #101d45;
+
+            transform: rotate(-5deg);
+
+            box-shadow:
+                0 30px 50px rgba(0,0,0,.30);
+        }
+
+        .screen {
+            position: absolute;
+
+            left: 18px;
+            right: 18px;
+            top: 18px;
+            bottom: 18px;
+
+            border-radius: 8px;
+
+            background:
+                linear-gradient(
+                    145deg,
+                    #eaf4ff,
+                    #ffffff
+                );
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .screen-cart {
+            font-size: 75px;
+        }
+
+        .laptop-base {
+            position: absolute;
+
+            width: 350px;
+            height: 25px;
+
+            bottom: 8px;
+            left: 5px;
+
+            background: #b8c8e7;
+
+            border-radius: 0 0 20px 20px;
+
+            transform: skewX(-25deg);
+        }
+
+        .box {
+            position: absolute;
+
+            width: 55px;
+            height: 55px;
+
+            right: 0;
+            bottom: 5px;
+
+            background: #f7bd42;
+
+            transform: rotate(12deg);
+
+            box-shadow:
+                0 15px 25px rgba(0,0,0,.2);
+        }
+
+        .bag {
+            position: absolute;
+
+            width: 60px;
+            height: 70px;
+
+            left: 10px;
+            bottom: 5px;
+
+            background: #2786ff;
+
+            border-radius: 8px;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            font-size: 30px;
+
+            box-shadow:
+                0 15px 25px rgba(0,0,0,.2);
+        }
+
+        /* =====================================================
+           RIGHT SIDE
+        ===================================================== */
+
+        .right-panel {
+            width: 43%;
+            min-height: 100vh;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            padding: 45px;
+
+            background:
+                radial-gradient(
+                    circle at 85% 10%,
+                    #eaf2ff,
+                    transparent 30%
+                ),
+                #f7faff;
+        }
+
+        .login-card {
             width: 100%;
-            padding: 13px;
-            border: 1px solid #d1d5db;
-            border-radius: 9px;
-            margin-bottom: 18px;
+            max-width: 570px;
+
+            background: white;
+
+            border-radius: 22px;
+
+            padding: 58px 58px 45px;
+
+            box-shadow:
+                0 25px 80px rgba(30, 70, 130, .12);
+
+            border: 1px solid #edf2f9;
         }
 
-        button {
-            width: 100%;
-            padding: 13px;
-            border: 0;
-            border-radius: 9px;
-            background: #2563eb;
-            color: white;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
+        .login-header {
+            text-align: center;
+
+            margin-bottom: 35px;
+        }
+
+        .login-header h2 {
+            margin: 0;
+
+            color: #16235b;
+
+            font-size: 38px;
+            line-height: 1.1;
+        }
+
+        .login-header p {
+            margin: 12px 0 0;
+
+            color: #7c88a5;
+
+            font-size: 17px;
         }
 
         .error {
-            background: #fee2e2;
-            color: #991b1b;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 18px;
+            background: #fff0f0;
+
+            color: #c62828;
+
+            border: 1px solid #ffd0d0;
+
+            border-radius: 10px;
+
+            padding: 13px 15px;
+
+            margin-bottom: 20px;
+
+            font-size: 14px;
+        }
+
+        .field {
+            margin-bottom: 22px;
+        }
+
+        .field label {
+            display: block;
+
+            color: #182044;
+
+            font-weight: 700;
+
+            font-size: 15px;
+
+            margin-bottom: 9px;
+        }
+
+        .input-wrapper {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+
+            left: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            color: #64739a;
+
+            font-size: 21px;
+
+            z-index: 2;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+
+            height: 58px;
+
+            padding: 0 48px;
+
+            border: 1px solid #d7deeb;
+
+            border-radius: 12px;
+
+            outline: none;
+
+            font-size: 15px;
+
+            color: #20294a;
+
+            background: white;
+
+            transition: .2s;
+        }
+
+        .input-wrapper input:focus {
+            border-color: #2166f3;
+
+            box-shadow:
+                0 0 0 4px rgba(33,102,243,.08);
+        }
+
+        .password-toggle {
+            position: absolute;
+
+            right: 17px;
+            top: 50%;
+
+            transform: translateY(-50%);
+
+            border: 0;
+            background: transparent;
+
+            cursor: pointer;
+
+            font-size: 19px;
+
+            color: #7c88a5;
+        }
+
+        .options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            margin: 5px 0 28px;
+        }
+
+        .remember {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            color: #7885a2;
+
+            font-size: 14px;
+        }
+
+        .remember input {
+            width: 17px;
+            height: 17px;
+
+            accent-color: #2166f3;
+        }
+
+        .forgot {
+            color: #0d5cff;
+
+            font-weight: 700;
+
+            font-size: 14px;
+        }
+
+        .forgot:hover {
+            text-decoration: underline;
+        }
+
+        .login-btn {
+            width: 100%;
+
+            height: 60px;
+
+            border: 0;
+
+            border-radius: 12px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    #2673f5,
+                    #1458ee
+                );
+
+            color: white;
+
+            font-size: 18px;
+
+            font-weight: 700;
+
+            cursor: pointer;
+
+            box-shadow:
+                0 12px 25px rgba(33,102,243,.25);
+
+            transition: .2s;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-1px);
+
+            box-shadow:
+                0 16px 30px rgba(33,102,243,.30);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+
+            margin: 30px 0 25px;
+
+            color: #8994ac;
+
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+
+            height: 1px;
+
+            flex: 1;
+
+            background: #e3e8f1;
         }
 
         .footer {
             text-align: center;
-            color: #9ca3af;
-            font-size: 12px;
-            margin-top: 25px;
+
+            color: #8994ac;
+
+            font-size: 13px;
         }
+
+        .footer strong {
+            color: #0d5cff;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+
+            .left-panel {
+                padding: 45px;
+            }
+
+            .brand h1 {
+                font-size: 42px;
+            }
+
+            .brand p {
+                font-size: 22px;
+            }
+
+            .illustration {
+                opacity: .5;
+                right: -40px;
+            }
+        }
+
+        @media (max-width: 850px) {
+
+            .page {
+                display: block;
+            }
+
+            .left-panel {
+                width: 100%;
+                min-height: auto;
+
+                padding: 40px 25px;
+            }
+
+            .right-panel {
+                width: 100%;
+                min-height: auto;
+
+                padding: 25px 18px 45px;
+            }
+
+            .illustration {
+                display: none;
+            }
+
+            .features {
+                margin-bottom: 10px;
+            }
+
+            .login-card {
+                padding: 40px 25px;
+            }
+
+            .login-header h2 {
+                font-size: 31px;
+            }
+        }
+
     </style>
+
 </head>
 
 <body>
 
-<div class="login-box">
+<div class="page">
 
-    <h1>🛒 E-Commerce</h1>
+    <!-- =====================================================
+         LEFT PANEL
+    ====================================================== -->
 
-    <div class="subtitle">
-        Sign in to your admin dashboard
-    </div>
+    <section class="left-panel">
 
-    {% if error_message %}
-        <div class="error">
-            {{ error_message }}
+        <div class="brand">
+
+            <div class="brand-icon">
+                🛒
+            </div>
+
+            <div>
+                <h1>E-Commerce</h1>
+                <p>Management System</p>
+            </div>
+
         </div>
-    {% endif %}
 
-    <form method="post">
-        {% csrf_token %}
 
-        <label>Username</label>
-        {{ form.username }}
+        <div class="hero">
 
-        <label>Password</label>
-        {{ form.password }}
+            <div class="line"></div>
 
-        <button type="submit">
-            Sign In
-        </button>
-    </form>
+            <h2>
+                Manage Your Store
+                <br>
+                Effortlessly
+            </h2>
 
-    <div class="footer">
-        django 2026 · E-Commerce Management System
-    </div>
+            <p class="hero-description">
+                A powerful e-commerce management system
+                to handle products, orders, customers
+                and much more.
+            </p>
+
+
+            <div class="features">
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📦
+                    </div>
+
+                    <div>
+                        <h3>Product Management</h3>
+                        <p>
+                            Add, update and manage your products
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        🛒
+                    </div>
+
+                    <div>
+                        <h3>Order Management</h3>
+                        <p>
+                            Track and manage customer orders
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        👥
+                    </div>
+
+                    <div>
+                        <h3>Customer Management</h3>
+                        <p>
+                            View and manage your customers
+                        </p>
+                    </div>
+
+                </div>
+
+
+                <div class="feature">
+
+                    <div class="feature-icon">
+                        📊
+                    </div>
+
+                    <div>
+                        <h3>Reports & Analytics</h3>
+                        <p>
+                            Get insights and grow your business
+                        </p>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- CSS illustration -->
+
+        <div class="illustration">
+
+            <div class="laptop">
+
+                <div class="screen">
+                    <div class="screen-cart">
+                        🛒
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="laptop-base"></div>
+
+            <div class="box"></div>
+
+            <div class="bag">
+                🛍️
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- =====================================================
+         RIGHT PANEL
+    ====================================================== -->
+
+    <section class="right-panel">
+
+        <div class="login-card">
+
+            <div class="login-header">
+
+                <h2>
+                    Welcome Back!
+                </h2>
+
+                <p>
+                    Sign in to your e-commerce admin dashboard
+                </p>
+
+            </div>
+
+
+            {% if error_message %}
+
+                <div class="error">
+                    {{ error_message }}
+                </div>
+
+            {% endif %}
+
+
+            <form method="post">
+
+                {% csrf_token %}
+
+
+                <!-- USERNAME -->
+
+                <div class="field">
+
+                    <label for="{{ form.username.id_for_label }}">
+                        Username
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            👤
+                        </span>
+
+                        {{ form.username }}
+
+                    </div>
+
+                </div>
+
+
+                <!-- PASSWORD -->
+
+                <div class="field">
+
+                    <label for="{{ form.password.id_for_label }}">
+                        Password
+                    </label>
+
+                    <div class="input-wrapper">
+
+                        <span class="input-icon">
+                            🔒
+                        </span>
+
+                        {{ form.password }}
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()"
+                            aria-label="Show password"
+                        >
+                            👁
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- OPTIONS -->
+
+                <div class="options">
+
+                    <label class="remember">
+
+                        {{ form.remember_me }}
+
+                        <span>
+                            Remember me
+                        </span>
+
+                    </label>
+
+
+                    <a
+                        class="forgot"
+                        href="{% url 'accounts:ecommerce_password_reset' %}"
+                    >
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+
+                <!-- LOGIN -->
+
+                <button
+                    type="submit"
+                    class="login-btn"
+                >
+                    🔒 &nbsp; Sign In
+                </button>
+
+            </form>
+
+
+            <div class="divider">
+                OR
+            </div>
+
+
+            <div class="footer">
+
+                <strong>© django 2026</strong>
+                · E-Commerce Management System
+
+            </div>
+
+        </div>
+
+    </section>
 
 </div>
+
+
+<script>
+
+function togglePassword() {
+
+    const password =
+        document.getElementById(
+            "{{ form.password.id_for_label }}"
+        );
+
+    if (password.type === "password") {
+
+        password.type = "text";
+
+    } else {
+
+        password.type = "password";
+
+    }
+
+}
+
+</script>
 
 </body>
 </html>

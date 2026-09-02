@@ -74,7 +74,7 @@ class Product(models.Model):
 
     @property
     def selling_price(self):
-        if self.discount_price is not None:
+        if self.discount_price is not None and self.discount_price > 0:
             return self.discount_price
         return self.price
 
