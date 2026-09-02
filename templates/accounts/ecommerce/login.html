@@ -11,18 +11,30 @@
 
     <title>E-Commerce Login</title>
 
+
     <style>
+
+        /* =====================================================
+           RESET
+        ===================================================== */
 
         * {
             box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
+
 
         html,
         body {
+            width: 100%;
+            height: 100%;
+
             margin: 0;
             padding: 0;
-            width: 100%;
-            min-height: 100%;
+
+            overflow: hidden;
+
             font-family:
                 Inter,
                 Arial,
@@ -30,26 +42,55 @@
                 sans-serif;
         }
 
+
         body {
-            min-height: 100vh;
+            min-height: 0;
+
             background: #f4f8ff;
         }
 
-        .page {
-            min-height: 100vh;
-            display: flex;
-        }
 
         /* =====================================================
-           LEFT SIDE
+           MAIN PAGE
+
+           IMPORTANT:
+           The complete page is restricted to browser viewport.
+           Therefore unnecessary vertical scrolling will not occur.
+        ===================================================== */
+
+        .page {
+            width: 100%;
+            height: 100vh;
+            height: 100dvh;
+
+            min-height: 0;
+
+            display: flex;
+
+            overflow: hidden;
+        }
+
+
+        /* =====================================================
+           LEFT PANEL
         ===================================================== */
 
         .left-panel {
+
             width: 57%;
-            min-height: 100vh;
-            padding: 65px 70px;
+            height: 100%;
+            min-height: 0;
+
+            padding:
+                clamp(25px, 5vh, 55px)
+                clamp(30px, 4vw, 65px);
+
             position: relative;
+
             overflow: hidden;
+
+            display: flex;
+            flex-direction: column;
 
             background:
                 radial-gradient(
@@ -67,206 +108,323 @@
             color: white;
         }
 
+
+        /* Decorative circles */
+
         .left-panel::before {
+
             content: "";
+
             position: absolute;
+
             width: 450px;
             height: 450px;
-            border: 1px solid rgba(255,255,255,.12);
+
+            border:
+                1px solid
+                rgba(255,255,255,.12);
+
             border-radius: 50%;
+
             right: -160px;
             bottom: -100px;
         }
 
+
         .left-panel::after {
+
             content: "";
+
             position: absolute;
+
             width: 250px;
             height: 250px;
-            border: 1px solid rgba(255,255,255,.10);
+
+            border:
+                1px solid
+                rgba(255,255,255,.10);
+
             border-radius: 50%;
+
             right: -80px;
             bottom: -20px;
         }
 
+
+        /* =====================================================
+           BRAND
+        ===================================================== */
+
         .brand {
+
             position: relative;
             z-index: 2;
 
             display: flex;
-            align-items: center;
-            gap: 18px;
 
-            margin-bottom: 65px;
-        }
-
-        .brand-icon {
-            width: 72px;
-            height: 72px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            border-radius: 18px;
-
-            background: rgba(255,255,255,.15);
-
-            font-size: 42px;
-
-            box-shadow:
-                0 15px 35px rgba(0,0,0,.15);
-        }
-
-        .brand h1 {
-            margin: 0;
-
-            font-size: 54px;
-            line-height: 1;
-
-            font-weight: 800;
-            letter-spacing: -2px;
-        }
-
-        .brand p {
-            margin: 10px 0 0;
-
-            font-size: 28px;
-            color: rgba(255,255,255,.78);
-        }
-
-        .line {
-            width: 70px;
-            height: 5px;
-
-            border-radius: 20px;
-
-            background: white;
-
-            margin-bottom: 35px;
-        }
-
-        .hero {
-            position: relative;
-            z-index: 2;
-        }
-
-        .hero h2 {
-            margin: 0 0 15px;
-
-            max-width: 530px;
-
-            font-size: 39px;
-            line-height: 1.15;
-        }
-
-        .hero-description {
-            max-width: 520px;
-
-            color: rgba(255,255,255,.78);
-
-            font-size: 18px;
-            line-height: 1.7;
-
-            margin-bottom: 40px;
-        }
-
-        .features {
-            position: relative;
-            z-index: 2;
-
-            display: flex;
-            flex-direction: column;
-            gap: 22px;
-        }
-
-        .feature {
-            display: flex;
             align-items: center;
 
-            gap: 20px;
-        }
+            gap: 15px;
 
-        .feature-icon {
-            width: 64px;
-            height: 64px;
+            margin-bottom:
+                clamp(25px, 5vh, 55px);
 
             flex-shrink: 0;
+        }
+
+
+        .brand-icon {
+
+            width: clamp(50px, 5vw, 68px);
+            height: clamp(50px, 5vw, 68px);
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
             border-radius: 16px;
 
-            background: rgba(255,255,255,.15);
+            background:
+                rgba(255,255,255,.15);
 
-            font-size: 28px;
+            font-size:
+                clamp(27px, 3vw, 38px);
 
             box-shadow:
-                0 10px 25px rgba(0,0,0,.12);
+                0 15px 35px
+                rgba(0,0,0,.15);
         }
 
-        .feature h3 {
-            margin: 0 0 4px;
 
-            font-size: 17px;
-        }
+        .brand h1 {
 
-        .feature p {
             margin: 0;
 
-            color: rgba(255,255,255,.68);
+            font-size:
+                clamp(32px, 3.5vw, 50px);
 
-            font-size: 14px;
+            line-height: 1;
+
+            font-weight: 800;
+
+            letter-spacing: -1.5px;
         }
+
+
+        .brand p {
+
+            margin: 7px 0 0;
+
+            font-size:
+                clamp(16px, 1.7vw, 24px);
+
+            color:
+                rgba(255,255,255,.78);
+        }
+
+
+        /* =====================================================
+           HERO
+        ===================================================== */
+
+        .hero {
+
+            position: relative;
+
+            z-index: 2;
+
+            flex-shrink: 0;
+        }
+
+
+        .line {
+
+            width: 55px;
+            height: 4px;
+
+            border-radius: 20px;
+
+            background: white;
+
+            margin-bottom: 18px;
+        }
+
+
+        .hero h2 {
+
+            margin: 0 0 12px;
+
+            max-width: 520px;
+
+            font-size:
+                clamp(28px, 2.8vw, 38px);
+
+            line-height: 1.12;
+        }
+
+
+        .hero-description {
+
+            max-width: 510px;
+
+            color:
+                rgba(255,255,255,.78);
+
+            font-size:
+                clamp(13px, 1.25vw, 16px);
+
+            line-height: 1.55;
+
+            margin-bottom:
+                clamp(20px, 3vh, 30px);
+        }
+
+
+        /* =====================================================
+           FEATURES
+        ===================================================== */
+
+        .features {
+
+            position: relative;
+
+            z-index: 2;
+
+            display: flex;
+
+            flex-direction: column;
+
+            gap:
+                clamp(9px, 1.5vh, 17px);
+        }
+
+
+        .feature {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 14px;
+        }
+
+
+        .feature-icon {
+
+            width:
+                clamp(43px, 4vw, 56px);
+
+            height:
+                clamp(43px, 4vw, 56px);
+
+            flex-shrink: 0;
+
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            border-radius: 14px;
+
+            background:
+                rgba(255,255,255,.15);
+
+            font-size:
+                clamp(19px, 2vw, 25px);
+
+            box-shadow:
+                0 10px 25px
+                rgba(0,0,0,.12);
+        }
+
+
+        .feature h3 {
+
+            margin: 0 0 3px;
+
+            font-size:
+                clamp(12px, 1.2vw, 16px);
+        }
+
+
+        .feature p {
+
+            margin: 0;
+
+            color:
+                rgba(255,255,255,.68);
+
+            font-size:
+                clamp(10px, 1vw, 13px);
+        }
+
 
         /* =====================================================
            ILLUSTRATION
         ===================================================== */
 
         .illustration {
+
             position: absolute;
 
-            right: 40px;
-            bottom: 55px;
+            right: 25px;
+            bottom: 15px;
 
-            width: 370px;
-            height: 280px;
+            width: 330px;
+            height: 240px;
 
             z-index: 1;
+
+            transform:
+                scale(
+                    clamp(.65, 1vw, .9)
+                );
+
+            transform-origin:
+                bottom right;
+
+            pointer-events: none;
         }
 
+
         .laptop {
+
             position: absolute;
 
-            width: 300px;
-            height: 190px;
+            width: 280px;
+            height: 175px;
 
             right: 20px;
-            top: 30px;
+            top: 25px;
 
-            border-radius: 18px;
+            border-radius: 16px;
 
             background: #162b62;
 
-            border: 8px solid #101d45;
+            border:
+                7px solid
+                #101d45;
 
             transform: rotate(-5deg);
 
             box-shadow:
-                0 30px 50px rgba(0,0,0,.30);
+                0 30px 50px
+                rgba(0,0,0,.30);
         }
 
+
         .screen {
+
             position: absolute;
 
-            left: 18px;
-            right: 18px;
-            top: 18px;
-            bottom: 18px;
+            left: 16px;
+            right: 16px;
 
-            border-radius: 8px;
+            top: 16px;
+            bottom: 16px;
+
+            border-radius: 7px;
 
             background:
                 linear-gradient(
@@ -276,35 +434,44 @@
                 );
 
             display: flex;
+
             align-items: center;
             justify-content: center;
         }
 
+
         .screen-cart {
-            font-size: 75px;
+
+            font-size: 65px;
         }
 
+
         .laptop-base {
+
             position: absolute;
 
-            width: 350px;
-            height: 25px;
+            width: 330px;
+            height: 22px;
 
             bottom: 8px;
             left: 5px;
 
             background: #b8c8e7;
 
-            border-radius: 0 0 20px 20px;
+            border-radius:
+                0 0 20px 20px;
 
-            transform: skewX(-25deg);
+            transform:
+                skewX(-25deg);
         }
 
+
         .box {
+
             position: absolute;
 
-            width: 55px;
-            height: 55px;
+            width: 50px;
+            height: 50px;
 
             right: 0;
             bottom: 5px;
@@ -314,16 +481,19 @@
             transform: rotate(12deg);
 
             box-shadow:
-                0 15px 25px rgba(0,0,0,.2);
+                0 15px 25px
+                rgba(0,0,0,.2);
         }
 
+
         .bag {
+
             position: absolute;
 
-            width: 60px;
-            height: 70px;
+            width: 55px;
+            height: 65px;
 
-            left: 10px;
+            left: 5px;
             bottom: 5px;
 
             background: #2786ff;
@@ -331,28 +501,39 @@
             border-radius: 8px;
 
             display: flex;
+
             align-items: center;
             justify-content: center;
 
-            font-size: 30px;
+            font-size: 27px;
 
             box-shadow:
-                0 15px 25px rgba(0,0,0,.2);
+                0 15px 25px
+                rgba(0,0,0,.2);
         }
 
+
         /* =====================================================
-           RIGHT SIDE
+           RIGHT PANEL
         ===================================================== */
 
         .right-panel {
+
             width: 43%;
-            min-height: 100vh;
+            height: 100%;
+
+            min-height: 0;
 
             display: flex;
+
             align-items: center;
+
             justify-content: center;
 
-            padding: 45px;
+            padding:
+                clamp(15px, 3vw, 35px);
+
+            overflow: hidden;
 
             background:
                 radial-gradient(
@@ -363,110 +544,177 @@
                 #f7faff;
         }
 
+
+        /* =====================================================
+           LOGIN CARD
+        ===================================================== */
+
         .login-card {
+
             width: 100%;
-            max-width: 570px;
+
+            max-width: 500px;
+
+            /*
+               Card cannot become taller than viewport.
+            */
+
+            max-height:
+                calc(100dvh - 30px);
 
             background: white;
 
-            border-radius: 22px;
+            border-radius: 20px;
 
-            padding: 58px 58px 45px;
+            padding:
+                clamp(25px, 4vh, 42px)
+                clamp(25px, 3.5vw, 45px)
+                clamp(20px, 3vh, 30px);
 
             box-shadow:
-                0 25px 80px rgba(30, 70, 130, .12);
+                0 25px 80px
+                rgba(30, 70, 130, .12);
 
-            border: 1px solid #edf2f9;
+            border:
+                1px solid #edf2f9;
+
+            overflow: hidden;
         }
+
+
+        /* =====================================================
+           LOGIN HEADER
+        ===================================================== */
 
         .login-header {
+
             text-align: center;
 
-            margin-bottom: 35px;
+            margin-bottom:
+                clamp(20px, 3vh, 28px);
         }
 
+
         .login-header h2 {
+
             margin: 0;
 
             color: #16235b;
 
-            font-size: 38px;
+            font-size:
+                clamp(27px, 2.5vw, 34px);
+
             line-height: 1.1;
         }
 
+
         .login-header p {
-            margin: 12px 0 0;
+
+            margin: 9px 0 0;
 
             color: #7c88a5;
 
-            font-size: 17px;
+            font-size:
+                clamp(12px, 1.1vw, 15px);
+
+            line-height: 1.4;
         }
 
+
+        /* =====================================================
+           ERROR
+        ===================================================== */
+
         .error {
+
             background: #fff0f0;
 
             color: #c62828;
 
-            border: 1px solid #ffd0d0;
+            border:
+                1px solid
+                #ffd0d0;
 
-            border-radius: 10px;
+            border-radius: 9px;
 
-            padding: 13px 15px;
+            padding: 10px 12px;
 
-            margin-bottom: 20px;
+            margin-bottom: 15px;
 
-            font-size: 14px;
+            font-size: 12px;
         }
+
+
+        /* =====================================================
+           FIELD
+        ===================================================== */
 
         .field {
-            margin-bottom: 22px;
+
+            margin-bottom:
+                clamp(12px, 2vh, 18px);
         }
 
+
         .field label {
+
             display: block;
 
             color: #182044;
 
             font-weight: 700;
 
-            font-size: 15px;
+            font-size: 13px;
 
-            margin-bottom: 9px;
+            margin-bottom: 6px;
         }
+
 
         .input-wrapper {
+
             position: relative;
+
+            width: 100%;
         }
 
+
         .input-icon {
+
             position: absolute;
 
-            left: 17px;
+            left: 15px;
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                translateY(-50%);
 
             color: #64739a;
 
-            font-size: 21px;
+            font-size: 17px;
 
             z-index: 2;
         }
 
+
         .input-wrapper input {
+
             width: 100%;
 
-            height: 58px;
+            height:
+                clamp(45px, 6vh, 53px);
 
-            padding: 0 48px;
+            padding:
+                0 45px;
 
-            border: 1px solid #d7deeb;
+            border:
+                1px solid
+                #d7deeb;
 
-            border-radius: 12px;
+            border-radius: 11px;
 
             outline: none;
 
-            font-size: 15px;
+            font-size: 14px;
 
             color: #20294a;
 
@@ -475,76 +723,119 @@
             transition: .2s;
         }
 
+
         .input-wrapper input:focus {
+
             border-color: #2166f3;
 
             box-shadow:
-                0 0 0 4px rgba(33,102,243,.08);
+                0 0 0 4px
+                rgba(33,102,243,.08);
         }
 
+
+        /* =====================================================
+           PASSWORD TOGGLE
+        ===================================================== */
+
         .password-toggle {
+
             position: absolute;
 
-            right: 17px;
+            right: 14px;
             top: 50%;
 
-            transform: translateY(-50%);
+            transform:
+                translateY(-50%);
 
             border: 0;
+
             background: transparent;
 
             cursor: pointer;
 
-            font-size: 19px;
+            font-size: 17px;
 
             color: #7c88a5;
         }
 
+
+        /* =====================================================
+           OPTIONS
+        ===================================================== */
+
         .options {
+
             display: flex;
-            justify-content: space-between;
+
+            justify-content:
+                space-between;
+
             align-items: center;
 
-            margin: 5px 0 28px;
+            margin:
+                2px 0
+                clamp(15px, 2.5vh, 23px);
         }
 
+
         .remember {
+
             display: flex;
+
             align-items: center;
-            gap: 8px;
+
+            gap: 7px;
 
             color: #7885a2;
 
-            font-size: 14px;
+            font-size: 12px;
+
+            cursor: pointer;
         }
 
+
         .remember input {
-            width: 17px;
-            height: 17px;
+
+            width: 15px;
+            height: 15px;
 
             accent-color: #2166f3;
         }
 
+
         .forgot {
+
             color: #0d5cff;
 
             font-weight: 700;
 
-            font-size: 14px;
+            font-size: 12px;
+
+            text-decoration: none;
         }
 
+
         .forgot:hover {
+
             text-decoration: underline;
         }
 
+
+        /* =====================================================
+           LOGIN BUTTON
+        ===================================================== */
+
         .login-btn {
+
             width: 100%;
 
-            height: 60px;
+            height:
+                clamp(46px, 6vh, 53px);
 
             border: 0;
 
-            border-radius: 12px;
+            border-radius: 11px;
 
             background:
                 linear-gradient(
@@ -555,39 +846,58 @@
 
             color: white;
 
-            font-size: 18px;
+            font-size:
+                clamp(14px, 1.3vw, 16px);
 
             font-weight: 700;
 
             cursor: pointer;
 
             box-shadow:
-                0 12px 25px rgba(33,102,243,.25);
+                0 12px 25px
+                rgba(33,102,243,.25);
 
             transition: .2s;
         }
 
+
         .login-btn:hover {
-            transform: translateY(-1px);
+
+            transform:
+                translateY(-1px);
 
             box-shadow:
-                0 16px 30px rgba(33,102,243,.30);
+                0 16px 30px
+                rgba(33,102,243,.30);
         }
 
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 15px;
 
-            margin: 30px 0 25px;
+        /* =====================================================
+           DIVIDER
+        ===================================================== */
+
+        .divider {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            margin:
+                clamp(15px, 2.5vh, 23px)
+                0
+                clamp(13px, 2vh, 18px);
 
             color: #8994ac;
 
-            font-size: 13px;
+            font-size: 11px;
         }
+
 
         .divider::before,
         .divider::after {
+
             content: "";
 
             height: 1px;
@@ -597,92 +907,516 @@
             background: #e3e8f1;
         }
 
+
+        /* =====================================================
+           FOOTER
+        ===================================================== */
+
         .footer {
+
             text-align: center;
 
             color: #8994ac;
 
-            font-size: 13px;
+            font-size: 10px;
+
+            line-height: 1.4;
         }
 
+
         .footer strong {
+
             color: #0d5cff;
         }
 
+
         /* =====================================================
-           RESPONSIVE
+           MEDIUM DESKTOP
         ===================================================== */
 
-        @media (max-width: 1100px) {
+        @media (max-width: 1200px) {
 
             .left-panel {
-                padding: 45px;
-            }
-
-            .brand h1 {
-                font-size: 42px;
-            }
-
-            .brand p {
-                font-size: 22px;
-            }
-
-            .illustration {
-                opacity: .5;
-                right: -40px;
-            }
-        }
-
-        @media (max-width: 850px) {
-
-            .page {
-                display: block;
-            }
-
-            .left-panel {
-                width: 100%;
-                min-height: auto;
-
-                padding: 40px 25px;
+                width: 54%;
             }
 
             .right-panel {
-                width: 100%;
-                min-height: auto;
-
-                padding: 25px 18px 45px;
+                width: 46%;
             }
 
             .illustration {
+                opacity: .45;
+            }
+
+        }
+
+
+        /* =====================================================
+           SHORT DESKTOP SCREENS
+           Example: 1366x600 / 1280x650
+        ===================================================== */
+
+        @media (max-height: 680px) and (min-width: 851px) {
+
+            .left-panel {
+
+                padding:
+                    22px
+                    40px;
+            }
+
+
+            .brand {
+
+                margin-bottom: 20px;
+            }
+
+
+            .brand-icon {
+
+                width: 45px;
+                height: 45px;
+
+                font-size: 24px;
+            }
+
+
+            .brand h1 {
+
+                font-size: 30px;
+            }
+
+
+            .brand p {
+
+                font-size: 14px;
+            }
+
+
+            .line {
+
+                width: 45px;
+                height: 3px;
+
+                margin-bottom: 12px;
+            }
+
+
+            .hero h2 {
+
+                font-size: 27px;
+
+                margin-bottom: 8px;
+            }
+
+
+            .hero-description {
+
+                font-size: 12px;
+
+                line-height: 1.35;
+
+                margin-bottom: 15px;
+            }
+
+
+            .features {
+
+                gap: 7px;
+            }
+
+
+            .feature-icon {
+
+                width: 35px;
+                height: 35px;
+
+                font-size: 16px;
+            }
+
+
+            .feature h3 {
+
+                font-size: 11px;
+            }
+
+
+            .feature p {
+
+                font-size: 9px;
+            }
+
+
+            .illustration {
+
                 display: none;
             }
 
-            .features {
+
+            .login-card {
+
+                padding:
+                    23px
+                    28px
+                    18px;
+            }
+
+
+            .login-header {
+
+                margin-bottom: 14px;
+            }
+
+
+            .login-header h2 {
+
+                font-size: 25px;
+            }
+
+
+            .login-header p {
+
+                font-size: 11px;
+            }
+
+
+            .field {
+
+                margin-bottom: 9px;
+            }
+
+
+            .field label {
+
+                font-size: 11px;
+
+                margin-bottom: 4px;
+            }
+
+
+            .input-wrapper input {
+
+                height: 41px;
+
+                font-size: 12px;
+            }
+
+
+            .options {
+
+                margin-bottom: 11px;
+            }
+
+
+            .login-btn {
+
+                height: 42px;
+
+                font-size: 13px;
+            }
+
+
+            .divider {
+
+                margin:
+                    10px 0;
+            }
+
+
+            .footer {
+
+                font-size: 9px;
+            }
+
+        }
+
+
+        /* =====================================================
+           TABLET
+        ===================================================== */
+
+        @media (max-width: 850px) {
+
+            html,
+            body {
+
+                width: 100%;
+                height: 100%;
+
+                overflow: hidden;
+            }
+
+
+            .page {
+
+                width: 100%;
+                height: 100vh;
+                height: 100dvh;
+
+                display: block;
+
+                overflow: hidden;
+            }
+
+
+            .left-panel {
+
+                display: none;
+            }
+
+
+            .right-panel {
+
+                width: 100%;
+                height: 100%;
+
+                min-height: 0;
+
+                padding: 18px;
+
+                overflow: hidden;
+
+                display: flex;
+
+                align-items: center;
+                justify-content: center;
+            }
+
+
+            .login-card {
+
+                width: 100%;
+
+                max-width: 460px;
+
+                max-height:
+                    calc(100dvh - 36px);
+
+                padding:
+                    28px
+                    25px
+                    22px;
+            }
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 480px) {
+
+            .right-panel {
+
+                padding: 12px;
+            }
+
+
+            .login-card {
+
+                max-height:
+                    calc(100dvh - 24px);
+
+                padding:
+                    23px
+                    18px
+                    18px;
+
+                border-radius: 15px;
+            }
+
+
+            .login-header {
+
+                margin-bottom: 17px;
+            }
+
+
+            .login-header h2 {
+
+                font-size: 24px;
+            }
+
+
+            .login-header p {
+
+                font-size: 11px;
+            }
+
+
+            .field {
+
+                margin-bottom: 12px;
+            }
+
+
+            .field label {
+
+                font-size: 12px;
+            }
+
+
+            .input-wrapper input {
+
+                height: 45px;
+
+                font-size: 13px;
+            }
+
+
+            .options {
+
+                margin-bottom: 14px;
+            }
+
+
+            .remember,
+            .forgot {
+
+                font-size: 11px;
+            }
+
+
+            .login-btn {
+
+                height: 46px;
+
+                font-size: 14px;
+            }
+
+
+            .divider {
+
+                margin:
+                    14px 0
+                    12px;
+            }
+
+
+            .footer {
+
+                font-size: 9px;
+            }
+
+        }
+
+
+        /* =====================================================
+           VERY SMALL MOBILE HEIGHT
+        ===================================================== */
+
+        @media (max-height: 600px) and (max-width: 850px) {
+
+            .right-panel {
+
+                padding: 8px;
+            }
+
+
+            .login-card {
+
+                max-height:
+                    calc(100dvh - 16px);
+
+                padding:
+                    15px
+                    18px
+                    12px;
+            }
+
+
+            .login-header {
+
                 margin-bottom: 10px;
             }
 
-            .login-card {
-                padding: 40px 25px;
-            }
 
             .login-header h2 {
-                font-size: 31px;
+
+                font-size: 21px;
             }
+
+
+            .login-header p {
+
+                font-size: 10px;
+
+                margin-top: 5px;
+            }
+
+
+            .field {
+
+                margin-bottom: 7px;
+            }
+
+
+            .field label {
+
+                font-size: 10px;
+
+                margin-bottom: 3px;
+            }
+
+
+            .input-wrapper input {
+
+                height: 38px;
+
+                font-size: 11px;
+            }
+
+
+            .options {
+
+                margin:
+                    2px 0
+                    8px;
+            }
+
+
+            .login-btn {
+
+                height: 38px;
+
+                font-size: 12px;
+            }
+
+
+            .divider {
+
+                margin:
+                    8px 0;
+            }
+
+
+            .footer {
+
+                font-size: 8px;
+            }
+
         }
 
     </style>
 
 </head>
 
+
 <body>
 
+
 <div class="page">
+
 
     <!-- =====================================================
          LEFT PANEL
     ====================================================== -->
 
     <section class="left-panel">
+
+
+        <!-- BRAND -->
 
         <div class="brand">
 
@@ -691,16 +1425,26 @@
             </div>
 
             <div>
-                <h1>E-Commerce</h1>
-                <p>Management System</p>
+
+                <h1>
+                    E-Commerce
+                </h1>
+
+                <p>
+                    Management System
+                </p>
+
             </div>
 
         </div>
 
 
+        <!-- HERO -->
+
         <div class="hero">
 
             <div class="line"></div>
+
 
             <h2>
                 Manage Your Store
@@ -708,14 +1452,22 @@
                 Effortlessly
             </h2>
 
+
             <p class="hero-description">
-                A powerful e-commerce management system
-                to handle products, orders, customers
-                and much more.
+
+                A powerful e-commerce management
+                system to handle products, orders,
+                customers and much more.
+
             </p>
 
 
+            <!-- FEATURES -->
+
             <div class="features">
+
+
+                <!-- PRODUCT -->
 
                 <div class="feature">
 
@@ -724,14 +1476,21 @@
                     </div>
 
                     <div>
-                        <h3>Product Management</h3>
+
+                        <h3>
+                            Product Management
+                        </h3>
+
                         <p>
                             Add, update and manage your products
                         </p>
+
                     </div>
 
                 </div>
 
+
+                <!-- ORDERS -->
 
                 <div class="feature">
 
@@ -740,14 +1499,21 @@
                     </div>
 
                     <div>
-                        <h3>Order Management</h3>
+
+                        <h3>
+                            Order Management
+                        </h3>
+
                         <p>
                             Track and manage customer orders
                         </p>
+
                     </div>
 
                 </div>
 
+
+                <!-- CUSTOMERS -->
 
                 <div class="feature">
 
@@ -756,14 +1522,21 @@
                     </div>
 
                     <div>
-                        <h3>Customer Management</h3>
+
+                        <h3>
+                            Customer Management
+                        </h3>
+
                         <p>
                             View and manage your customers
                         </p>
+
                     </div>
 
                 </div>
 
+
+                <!-- ANALYTICS -->
 
                 <div class="feature">
 
@@ -772,44 +1545,61 @@
                     </div>
 
                     <div>
-                        <h3>Reports & Analytics</h3>
+
+                        <h3>
+                            Reports & Analytics
+                        </h3>
+
                         <p>
                             Get insights and grow your business
                         </p>
+
                     </div>
 
                 </div>
+
 
             </div>
 
         </div>
 
 
-        <!-- CSS illustration -->
+        <!-- =================================================
+             ILLUSTRATION
+        ================================================== -->
 
         <div class="illustration">
+
 
             <div class="laptop">
 
                 <div class="screen">
+
                     <div class="screen-cart">
                         🛒
                     </div>
+
                 </div>
 
             </div>
 
+
             <div class="laptop-base"></div>
 
+
             <div class="box"></div>
+
 
             <div class="bag">
                 🛍️
             </div>
 
+
         </div>
 
+
     </section>
+
 
 
     <!-- =====================================================
@@ -818,7 +1608,13 @@
 
     <section class="right-panel">
 
+
+        <!-- LOGIN CARD -->
+
         <div class="login-card">
+
+
+            <!-- HEADER -->
 
             <div class="login-header">
 
@@ -833,6 +1629,9 @@
             </div>
 
 
+
+            <!-- ERROR -->
+
             {% if error_message %}
 
                 <div class="error">
@@ -842,24 +1641,32 @@
             {% endif %}
 
 
+
+            <!-- LOGIN FORM -->
+
             <form method="post">
 
                 {% csrf_token %}
+
 
 
                 <!-- USERNAME -->
 
                 <div class="field">
 
-                    <label for="{{ form.username.id_for_label }}">
+                    <label
+                        for="{{ form.username.id_for_label }}"
+                    >
                         Username
                     </label>
+
 
                     <div class="input-wrapper">
 
                         <span class="input-icon">
                             👤
                         </span>
+
 
                         {{ form.username }}
 
@@ -868,13 +1675,17 @@
                 </div>
 
 
+
                 <!-- PASSWORD -->
 
                 <div class="field">
 
-                    <label for="{{ form.password.id_for_label }}">
+                    <label
+                        for="{{ form.password.id_for_label }}"
+                    >
                         Password
                     </label>
+
 
                     <div class="input-wrapper">
 
@@ -882,7 +1693,9 @@
                             🔒
                         </span>
 
+
                         {{ form.password }}
+
 
                         <button
                             type="button"
@@ -898,9 +1711,11 @@
                 </div>
 
 
+
                 <!-- OPTIONS -->
 
                 <div class="options">
+
 
                     <label class="remember">
 
@@ -913,6 +1728,7 @@
                     </label>
 
 
+
                     <a
                         class="forgot"
                         href="{% url 'accounts:ecommerce_password_reset' %}"
@@ -920,10 +1736,12 @@
                         Forgot Password?
                     </a>
 
+
                 </div>
 
 
-                <!-- LOGIN -->
+
+                <!-- LOGIN BUTTON -->
 
                 <button
                     type="submit"
@@ -932,27 +1750,45 @@
                     🔒 &nbsp; Sign In
                 </button>
 
+
             </form>
 
+
+
+            <!-- DIVIDER -->
 
             <div class="divider">
                 OR
             </div>
 
 
+
+            <!-- FOOTER -->
+
             <div class="footer">
 
-                <strong>© django 2026</strong>
+                <strong>
+                    © django 2026
+                </strong>
+
                 · E-Commerce Management System
 
             </div>
 
+
         </div>
+
 
     </section>
 
+
 </div>
 
+
+
+<!-- =====================================================
+     PASSWORD SHOW / HIDE
+====================================================== -->
 
 <script>
 
@@ -962,6 +1798,12 @@ function togglePassword() {
         document.getElementById(
             "{{ form.password.id_for_label }}"
         );
+
+
+    if (!password) {
+        return;
+    }
+
 
     if (password.type === "password") {
 
@@ -976,6 +1818,7 @@ function togglePassword() {
 }
 
 </script>
+
 
 </body>
 </html>
