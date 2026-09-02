@@ -71,7 +71,6 @@ urlpatterns = [
     # ============================================================
     # E-COMMERCE MANAGEMENT SYSTEM
     # ============================================================
-
     path(
         "ecommerce/",
         include("accounts.ecommerce.urls"),

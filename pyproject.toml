@@ -6,5 +6,24 @@ omit = ["*/migrations/*", "*/tests/*", "*/conftest.py", "*/admin.py", "*/apps.py
 fail_under = 90
 show_missing = true
 
+[tool.black]
+line-length = 88
+target-version = ["py312"]
+exclude = '''
+/(
+    \.git
+  | \.venv
+  | venv
+  | __pycache__
+  | migrations
+  | static
+  | media
+)/
+'''
+
 [tool.isort]
 profile = "black"
+line_length = 88
+skip_glob = [
+    "*/migrations/*.py"
+]
