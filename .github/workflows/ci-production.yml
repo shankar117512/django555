@@ -8,8 +8,8 @@ on:
     branches: [main]
 
 env:
-  PYTHON_VERSION: "3.12"
-  ENVIRONMENT: production
+  PYTHON_VERSION: ""
+  ENVIRONMENT: prod
   DJANGO_SETTINGS_MODULE: config.settings.production
 
 jobs:
